@@ -509,6 +509,21 @@ header.top .lede { max-width: 64ch; color: var(--muted); margin-top: 6px; }
 .prop-facts { display: flex; gap: 8px 18px; flex-wrap: wrap; font-size: 0.92rem; color: var(--muted); }
 .prop-facts b { color: var(--ink); }
 .prop-price { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; }
+.trust { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 10px; margin: 0 0 18px; }
+.trust-item { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 0.86rem; }
+.trust-item .ti { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--good-soft); color: var(--good); font-weight: 700; }
+.trust-item b { display: block; font-size: 0.9rem; }
+.trust-item .muted { font-size: 0.82rem; }
+.link-btn { border: 0; background: none; padding: 0; color: var(--accent); font-weight: 600; text-decoration: underline; cursor: pointer; font-size: 0.82rem; }
+.path-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; align-items: end; border-radius: 12px; padding: 14px 16px; background: var(--accent-soft); margin: 14px 0; }
+.path-head .when { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; }
+.progress { grid-column: 1 / -1; height: 10px; border-radius: 99px; background: var(--surface); overflow: hidden; }
+.progress span { display: block; height: 100%; background: var(--seg-surplus); border-radius: 99px; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 18px; margin-top: 4px; }
+.checkin-list { display: grid; gap: 4px; margin-top: 8px; font-size: 0.85rem; }
+.checkin-list div { display: flex; justify-content: space-between; gap: 10px; padding: 5px 8px; border-radius: 6px; background: var(--surface-2); }
+.privacy-body { display: grid; gap: 12px; font-size: 0.9rem; }
+.privacy-body h3 { font-size: 0.95rem; margin-bottom: 2px; }
 .brokers { display: grid; gap: 10px; margin-top: 12px; }
 .broker { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: start; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--surface); }
 .broker.pinned { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
@@ -778,6 +793,11 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     <h1>Your budget, before we talk homes</h1>
     <p class="muted">Fill in your income and spending so your broker can show how buying in different suburbs would work for you. Upload bank statements (CSV) or type the amounts in. Statements are read in your browser only; just the monthly totals go to your broker.</p>
     <div class="intake-steps"><span><b>1</b> Your household</span><span><b>2</b> Your spending</span><span><b>3</b> Send it to your broker</span></div>
+    <div class="trust">
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Independent</b><span class="muted">Not a bank, and not owned by a broker group or property portal.</span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>How we handle your figures</button></span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Free for buyers</b><span class="muted">Always. Results are never adjusted to favour a lender or broker.</span></div></div>
+  </div>
     <div class="intake-name"><label for="clientNameIntake">Your name</label><input id="clientNameIntake" type="text" autocomplete="name" style="max-width:340px"></div>
   </section>
 
@@ -808,6 +828,11 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       <label class="check" style="margin-top:10px"><input type="checkbox" id="oFhb"> I'm a first home buyer</label>
     </section>
     <section class="panel" id="ovResult" aria-live="polite"></section>
+    <div class="trust">
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Independent</b><span class="muted">Not a bank, and not owned by a broker group or property portal.</span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>How we handle your figures</button></span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Free for buyers</b><span class="muted">Always. Results are never adjusted to favour a lender or broker.</span></div></div>
+  </div>
     <section class="panel" id="ovBrokers" aria-labelledby="ovBrokH">
       <h2 id="ovBrokH">Get pre-approved before you make an offer</h2>
       <p class="muted small" id="ovBrokSub" style="margin-top:4px"></p>
@@ -830,6 +855,12 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     </section>
     <p class="hint">General information only, based on public 2026-27 rates and the details above. It isn't credit advice or a loan approval. Speak to a mortgage broker for an assessment.</p>
   </div>
+
+  <div class="broker-only"><div class="trust">
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Independent</b><span class="muted">Not a bank, and not owned by a broker group or property portal.</span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>How we handle your figures</button></span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Free for buyers</b><span class="muted">Always. Results are never adjusted to favour a lender or broker.</span></div></div>
+  </div></div>
 
   <div class="notice broker-only" id="exampleNote">
     <span><strong>Example client loaded.</strong> These figures come from 12 months of made-up sample statements. Upload real statements, enter figures manually or open a saved client.</span>
@@ -1097,6 +1128,32 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   </div>
 
   <div class="lower broker-only">
+    <section class="panel" aria-labelledby="pathH">
+      <h2 id="pathH">Path to buying</h2>
+      <p class="muted small" style="margin-top:2px">How long until each suburb is within reach, what's still to sort out, and progress since the last check-in.</p>
+      <div class="grid2" style="margin-top:12px">
+        <div><label for="planSave">Saving each month</label><div class="money"><input id="planSave" type="number" min="0" step="50" inputmode="decimal"></div><p class="hint" id="planSaveHint"></p></div>
+        <div><label for="priceGrowth">House price growth per year (%)</label><input id="priceGrowth" type="number" min="-5" max="15" step="0.5"><p class="hint">Prices rising while they save pushes the date out. Use 0 to ignore.</p></div>
+      </div>
+      <div class="path-head" id="pathHead"></div>
+      <div class="path-grid">
+        <div>
+          <div class="label-like">Ready to buy in <span id="pathSubName"></span>?</div>
+          <div class="flags" id="pathReady"></div>
+        </div>
+        <div>
+          <div class="label-like">When each suburb comes within reach</div>
+          <div class="table-scroll"><table class="mini-table" id="pathTable"></table></div>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div class="label-like">Check-ins</div>
+        <div id="pathChanges" class="small"></div>
+        <div class="btn-row" style="margin-top:8px"><button type="button" id="checkIn">Record a check-in</button><span class="status-msg" id="checkMsg" aria-live="polite"></span></div>
+        <div class="checkin-list" id="pathLog"></div>
+        <p class="hint">Update their savings at each catch-up and record a check-in to track progress. In the live version, buyers get an alert when interest rates or prices change their results.</p>
+      </div>
+    </section>
     <section class="panel" aria-labelledby="sumH">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
         <h2 id="sumH">Client summary</h2>
@@ -1149,6 +1206,21 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
         <label class="check" style="margin-top:10px"><input type="checkbox" id="gReviewed"> I reviewed the statement categories and declared expenses with the client</label>
         <div class="btn-row" style="margin-top:14px"><button type="button" class="primary" id="openNote">Create draft file note</button></div>
         </div>
+</div>
+
+<!-- Privacy and independence -->
+<div class="overlay" id="dlgPrivacy" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dpH" style="width:min(640px,100%)">
+    <div class="dh"><h2 id="dpH">How we handle your figures</h2><button type="button" class="close">Close</button></div>
+    <div class="privacy-body">
+      <div><h3>Worked out on your device</h3><p>Everything you type, and any bank statements you upload, is processed in your own browser. Statements are never uploaded. Only the monthly totals are used.</p></div>
+      <div><h3>Nothing is shared unless you choose to</h3><p>Your details only go to a broker when you press send, and only to the broker you pick. If your broker saves your figures, they're kept in that broker's private client list.</p></div>
+      <div><h3>Independent</h3><p>Suburb Fit isn't a bank or lender, and isn't owned by a broker group, real estate agency or property portal. We don't sell loans.</p></div>
+      <div><h3>Free for buyers, and honest about how we're paid</h3><p>Buyers never pay. Brokers may pay to be listed or to receive enquiries. That never changes your numbers, which use the same public data for everyone.</p></div>
+      <div><h3>Where the numbers come from</h3><p>Public 2026-27 sources: SA Valuer-General sales, council rates, SA Water, RevenueSA, the AER energy price, the ATO and federal home buyer schemes. Results are estimates and general information, not credit advice.</p></div>
+      <p class="hint">Prototype. A full privacy policy will be published before launch.</p>
+    </div>
+  </div>
 </div>
 
 <!-- File note -->
@@ -1455,7 +1527,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       insBase: 2559, insQuote: 0, petrol: {}, petrolAvg: 238.8, fuelPrice: 2.388, fuelUse: 8, ptFare: 4.55, ptPass: 119.10,
       property: { suburb: null, address: "", cv: 0, rates: 0, esl: 0, waterQ: 0 },
       rateShift: 0, extraRepay: 0, offsetBal: 0,
-      intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15,
+      intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
       goals: { purpose: "First home to live in", time: "3 to 6 months", rateType: "Variable", features: [], priorities: "", notes: "", reviewed: false },
       shortlist: ["fulham", "lockleys", "westbeach", "seaton", "royalpark", "flinderspark", "findon", "henleybeach", "hendon", "woodvillewest"]
     };
@@ -2065,9 +2137,10 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
     renderRepayments(s);
     const take = whatItTakes(s); renderTake(take);
+    const path = renderPath(s, sub);
     $("propFor").textContent = state.property.suburb ? subById(state.property.suburb).name : sub.name;
     $("propBadge").innerHTML = state.property.suburb && propActive(subById(state.property.suburb)) ? `<span class="tag-ok">${escapeHtml(state.property.address || "Figures entered")} · ${escapeHtml(subById(state.property.suburb).name)}</span>` : "";
-    renderChart(); renderSummary(s, st, lst, flags, take);
+    renderChart(); renderSummary(s, st, lst, flags, take, path);
   }
 
   function renderPriceEst(sub) {
@@ -2151,7 +2224,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
   // ---------- Summary, used by copy and the PDF ----------
   let lastReport = null;
-  function renderSummary(s, st, lst, flags, take) {
+  function renderSummary(s, st, lst, flags, take, path) {
     const today = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
     const name = state.clientName || "Client";
     const lines = [
@@ -2164,7 +2237,8 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       ["Left over now", `${fmt(s.now)} a month`],
       ["Left over after buying", `${fmt(s.after)} a month (${st.label.toLowerCase()})`],
       ["Lender-style check", `${lst.label} (${fmt(s.lenderSurplus)} surplus)`],
-      ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(state.savings)} savings`]
+      ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(state.savings)} savings`],
+      ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
     ];
     const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], ["Home and contents insurance", fmt(s.pc.insurance / 12)], ["Commute to work", fmt(s.commuteNew)]];
     const compare = listSubs().map(sub => { const x = scenario(sub); return { name: sub.name, price: x.price, after: x.after, status: status(x).label, sel: sub.id === state.suburb }; });
@@ -2243,6 +2317,73 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     catch (e) { msg.className = "status-msg" + (e && e.code === "declined" ? "" : " err"); msg.textContent = e && e.code === "declined" ? "Download cancelled." : "The PDF couldn't be saved here."; }
   }
 
+
+
+  // ---------- Path to buying: timeline, readiness and check-ins ----------
+  const planSave = s => state.planSave ?? Math.max(0, Math.round(s.now / 50) * 50);
+  const monthLabel = m => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + m); return d.toLocaleDateString("en-AU", { month: "short", year: "numeric" }); };
+  // Months until savings cover the cash needed at settlement, with prices growing while they save
+  function monthsToReach(sub, save) {
+    const s0 = scenario(sub);
+    if (state.savings >= s0.cashNeeded) return 0;
+    if (save <= 0) return null;
+    const g = (state.priceGrowth || 0) / 100, base = priceFor(sub);
+    for (let m = 1; m <= 240; m++) {
+      const have = state.savings + save * m;
+      const need = g ? withState({ priceOverride: { ...state.priceOverride, [sub.id]: base * Math.pow(1 + g, m / 12) } }, () => scenario(sub)).cashNeeded : s0.cashNeeded;
+      if (have >= need) return m;
+    }
+    return null;
+  }
+  const whenText = m => m === 0 ? "Ready now" : m === null ? "Not within 20 years" : `About ${monthLabel(m)}`;
+  function renderPath(s, sub) {
+    const save = planSave(s), m = monthsToReach(sub, save), st = status(s);
+    $("planSaveHint").textContent = state.planSave === null ? `Blank uses what's left over now: ${fmt(Math.max(0, s.now))} a month.` : `Left over now is ${fmt(s.now)} a month.`;
+    if (document.activeElement !== $("planSave")) $("planSave").value = state.planSave ?? "";
+    const pct = Math.max(0, Math.min(100, state.savings / Math.max(1, s.cashNeeded) * 100));
+    $("pathHead").innerHTML = `<div><div class="eyebrow">${escapeHtml(sub.name)} · cash needed ${fmt(s.cashNeeded)}</div><div class="when">${whenText(m)}</div>
+        <div class="small muted">${m === 0 ? `Savings of ${fmt(state.savings)} already cover settlement.` : m === null ? `Saving ${fmt(save)} a month won't catch up with prices. Try a cheaper suburb or saving more.` : `Saving ${fmt(save)} a month${state.priceGrowth ? `, with prices up ${state.priceGrowth}% a year` : ""}. ${m} month${m > 1 ? "s" : ""} away.`}</div></div>
+      <div class="num" style="font-weight:700">${Math.round(pct)}%</div>
+      <div class="progress" role="img" aria-label="${Math.round(pct)}% of the cash needed is saved"><span style="width:${pct.toFixed(1)}%"></span></div>`;
+    $("pathSubName").textContent = sub.name;
+    const checks = [
+      [state.savings >= s.cashNeeded, `Savings cover the ${fmt(s.cashNeeded)} needed at settlement`, `${fmt(s.cashNeeded - state.savings)} more savings needed`],
+      [s.lvr <= 0.95, "Deposit is at least 5% of the price", `Deposit is under 5% (${Math.round((1 - s.lvr) * 100)}%), below most lenders' minimum`],
+      [s.after >= state.income * 0.05, `Budget after buying is ${st.label.toLowerCase()} (${fmt(s.after)} left each month)`, `Budget after buying is ${st.label.toLowerCase()} (${fmt(s.after)} a month)`],
+      [s.lenderSurplus >= 0, "Likely passes a lender's serviceability check", "Likely fails a lender's serviceability check"]
+    ];
+    const ready = checks.every(c => c[0]);
+    $("pathReady").innerHTML = checks.map(([ok, yes, no]) => `<div class="flag ${ok ? "good" : "bad"}"><span class="ic" aria-hidden="true">${ok ? "✓" : "!"}</span><span>${ok ? yes : no}</span></div>`).join("") +
+      `<div class="flag ${ready ? "good" : "warn"}"><span class="ic" aria-hidden="true">${ready ? "★" : "i"}</span><span><b>${ready ? "Ready to talk to a broker about pre-approval." : "Not ready yet."}</b> ${ready ? "Every check passes for this suburb." : "Sort out the items above, or look at the suburbs that come within reach sooner."}</span></div>`;
+    const rows = listSubs().map(x => { const sx = scenario(x); return { x, sx, m: monthsToReach(x, save), st: status(sx) }; })
+      .sort((a, b) => (a.m ?? 9999) - (b.m ?? 9999) || b.sx.after - a.sx.after);
+    $("pathTable").innerHTML = `<thead><tr><th>Suburb</th><th class="r">Within reach</th><th class="r">Budget after</th></tr></thead><tbody>` +
+      rows.map(r => `<tr class="${r.x.id === state.suburb ? "sel" : ""}"><td>${escapeHtml(r.x.name)}</td><td class="r">${whenText(r.m)}</td><td class="r"><span class="pill ${r.st.cls}" style="padding:0 8px;font-size:0.72rem">${r.st.label}</span></td></tr>`).join("") + "</tbody>";
+    // Check-ins
+    const log = state.checkins || [], last = log[log.length - 1];
+    if (!last) $("pathChanges").innerHTML = `<p class="muted">No check-ins yet. Record one now as a starting point, then again at the next catch-up.</p>`;
+    else {
+      const since = new Date(last.d), days = Math.max(1, Math.round((Date.now() - since) / 86400000)), months = days / 30.44;
+      const saved = state.savings - last.savings, planned = (last.save || save) * months;
+      const lastSub = subById(last.sub), nowLast = scenario(lastSub);
+      const diff = (a, b, unit = "") => { const d = a - b; return d === 0 ? "no change" : `${d > 0 ? "up" : "down"} ${fmt(Math.abs(d)).replace("−", "")}${unit}`; };
+      const items = [
+        `Savings ${diff(state.savings, last.savings)} since ${since.toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}${months >= 0.9 ? ` (${saved >= planned * 0.9 ? "on track" : "behind plan"}: the plan was about ${fmt(planned)})` : ""}`,
+        `${lastSub.name} price estimate ${diff(Math.round(nowLast.price), Math.round(last.price))}`,
+        `Left over after buying in ${lastSub.name} ${diff(Math.round(nowLast.after), last.after, " a month")}`,
+        state.rate !== last.rate ? `Interest rate ${state.rate > last.rate ? "up" : "down"} from ${last.rate}% to ${state.rate}%` : `Interest rate unchanged at ${state.rate}%`
+      ];
+      $("pathChanges").innerHTML = `<div class="label-like" style="font-size:0.82rem">Since the last check-in</div><ul style="margin:4px 0 0;padding-left:18px;display:grid;gap:2px">${items.map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ul>`;
+    }
+    $("pathLog").innerHTML = log.slice(-6).reverse().map(c => `<div><span>${new Date(c.d).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })} · ${escapeHtml(subById(c.sub).name)}</span><span class="num">${fmt(c.savings)} saved</span></div>`).join("");
+    return { m, save, ready };
+  }
+  function recordCheckIn() {
+    const sub = subById(state.suburb), s = scenario(sub);
+    state.checkins = [...(state.checkins || []), { d: new Date().toISOString(), savings: state.savings, sub: sub.id, price: s.price, after: Math.round(s.after), rate: state.rate, save: planSave(s) }].slice(-24);
+    $("checkMsg").className = "status-msg ok"; $("checkMsg").textContent = db && canEdit ? "Recorded. Save the client to keep it." : "Recorded for this visit.";
+    changed();
+  }
 
   // ---------- What it would take ----------
   const GOALS = { "0": "Break even", "0.05": "5% spare", "0.15": "Comfortable" };
@@ -2889,6 +3030,9 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     $("gPriorities").value = g.priorities || ""; $("gNotes").value = g.notes || ""; $("gReviewed").checked = !!g.reviewed;
     $("gFeatures").querySelectorAll("input").forEach(i => i.checked = g.features.includes(i.value));
   });
+  bindNum("planSave", "planSave", { nullable: true }); bindNum("priceGrowth", "priceGrowth");
+  $("checkIn").onclick = recordCheckIn;
+  document.addEventListener("click", e => { if (e.target.closest("[data-privacy]")) openDlg("dlgPrivacy"); });
   $("openGoals").onclick = () => openDlg("dlgGoals");
   $("openNote").onclick = () => { closeAll(); openNote(); }; $("notePdf").onclick = notePdf;
   $("noteCopy").onclick = () => copyText($("noteText").value, $("noteText"), $("noteMsg"));
