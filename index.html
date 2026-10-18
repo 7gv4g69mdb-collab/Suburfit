@@ -509,6 +509,16 @@ header.top .lede { max-width: 64ch; color: var(--muted); margin-top: 6px; }
 .prop-facts { display: flex; gap: 8px 18px; flex-wrap: wrap; font-size: 0.92rem; color: var(--muted); }
 .prop-facts b { color: var(--ink); }
 .prop-price { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; }
+.exp-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+@media (max-width: 560px) { .exp-modes { grid-template-columns: minmax(0, 1fr); } }
+.exp-modes button { display: grid; gap: 2px; text-align: left; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
+.exp-modes button span { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
+.exp-modes button[aria-selected="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.quick-main { margin-top: 16px; padding: 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+.quick-main label { font-size: 0.95rem; font-weight: 600; }
+.quick-main .pay-row { max-width: 360px; }
+.examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
+.examples span:not(.muted) { font-size: 0.78rem; padding: 3px 9px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); }
 .trust { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 10px; margin: 0 0 18px; }
 .trust-item { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 0.86rem; }
 .trust-item .ti { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--good-soft); color: var(--good); font-weight: 700; }
@@ -893,36 +903,65 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
       <!-- STEP 2 -->
       <section class="panel" aria-labelledby="s2h">
-        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">Current spending</h2><p class="muted small">Upload 6 to 12 months of bank statements (CSV), or type the amounts into the table.</p></div></div>
-        <label class="drop" id="drop" for="file" tabindex="0">
-          <input id="file" type="file" accept=".csv,text/csv" multiple>
-          <span><strong>Upload bank statements</strong> <span class="muted">(CSV export from internet banking, several files allowed)</span></span>
-          <span class="muted small">Works with most Australian bank exports. Files are read in this browser only and never uploaded anywhere.</span>
-        </label>
-        <div class="btn-row" style="margin-top:10px">
-          <button type="button" id="sampleBtn" class="broker-only">Load sample statements</button>
-          <button type="button" id="loadIntakeBtn" class="broker-only">Load a client's file</button>
-          <button type="button" id="clearBtn">Clear and enter manually</button>
+        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">Current spending</h2><p class="muted small">Choose how much detail to give. You can switch at any time.</p></div></div>
+        <div class="exp-modes" role="tablist" aria-label="How to enter spending" id="expModes">
+          <button type="button" role="tab" data-mode="quick" aria-selected="false"><b>Quick estimate</b><span>One weekly or monthly figure</span></button>
+          <button type="button" role="tab" data-mode="detail" aria-selected="false"><b>Detailed</b><span>Category by category</span></button>
+          <button type="button" role="tab" data-mode="upload" aria-selected="false"><b>Bank statements</b><span>6 to 12 months, filled in for you</span></button>
         </div>
-        <div class="import-status" id="importStatus" aria-live="polite"></div>
-        <details class="fold" id="review" hidden>
-          <summary>Check how statement spending was sorted (<span id="merchCount">0</span> payees)</summary>
-          <div class="inner">
-            <p class="muted small" style="margin-bottom:8px">Change a category and the monthly table updates. Transfers between the client's own accounts are left out.</p>
-            <div class="table-scroll"><table class="mini-table">
-              <thead><tr><th>Payee</th><th class="r">Per month</th><th>Category</th></tr></thead>
-              <tbody id="merchBody"></tbody>
-            </table></div>
+
+        <div id="expQuick" class="exp-pane">
+          <div class="grid2">
+            <div><label for="qRent">Rent or board you pay now</label><div class="pay-row"><div class="money"><input id="qRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qRentF" aria-label="Rent frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option></select></div><p class="hint">Leave blank if you don't pay rent. This stops once you buy.</p></div>
+            <div><label for="qDebt">Loan, credit card and Afterpay repayments</label><div class="pay-row"><div class="money"><input id="qDebt" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qDebtF" aria-label="Repayment frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly" selected>Monthly</option></select></div><p class="hint">Car loans, personal loans, credit cards, buy now pay later.</p></div>
           </div>
-        </details>
-        <div class="table-scroll">
-          <table class="exp-table">
-            <thead><tr><th>Spending category</th><th>Amount</th><th>How often</th><th style="text-align:right">Per month</th></tr></thead>
-            <tbody id="expBody"></tbody>
-            <tfoot><tr><td colspan="3">Total current spending</td><td class="mo num" id="expTotal"></td></tr></tfoot>
-          </table>
+          <div class="quick-main">
+            <label for="qSpend">Roughly how much do you spend on everything else?</label>
+            <div class="pay-row"><div class="money"><input id="qSpend" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qSpendF" aria-label="Spending frequency"><option value="weekly">A week</option><option value="fortnightly">A fortnight</option><option value="monthly">A month</option></select></div>
+            <div class="examples"><span class="muted small">Include things like:</span>
+              <span>Groceries</span><span>Fuel and transport</span><span>Power, gas and water bills</span><span>Phone and internet</span><span>Car, health and contents insurance</span><span>Eating out and takeaway</span><span>Subscriptions and entertainment</span><span>Kids and school</span><span>Clothes and shopping</span><span>Medical</span>
+            </div>
+            <div class="btn-row" style="margin-top:8px"><button type="button" id="qTypical">Not sure? Use a typical figure</button></div>
+          </div>
+          <div class="total-box" style="margin-top:12px"><span class="tb-num num" id="qTotal">$0</span><span class="muted small" id="qTotalSub">a month in total</span></div>
+          <p class="hint" id="qNote"></p>
         </div>
-        <p class="hint broker-only">Rows marked <b>Replaced</b> drop out after the purchase. The suburb's repayment, rates, water, electricity and home insurance take their place. Car, health and life insurance carry over.</p>
+
+        <div id="expUpload" class="exp-pane">
+          <label class="drop" id="drop" for="file" tabindex="0">
+            <input id="file" type="file" accept=".csv,text/csv" multiple>
+            <span><strong>Upload bank statements</strong> <span class="muted">(CSV export from internet banking, several files allowed)</span></span>
+            <span class="muted small">Works with most Australian bank exports. Files are read in this browser only and never uploaded anywhere. Each payment is sorted into a category for you.</span>
+          </label>
+          <div class="btn-row" style="margin-top:10px">
+            <button type="button" id="sampleBtn" class="broker-only">Load sample statements</button>
+            <button type="button" id="loadIntakeBtn" class="broker-only">Load a client's file</button>
+            <button type="button" id="clearBtn">Clear</button>
+          </div>
+          <div class="import-status" id="importStatus" aria-live="polite"></div>
+          <details class="fold" id="review" hidden>
+            <summary>Check how statement spending was sorted (<span id="merchCount">0</span> payees)</summary>
+            <div class="inner">
+              <p class="muted small" style="margin-bottom:8px">Change a category and the monthly table updates. Transfers between your own accounts are left out.</p>
+              <div class="table-scroll"><table class="mini-table">
+                <thead><tr><th>Payee</th><th class="r">Per month</th><th>Category</th></tr></thead>
+                <tbody id="merchBody"></tbody>
+              </table></div>
+            </div>
+          </details>
+        </div>
+
+        <div id="expDetail" class="exp-pane">
+          <p class="muted small" id="detailLead" style="margin-bottom:6px"></p>
+          <div class="table-scroll">
+            <table class="exp-table">
+              <thead><tr><th>Spending category</th><th>Amount</th><th>How often</th><th style="text-align:right">Per month</th></tr></thead>
+              <tbody id="expBody"></tbody>
+              <tfoot><tr><td colspan="3">Total current spending</td><td class="mo num" id="expTotal"></td></tr></tfoot>
+            </table>
+          </div>
+          <p class="hint broker-only">Rows marked <b>Replaced</b> drop out after the purchase. The suburb's repayment, rates, water, electricity and home insurance take their place. Car, health and life insurance carry over.</p>
+        </div>
       </section>
 
       <!-- INTAKE: send to broker -->
@@ -1527,6 +1566,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       insBase: 2559, insQuote: 0, petrol: {}, petrolAvg: 238.8, fuelPrice: 2.388, fuelUse: 8, ptFare: 4.55, ptPass: 119.10,
       property: { suburb: null, address: "", cv: 0, rates: 0, esl: 0, waterQ: 0 },
       rateShift: 0, extraRepay: 0, offsetBal: 0,
+      expMode: "quick", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
       intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
       goals: { purpose: "First home to live in", time: "3 to 6 months", rateType: "Variable", features: [], priorities: "", notes: "", reviewed: false },
       shortlist: ["fulham", "lockleys", "westbeach", "seaton", "royalpark", "flinderspark", "findon", "henleybeach", "hendon", "woodvillewest"]
@@ -1771,6 +1811,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   function categorise(desc) { for (const [cat, re] of RULES) if (re.test(desc)) return cat; return "other"; }
 
   function importTransactions(txs, label) {
+    if (state.expMode !== "upload") setExpMode("upload", true);
     const seen = new Set(), uniq = [];
     txs.forEach(t => { const k = t.date.toISOString().slice(0, 10) + "|" + t.amt + "|" + t.desc; if (!seen.has(k)) { seen.add(k); uniq.push(t); } });
     if (!uniq.length) { setStatus(`<span class="err">No transactions found.</span> Check the file is a CSV export with date, description and amount columns.`); return; }
@@ -1916,6 +1957,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   function syncInputs() {
     bindings.forEach(f => f());
     syncPayInputs();
+    syncQuickInputs(); setExpMode(state.expMode || "detail", true);
     $("hemOverride").value = state.hemOverride ?? "";
     $("insQuote").value = state.insQuote || "";
     $("clientNameIntake").value = state.clientName || "";
@@ -2319,6 +2361,51 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
 
 
+
+  // ---------- Spending: quick estimate, detailed table, bank statements ----------
+  // Typical renter bills inside a quick estimate. They're swapped for the new home's costs after buying.
+  function quickBills() {
+    const kl = waterKl(), tier1 = Math.min(kl, 0.3836 * 365);
+    return { power: Math.round(state.powerYr * 0.85 / 12), water: Math.round((tier1 * 2.52 + Math.max(0, kl - tier1) * 3.597) / 12), homeins: 30 };
+  }
+  const commuteToday = () => state.commuters.reduce((a, c) => a + commuteMonthly(c.curKm, c, state.fuelPrice), 0);
+  function applyQuick() {
+    const q = state.quick, spend = monthly(q.spend), bills = quickBills();
+    CAT_IDS.forEach(id => state.expenses[id] = { amount: 0, freq: "monthly" });
+    state.expenses.rent = { amount: q.rent.amount, freq: q.rent.freq };
+    state.expenses.debt = { amount: q.debt.amount, freq: q.debt.freq };
+    let left = spend;
+    ["power", "water", "homeins"].forEach(k => { const v = Math.min(bills[k], left); state.expenses[k] = { amount: Math.round(v), freq: "monthly" }; left -= v; });
+    const fuel = Math.min(Math.round(commuteToday()), left); state.expenses.fuel = { amount: fuel, freq: "monthly" }; left -= fuel;
+    state.expenses.other = { amount: Math.round(left), freq: "monthly" };
+    state.months = 0; state.merchants = [];
+    renderQuickTotals(); renderExpenses();
+  }
+  function renderQuickTotals() {
+    const q = state.quick, total = monthly(q.rent) + monthly(q.spend) + monthly(q.debt), b = quickBills();
+    $("qTotal").textContent = fmt(total);
+    $("qTotalSub").textContent = total ? `a month in total · about ${fmt(total * 12 / 52)} a week` : "a month in total";
+    const billsIn = Math.min(monthly(q.spend), b.power + b.water + b.homeins);
+    $("qNote").textContent = monthly(q.spend) ? `About ${fmt(billsIn)} a month of that is treated as power, water and contents insurance, and swapped for the new home's own costs after buying${commuteToday() ? `. Your current commute is swapped for the new suburb's commute in the same way` : ""}.` : "";
+  }
+  function quickFromDetail() {
+    const total = CATS.reduce((a, c) => a + monthly(state.expenses[c.id]), 0), rent = monthly(state.expenses.rent), debt = monthly(state.expenses.debt);
+    state.quick = { rent: { amount: Math.round(rent), freq: "monthly" }, spend: { amount: Math.round(total - rent - debt), freq: "monthly" }, debt: { amount: Math.round(debt), freq: "monthly" } };
+  }
+  function setExpMode(mode, quiet) {
+    if (mode === "quick" && state.expMode !== "quick") { quickFromDetail(); syncQuickInputs(); applyQuick(); }
+    state.expMode = mode;
+    document.querySelectorAll("#expModes [data-mode]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
+    $("expQuick").hidden = mode !== "quick"; $("expUpload").hidden = mode !== "upload"; $("expDetail").hidden = mode === "quick";
+    $("detailLead").textContent = mode === "upload" ? (state.months ? "Filled in from the statements. Adjust any amount." : "Upload statements above and this table fills in automatically.") : "Enter what you spend in each category. Use whichever frequency is easiest.";
+    if (!quiet) changed();
+  }
+  function syncQuickInputs() {
+    const q = state.quick;
+    [["qRent", "rent"], ["qSpend", "spend"], ["qDebt", "debt"]].forEach(([id, k]) => { $(id).value = q[k].amount || ""; $(id + "F").value = q[k].freq; });
+    renderQuickTotals();
+  }
+
   // ---------- Path to buying: timeline, readiness and check-ins ----------
   const planSave = s => state.planSave ?? Math.max(0, Math.round(s.now / 50) * 50);
   const monthLabel = m => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + m); return d.toLocaleDateString("en-AU", { month: "short", year: "numeric" }); };
@@ -2466,7 +2553,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       ["Financial situation", [
         ...state.takeHome.map((p, i) => p.amount ? `Borrower ${i + 1} take-home: ${fmt(p.amount)} ${freqL(p.freq)} (${fmt(yearlyPay(p))} a year)` : null).filter(Boolean),
         `Total take-home pay: ${fmt(state.income)} a month (${fmt(state.income * 12)} a year); before-tax income estimated at about ${fmt(estGross())} a year`,
-        `Declared living expenses: ${fmt(s.currentTotal)} a month including current rent (${state.months ? `from ${state.months.toFixed(1)} months of bank statements` : "entered by hand"})`,
+        `Declared living expenses: ${fmt(s.currentTotal)} a month including current rent (${state.months ? `from ${state.months.toFixed(1)} months of bank statements` : state.expMode === "quick" ? "client's quick estimate" : "entered by category"})`,
         `Living costs used for the lender check: ${fmt(s.lenderLiving)} a month (declared ${fmt(s.declaredLiving)}, benchmark ${fmt(hem())}${state.hemOverride === null ? ", placeholder figure" : ""})${s.declaredLiving < hem() ? ". Declared costs are below the benchmark, so the benchmark was used" : ""}`,
         `Existing loan and BNPL repayments: ${fmt(s.debtNow)} a month`,
         `Credit card limits: ${fmt(state.cardLimits)}`,
@@ -2585,6 +2672,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     CAT_IDS.forEach(id => { if (!state.expenses[id]) state.expenses[id] = { amount: 0, freq: "monthly" }; });
     if (!subs().some(s => s.id === state.suburb)) state.suburb = "seaton";
     state.goals = Object.assign(defaultState().goals, (saved && saved.goals) || {});
+    if (!(saved && saved.expMode)) state.expMode = state.months ? "upload" : "detail";
     $("exampleNote").hidden = true; setStatus(state.months ? `<span class="ok">Loaded saved figures</span> (${state.months.toFixed(1)} months of statements).` : "");
     syncInputs(); changed();
   }
@@ -2612,7 +2700,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     }
   }
   function intakePayload() {
-    return { type: "suburbfit-intake", version: 1, createdAt: new Date().toISOString(), clientName: state.clientName, adults: state.adults, children: state.children, income: state.income, takeHome: state.takeHome, earners: state.earners, cardLimits: state.cardLimits, savings: state.savings, expenses: state.expenses, months: state.months, intakeSuburbs: state.intakeSuburbs, intakeNotes: state.intakeNotes };
+    return { type: "suburbfit-intake", version: 1, createdAt: new Date().toISOString(), clientName: state.clientName, adults: state.adults, children: state.children, income: state.income, takeHome: state.takeHome, earners: state.earners, cardLimits: state.cardLimits, savings: state.savings, expenses: state.expenses, months: state.months, intakeSuburbs: state.intakeSuburbs, intakeNotes: state.intakeNotes, expMode: state.expMode, quick: state.quick };
   }
   const toCode = obj => "SF1:" + btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
   function fromCode(text) {
@@ -2634,6 +2722,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     const fresh = defaultState();
     ["clientName", "adults", "children", "income", "takeHome", "earners", "cardLimits", "savings", "expenses", "months", "intakeSuburbs", "intakeNotes"].forEach(k => { if (obj[k] !== undefined) fresh[k] = obj[k]; });
     fresh.isExample = false; fresh.merchants = [];
+    fresh.expMode = obj.expMode || (obj.months ? "upload" : "detail"); if (obj.quick) fresh.quick = obj.quick;
     if (!obj.takeHome && obj.income) fresh.takeHome = [{ amount: obj.income, freq: "monthly" }, { amount: 0, freq: "fortnightly" }];
     if (fresh.intakeSuburbs && fresh.intakeSuburbs[0] && subs().some(s => s.id === fresh.intakeSuburbs[0])) fresh.suburb = fresh.intakeSuburbs[0];
     (fresh.intakeSuburbs || []).forEach(id => { if (subs().some(s => s.id === id) && !fresh.shortlist.includes(id)) fresh.shortlist.push(id); });
@@ -2963,8 +3052,8 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   $("sampleBtn").onclick = () => { currentClientId = null; state = defaultState(); syncInputs(); loadSample(); };
   $("clearBtn").onclick = () => {
     CAT_IDS.forEach(id => state.expenses[id] = { amount: 0, freq: "monthly" });
-    state.merchants = []; state.months = 0; state.incomeDetected = null; state.incomeSources = []; state.takeHome = [{ amount: 0, freq: "fortnightly" }, { amount: 0, freq: "fortnightly" }]; syncPayInputs();
-    showIncomeHint(); setStatus(""); markEdited(); renderMerchants(); renderExpenses(); changed(); $("pay0").focus();
+    state.merchants = []; state.months = 0; state.incomeDetected = null; state.incomeSources = [];
+    showIncomeHint(); setStatus(""); markEdited(); renderMerchants(); renderExpenses(); setExpMode("upload", true); changed(); $("drop").focus();
   };
   const drop = $("drop"), file = $("file");
   async function handleFiles(files) {
@@ -3030,6 +3119,12 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     $("gPriorities").value = g.priorities || ""; $("gNotes").value = g.notes || ""; $("gReviewed").checked = !!g.reviewed;
     $("gFeatures").querySelectorAll("input").forEach(i => i.checked = g.features.includes(i.value));
   });
+  document.querySelectorAll("#expModes [data-mode]").forEach(b => b.addEventListener("click", () => setExpMode(b.dataset.mode)));
+  [["qRent", "rent"], ["qSpend", "spend"], ["qDebt", "debt"]].forEach(([id, k]) => {
+    $(id).addEventListener("input", e => { state.quick[k].amount = num(e.target.value); markEdited(); applyQuick(); changed(); });
+    $(id + "F").addEventListener("change", e => { state.quick[k].freq = e.target.value; applyQuick(); changed(); });
+  });
+  $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round(hemPlaceholder() / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
   bindNum("planSave", "planSave", { nullable: true }); bindNum("priceGrowth", "priceGrowth");
   $("checkIn").onclick = recordCheckIn;
   document.addEventListener("click", e => { if (e.target.closest("[data-privacy]")) openDlg("dlgPrivacy"); });
