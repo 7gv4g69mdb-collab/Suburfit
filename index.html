@@ -1009,7 +1009,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       </section>
 
       <!-- STEP 4 -->
-      <section class="panel broker-only" aria-labelledby="s4h">
+      <section class="panel broker-only" aria-labelledby="s4h" id="stepCommute">
         <div class="step-head"><span class="step-no">4</span><div><h2 id="s4h">Getting to work</h2><p class="muted small">Today's commute comes out of current fuel spending and each suburb's commute is added.</p></div></div>
         <div id="commuters" class="commuters"></div>
         <div class="sub-card" style="margin-top:14px">
@@ -1700,8 +1700,10 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     const repay = repayment(loan, state.rate, state.term);
     const repayStress = repayment(loan, state.rate + state.buffer, state.term);
     const commute = commuteFor(sub);
-    const commuteNew = commute.reduce((a, c) => a + c.cost, 0);
-    const commuteNow = commute.reduce((a, c) => a + c.now, 0);
+    // Quick estimate: fuel and transport are part of the one spending figure and assumed the same in every suburb
+    const quickMode = state.expMode === "quick";
+    const commuteNew = quickMode ? 0 : commute.reduce((a, c) => a + c.cost, 0);
+    const commuteNow = quickMode ? 0 : commute.reduce((a, c) => a + c.now, 0);
     let currentTotal = 0, kept = 0;
     CATS.forEach(c => { const m = monthly(state.expenses[c.id]); currentTotal += m; if (!c.replaced) kept += m; });
     const commuteRemoved = Math.min(commuteNow, monthly(state.expenses.fuel));
@@ -2143,8 +2145,8 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       <tr class="sub"><td>Water and sewerage${pcp && state.property.waterQ > 0 ? fromListing : ""}</td><td class="r num">${m(s.pc.water)}</td></tr>
       <tr class="sub"><td>Electricity</td><td class="r num">${m(s.pc.power)}</td></tr>
       <tr class="sub"><td>Home and contents insurance${state.insQuote > 0 ? '<span class="tag-ok">Quote</span>' : est}</td><td class="r num">${m(s.pc.insurance)}</td></tr>
-      <tr><td>Commute to work <span class="muted small">(about ${fmt(weekly(s.commuteNew))} a week)</span></td><td class="r num">−${fmt(s.commuteNew)}</td></tr>
-      ${s.commute.map((c, i) => state.commuters[i].on ? `<tr class="sub"><td>Borrower ${i + 1}: ${c.wp ? c.wp.name : ""}${c.km ? `, ${c.km.toFixed(0)} km each way` : ""}${state.commuters[i].mode === "pt" && c.km ? " by public transport" : ""}</td><td class="r num">${fmt(c.cost)}</td></tr>` : "").join("")}
+      ${state.expMode === "quick" ? `<tr class="sub"><td>Fuel and transport: included in living costs, same in every suburb</td><td></td></tr>` : `<tr><td>Commute to work <span class="muted small">(about ${fmt(weekly(s.commuteNew))} a week)</span></td><td class="r num">−${fmt(s.commuteNew)}</td></tr>
+      ${s.commute.map((c, i) => state.commuters[i].on ? `<tr class="sub"><td>Borrower ${i + 1}: ${c.wp ? c.wp.name : ""}${c.km ? `, ${c.km.toFixed(0)} km each way` : ""}${state.commuters[i].mode === "pt" && c.km ? " by public transport" : ""}</td><td class="r num">${fmt(c.cost)}</td></tr>` : "").join("")}`}
       <tr class="total"><td>Left over each month</td><td class="r num">${fmt(s.after)}</td></tr>`;
 
     $("rCash").innerHTML = `
@@ -2282,7 +2284,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(state.savings)} savings`],
       ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
     ];
-    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], ["Home and contents insurance", fmt(s.pc.insurance / 12)], ["Commute to work", fmt(s.commuteNew)]];
+    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], ["Home and contents insurance", fmt(s.pc.insurance / 12)], ...(state.expMode === "quick" ? [] : [["Commute to work", fmt(s.commuteNew)]])];
     const compare = listSubs().map(sub => { const x = scenario(sub); return { name: sub.name, price: x.price, after: x.after, status: status(x).label, sel: sub.id === state.suburb }; });
     const notes = flags.map(f => f[2]);
     lastReport = { take, name, today, lines, costs, compare, notes, s, st, lst, cash: [["Deposit", fmt(s.depositNeeded)], ["Stamp duty", fmt(state.dutyOnLoan ? 0 : s.duty)], ...(s.lmi && !state.lmiOnLoan ? [["Mortgage insurance", fmt(s.lmi)]] : []), ["Legal and registration", fmt(state.otherCosts)], ...(s.grant ? [["First Home Owner Grant", "-" + fmt(s.grant)]] : []), ["Cash needed", fmt(s.cashNeeded)]] };
@@ -2376,7 +2378,6 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     state.expenses.debt = { amount: q.debt.amount, freq: q.debt.freq };
     let left = spend;
     ["power", "water", "homeins"].forEach(k => { const v = Math.min(bills[k], left); state.expenses[k] = { amount: Math.round(v), freq: "monthly" }; left -= v; });
-    const fuel = Math.min(Math.round(commuteToday()), left); state.expenses.fuel = { amount: fuel, freq: "monthly" }; left -= fuel;
     state.expenses.other = { amount: Math.round(left), freq: "monthly" };
     state.months = 0; state.merchants = [];
     renderQuickTotals(); renderExpenses();
@@ -2386,7 +2387,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     $("qTotal").textContent = fmt(total);
     $("qTotalSub").textContent = total ? `a month in total · about ${fmt(total * 12 / 52)} a week` : "a month in total";
     const billsIn = Math.min(monthly(q.spend), b.power + b.water + b.homeins);
-    $("qNote").textContent = monthly(q.spend) ? `About ${fmt(billsIn)} a month of that is treated as power, water and contents insurance, and swapped for the new home's own costs after buying${commuteToday() ? `. Your current commute is swapped for the new suburb's commute in the same way` : ""}.` : "";
+    $("qNote").textContent = monthly(q.spend) ? `About ${fmt(billsIn)} a month of that is treated as power, water and contents insurance, and swapped for the new home's own costs after buying. Fuel and transport are assumed to stay the same wherever you buy. For a suburb-by-suburb commute comparison, choose Detailed or Bank statements.` : "";
   }
   function quickFromDetail() {
     const total = CATS.reduce((a, c) => a + monthly(state.expenses[c.id]), 0), rent = monthly(state.expenses.rent), debt = monthly(state.expenses.debt);
@@ -2394,11 +2395,22 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   }
   function setExpMode(mode, quiet) {
     if (mode === "quick" && state.expMode !== "quick") { quickFromDetail(); syncQuickInputs(); applyQuick(); }
+    // Leaving quick mode: split today's commute out of "other" so it can be swapped for each suburb's commute
+    if (mode !== "quick" && state.expMode === "quick" && !monthly(state.expenses.fuel)) {
+      const fuel = Math.min(Math.round(commuteToday()), monthly(state.expenses.other));
+      state.expenses.fuel = { amount: fuel, freq: "monthly" }; state.expenses.other = { amount: Math.round(monthly(state.expenses.other) - fuel), freq: "monthly" }; renderExpenses();
+    }
     state.expMode = mode;
     document.querySelectorAll("#expModes [data-mode]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
     $("expQuick").hidden = mode !== "quick"; $("expUpload").hidden = mode !== "upload"; $("expDetail").hidden = mode === "quick";
+    $("stepCommute").hidden = mode === "quick"; renumberSteps();
     $("detailLead").textContent = mode === "upload" ? (state.months ? "Filled in from the statements. Adjust any amount." : "Upload statements above and this table fills in automatically.") : "Enter what you spend in each category. Use whichever frequency is easiest.";
     if (!quiet) changed();
+  }
+  // Number the visible steps 1, 2, 3... (steps hide in quick mode and on the client page)
+  function renumberSteps() {
+    let n = 0;
+    document.querySelectorAll(".inputs > section.panel").forEach(sec => { const no = sec.querySelector(".step-no"); if (!no || sec.hidden || getComputedStyle(sec).display === "none") return; no.textContent = ++n; });
   }
   function syncQuickInputs() {
     const q = state.quick;
@@ -2684,7 +2696,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     const open = isOpen();
     const intake = !open && (isIntake() || previewing);
     document.body.classList.toggle("openhome", open);
-    document.body.classList.toggle("intake", intake);
+    document.body.classList.toggle("intake", intake); renumberSteps();
     $("backToBroker").hidden = !previewing;
     $("openBack").hidden = !(open && brokerBackup);
     if (open) { enterOpen(); window.scrollTo(0, 0); return; }
