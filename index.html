@@ -9,7 +9,7 @@
 <title>Adelaide West Suburb Fit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&display=swap">
 <script>/** @license
  *
  * jsPDF - PDF Document creation from JavaScript
@@ -413,16 +413,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 <style>
 /* Layout: broker workspace. Dark brand bar on top; inputs as numbered step cards on the left; a sticky results column with tabs on the right; projection and summary full width below. */
 :root {
-  --bg: #edf1f5;
+  --bg: #f4f5f2;
   --surface: #ffffff;
-  --surface-2: #f4f7fa;
-  --ink: #0f1e2b;
-  --muted: #586877;
-  --line: #dbe2e9;
-  --brand: #12304c;
+  --surface-2: #f6f7f4;
+  --ink: #17212b;
+  --muted: #5a6670;
+  --line: #e0e3dd;
+  --brand: #0f2f38;
   --brand-ink: #f2f6fa;
-  --accent: #1e5fae;
-  --accent-soft: #e3edf9;
+  --accent: #0d5f73;
+  --accent-soft: #e3f0f1;
   --good: #1d774b;
   --good-soft: #def2e7;
   --warn: #965f00;
@@ -433,23 +433,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   --seg-home: #eb6834;
   --seg-surplus: #1baf7a;
   --seg-short: #e34948;
-  --shadow: 0 1px 2px rgba(15, 30, 43, 0.06), 0 6px 20px rgba(15, 30, 43, 0.05);
-  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --shadow: 0 1px 2px rgba(23, 33, 43, 0.04);
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body: "Public Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
   --radius: 12px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0b131a; --surface: #121e28; --surface-2: #182733; --ink: #e4ecf2; --muted: #95a7b5; --line: #263746;
-    --accent: #74aff0; --accent-soft: #1a3350; --good: #5cc790; --good-soft: #15352a; --warn: #e6b24f; --warn-soft: #3a2d12;
+    --bg: #0e1416; --surface: #151d20; --surface-2: #1b2528; --ink: #e6ecec; --muted: #98a6aa; --line: #273336;
+    --accent: #6cc0d2; --accent-soft: #16323a; --good: #5cc790; --good-soft: #15352a; --warn: #e6b24f; --warn-soft: #3a2d12;
     --bad: #f07a76; --bad-soft: #3d1c1c; --seg-living: #3987e5; --seg-home: #d95926; --seg-surplus: #199e70; --seg-short: #e66767;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0b131a; --surface: #121e28; --surface-2: #182733; --ink: #e4ecf2; --muted: #95a7b5; --line: #263746;
-  --accent: #74aff0; --accent-soft: #1a3350; --good: #5cc790; --good-soft: #15352a; --warn: #e6b24f; --warn-soft: #3a2d12;
+  --bg: #0e1416; --surface: #151d20; --surface-2: #1b2528; --ink: #e6ecec; --muted: #98a6aa; --line: #273336;
+  --accent: #6cc0d2; --accent-soft: #16323a; --good: #5cc790; --good-soft: #15352a; --warn: #e6b24f; --warn-soft: #3a2d12;
   --bad: #f07a76; --bad-soft: #3d1c1c; --seg-living: #3987e5; --seg-home: #d95926; --seg-surplus: #199e70; --seg-short: #e66767;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
   color-scheme: dark;
@@ -810,6 +810,73 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   .kpi .big { font-size: 1.3rem; }
   .client-chip input { width: 9em; }
 }
+
+/* ---------- Professional finish ---------- */
+body { font-size: 15.5px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+h1 { font-weight: 600; letter-spacing: -0.015em; font-size: clamp(1.7rem, 3vw, 2.3rem); }
+h2 { font-weight: 600; letter-spacing: -0.01em; font-size: 1.2rem; }
+h3 { font-family: var(--font-body); font-weight: 600; }
+.eyebrow { text-transform: none; letter-spacing: 0; font-size: 0.82rem; font-weight: 500; color: var(--muted); }
+.panel { border-radius: 14px; padding: 24px; box-shadow: var(--shadow); }
+.step-no { background: none; border: 1.5px solid var(--accent); color: var(--accent); font-family: var(--font-body); font-size: 0.85rem; width: 28px; height: 28px; }
+label, .label-like { font-weight: 600; font-size: 0.86rem; color: var(--ink); }
+input[type="number"], input[type="text"], input[type="search"], input[type="email"], input[type="tel"], select, textarea { min-height: 44px; padding: 10px 12px; border-radius: 8px; border-color: color-mix(in srgb, var(--line) 70%, var(--muted)); }
+textarea { min-height: auto; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.money::before { left: 12px; }
+.money input { padding-left: 24px; }
+button { min-height: 40px; padding: 9px 16px; border-radius: 8px; font-weight: 600; transition: background-color .15s, border-color .15s; }
+button:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: var(--surface-2); }
+button.primary:hover { background: color-mix(in srgb, var(--accent) 88%, black); border-color: transparent; }
+button.link:hover, .link-btn:hover { background: none; }
+.hint { color: var(--muted); }
+/* Top bar */
+.appbar { padding-block: calc(env(safe-area-inset-top, 0px) + 12px) 12px; }
+.appbar .acts { align-items: center; gap: 4px; }
+.appbar button, .appbar .more > summary { background: transparent; border: 0; color: var(--brand-ink); opacity: 0.88; font-weight: 500; min-height: 38px; }
+.appbar button:hover, .appbar .more > summary:hover { background: rgba(255, 255, 255, 0.1); opacity: 1; }
+.appbar button.solid { opacity: 1; background: var(--brand-ink); color: var(--brand); font-weight: 600; margin-left: 6px; }
+.appbar button.solid:hover { background: #ffffff; }
+.brand .bn { font-weight: 600; font-size: 1.1rem; }
+.more { position: relative; }
+.more > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 8px; }
+.more > summary::-webkit-details-marker { display: none; }
+.more > summary::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); }
+.more-pop { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 190px; display: grid; padding: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 28px rgba(15, 30, 40, 0.16); }
+.appbar .more-pop button { color: var(--ink); opacity: 1; text-align: left; justify-content: flex-start; width: 100%; }
+.appbar .more-pop button:hover { background: var(--surface-2); }
+/* Page header and trust line */
+header.top { margin-bottom: 22px; }
+.client-chip { box-shadow: none; border-radius: 10px; padding: 4px 6px 4px 14px; }
+.client-chip input { min-height: 36px; }
+.trust { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; gap: 14px 24px; }
+.trust-item { background: none; border: 0; padding: 0; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; }
+.trust-item .ti { width: 22px; height: 22px; font-size: 0.72rem; }
+.trust-item b { font-size: 0.88rem; }
+.notice { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; }
+.notice strong { color: var(--ink); }
+/* Step pages */
+body.wiz .inputs > section.panel.wiz-cur { padding: 32px; }
+body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.6rem; }
+.wiz-steps button { font-weight: 500; }
+.wiz-steps button[aria-current="step"] { font-weight: 600; }
+.wiz-bar { height: 4px; }
+/* Results */
+.res-hero { border-radius: 16px; padding: 28px; box-shadow: var(--shadow); }
+.hero-top h2 { font-size: 1.6rem; }
+.hero-num { font-weight: 600; letter-spacing: -0.025em; }
+.hero-facts div { background: var(--surface-2); border: 1px solid var(--line); }
+.hero-facts b { font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; }
+.kpi { border: 1px solid var(--line); }
+.kpi .big { font-weight: 600; }
+.kpi.hl { border-color: color-mix(in srgb, var(--accent) 30%, var(--line)); }
+.exp-modes button { min-height: 64px; }
+.exp-modes button[aria-selected="true"] { box-shadow: inset 0 0 0 1px var(--accent); }
+.tabs button { min-height: 0; }
+@media (max-width: 640px) { .panel { padding: 18px; } body.wiz .inputs > section.panel.wiz-cur { padding: 22px 18px; } .res-hero { padding: 20px; } }
+.exp-table th, .mini-table th, .region-h { text-transform: none; letter-spacing: 0; font-size: 0.8rem; font-weight: 600; }
+.draft-tag, .demo-tag { text-transform: none; letter-spacing: 0; font-size: 0.76rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
 <!-- Brand bar -->
@@ -822,10 +889,15 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     <div class="acts broker-only">
       <button type="button" id="openClients">Saved clients</button>
       <button type="button" id="saveClient">Save client</button>
-      <button type="button" id="openIntake">Client link</button>
-      <button type="button" id="openGoals">File note</button>
-      <button type="button" id="openBrand">Branding</button>
-      <button type="button" id="openAgent">Open home QR</button>
+      <details class="more" id="moreMenu">
+        <summary>More</summary>
+        <div class="more-pop" role="menu">
+          <button type="button" role="menuitem" id="openIntake">Client link</button>
+          <button type="button" role="menuitem" id="openGoals">File note</button>
+          <button type="button" role="menuitem" id="openAgent">Open home QR</button>
+          <button type="button" role="menuitem" id="openBrand">Branding</button>
+        </div>
+      </details>
       <button type="button" class="solid" id="pdfBtn">PDF report</button>
     </div>
     <div class="acts open-only"><span class="small" id="openBrandLine"></span><button type="button" id="openBack" hidden>Back to broker view</button></div>
@@ -838,7 +910,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 <div class="wrap">
   <header class="top broker-only">
     <div>
-      <div class="eyebrow">59 Adelaide western suburbs · Charles Sturt and West Torrens · 2026-27 costs</div>
+      <div class="eyebrow">59 Adelaide western suburbs in Charles Sturt and West Torrens, with 2026-27 costs</div>
       <h1>Adelaide West Suburb Fit</h1>
       <p class="lede">See how a client's budget looks after buying in each suburb, using their real spending, the loan they want and each suburb's running costs.</p>
     </div>
@@ -1631,7 +1703,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   const CARD_RECEIVED_RE = /(payment received|payment - thank|payment thank ?you|thank you for your payment|payment recd|bpay payment.*thank)/i;
   const REFUND_RE = /\b(refund|reversal|reversed|returned|credit adj(ustment)?)\b/i;
 
-  const BRAND_COLOURS = [["#12304c", "Navy"], ["#0f4f4f", "Teal"], ["#3b2a5a", "Plum"], ["#1f4a2c", "Forest"], ["#2b2f36", "Charcoal"], ["#6b2a1f", "Brick"]];
+  const BRAND_COLOURS = [["#0f2f38", "Harbour"], ["#12304c", "Navy"], ["#0f4f4f", "Teal"], ["#3b2a5a", "Plum"], ["#1f4a2c", "Forest"], ["#2b2f36", "Charcoal"], ["#6b2a1f", "Brick"]];
 
   // ---------- State ----------
   function defaultState() {
@@ -2070,6 +2142,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   function updateExpenseTotals() {
     let t = 0; CATS.forEach(c => { const m = monthly(state.expenses[c.id]); t += m; const el = $("mo-" + c.id); if (el) el.textContent = fmt(m); });
     $("expTotal").textContent = fmt(t) + " / month";
+    if ($("detailLead") && state.expMode === "upload") $("detailLead").textContent = state.months ? "Filled in from the statements. Adjust any amount." : "Upload statements above and this table fills in automatically.";
   }
   function markEdited() { if (state.isExample) { state.isExample = false; $("exampleNote").hidden = true; } }
   function renderMerchants() {
@@ -3306,6 +3379,8 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     $(id + "F").addEventListener("change", e => { state.quick[k].freq = e.target.value; applyQuick(); changed(); });
   });
   $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round(hemPlaceholder() / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
+  $("moreMenu").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("moreMenu").open = false; }));
+  document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
   $("wizNext").onclick = () => wizGo(wizIdx + 1);
   $("wizPrev").onclick = () => wizGo(wizIdx - 1);
   $("wizEdit").onclick = () => { wizOn = true; wizIdx = 0; renderWiz(); wizScroll(); };
