@@ -509,6 +509,58 @@ header.top .lede { max-width: 64ch; color: var(--muted); margin-top: 6px; }
 .prop-facts { display: flex; gap: 8px 18px; flex-wrap: wrap; font-size: 0.92rem; color: var(--muted); }
 .prop-facts b { color: var(--ink); }
 .prop-price { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; }
+/* Step-by-step flow */
+.wiz-top { max-width: 760px; margin: 0 auto 16px; }
+body:not(.wiz) .wiz-top, body.openhome .wiz-top { display: none !important; }
+.wiz-steps { list-style: none; margin: 0 0 8px; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; }
+.wiz-steps button { border: 0; background: none; padding: 4px 8px; border-radius: 99px; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+.wiz-steps button[aria-current="step"] { background: var(--accent); color: var(--surface); }
+.wiz-steps button.done { color: var(--accent); }
+.wiz-bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.wiz-bar span { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .25s ease; }
+body.wiz .layout { grid-template-columns: minmax(0, 1fr); max-width: 760px; margin: 0 auto; }
+body.wiz .inputs > section.panel:not(.wiz-cur) { display: none !important; }
+body.wiz .inputs > section.panel.wiz-cur { padding: 28px; }
+body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.45rem; }
+body.wiz .results, body.wiz .lower, body.wiz footer.fine, body.wiz #resHero, body.wiz #exampleNote { display: none !important; }
+body.wiz:not(.wiz-first) .trust-wrap, body.wiz:not(.wiz-first) header.top .lede { display: none; }
+body:not(.wiz) .wiz-only { display: none !important; }
+.wiz-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; position: sticky; bottom: 0; z-index: 5; padding: 12px 0; background: linear-gradient(to top, var(--bg) 70%, transparent); }
+.wiz-nav button { min-width: 120px; padding: 12px 18px; font-size: 1rem; }
+.wiz-nav button[disabled] { visibility: hidden; }
+/* Results hero */
+.res-hero { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin-bottom: 22px; display: grid; gap: 20px; }
+.hero-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap; }
+.hero-top h2 { font-size: 1.5rem; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+@media (max-width: 760px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } }
+.hero-num { font-family: var(--font-display); font-size: clamp(2.6rem, 8vw, 3.6rem); font-weight: 700; line-height: 1; letter-spacing: -0.02em; margin: 6px 0 4px; }
+.hero-num.neg { color: var(--bad); }
+.hero-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; margin-top: 16px; }
+.hero-facts div { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+.hero-facts b { display: block; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.donut-wrap { margin: 0; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 16px; align-items: center; }
+@media (max-width: 420px) { .donut-wrap { grid-template-columns: minmax(0, 1fr); justify-items: center; } }
+.donut-box { position: relative; width: 170px; height: 170px; }
+.donut-box svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.donut-box circle.seg { transition: stroke-width .15s; cursor: default; }
+.donut-box circle.seg:hover { stroke-width: 30; }
+.donut-centre { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; font-size: 0.72rem; line-height: 1.25; color: var(--muted); }
+.donut-centre b { display: block; font-size: 1.15rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.donut-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 0.86rem; width: 100%; }
+.donut-legend li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.donut-legend i { width: 12px; height: 12px; border-radius: 3px; }
+.donut-legend .num { font-weight: 600; }
+.sliders { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.slider .sl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider .sl-top label { margin: 0; }
+.slider .sl-top .num { font-weight: 700; font-size: 1.05rem; }
+.slider input[type="range"] { width: 100%; accent-color: var(--accent); margin: 8px 0 2px; height: 28px; }
+.sl-foot { display: flex; justify-content: space-between; gap: 8px; font-size: 0.74rem; color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:root { --seg-run: #9b59d0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --seg-run: #a46ee0; } }
+:root[data-theme="dark"] { --seg-run: #a46ee0; }
 .exp-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
 @media (max-width: 560px) { .exp-modes { grid-template-columns: minmax(0, 1fr); } }
 .exp-modes button { display: grid; gap: 2px; text-align: left; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
@@ -866,7 +918,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     <p class="hint">General information only, based on public 2026-27 rates and the details above. It isn't credit advice or a loan approval. Speak to a mortgage broker for an assessment.</p>
   </div>
 
-  <div class="broker-only"><div class="trust">
+  <div class="broker-only trust-wrap"><div class="trust">
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Independent</b><span class="muted">Not a bank, and not owned by a broker group or property portal.</span></div></div>
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>How we handle your figures</button></span></div></div>
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Free for buyers</b><span class="muted">Always. Results are never adjusted to favour a lender or broker.</span></div></div>
@@ -876,12 +928,37 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     <span><strong>Example client loaded.</strong> These figures come from 12 months of made-up sample statements. Upload real statements, enter figures manually or open a saved client.</span>
   </div>
 
+  <div class="wiz-top" id="wizTop">
+    <ol class="wiz-steps" id="wizSteps" aria-label="Steps"></ol>
+    <div class="wiz-bar" aria-hidden="true"><span id="wizBar"></span></div>
+  </div>
+
+  <section class="res-hero broker-only" id="resHero" aria-labelledby="heroH">
+    <div class="hero-top">
+      <div><div class="eyebrow">Your results</div><h2 id="heroH">Here's how buying looks</h2><p class="muted small">Everything you entered is below on one page. Change anything and the results update straight away.</p></div>
+      <button type="button" id="wizEdit">Go through the steps again</button>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-main" id="hHead"></div>
+      <figure class="donut-wrap" aria-labelledby="donutCap">
+        <div class="donut-box"><svg id="hDonut" viewBox="0 0 200 200" role="img"></svg><div class="donut-centre" id="hDonutC"></div></div>
+        <figcaption id="donutCap" class="sr-only">Where the monthly take-home pay goes</figcaption>
+        <ul class="donut-legend" id="hLegend"></ul>
+      </figure>
+    </div>
+    <div class="sliders">
+      <div class="slider"><div class="sl-top"><label for="slPrice">Purchase price</label><span class="num" id="slPriceV"></span></div><input type="range" id="slPrice"><div class="sl-foot"><span id="slPriceMin"></span><button type="button" class="link-btn" id="slPriceReset">Use the estimate</button><span id="slPriceMax"></span></div></div>
+      <div class="slider"><div class="sl-top"><label for="slDep" id="slDepL">Deposit</label><span class="num" id="slDepV"></span></div><input type="range" id="slDep"><div class="sl-foot"><span id="slDepMin"></span><span id="slDepMax"></span></div></div>
+      <div class="slider"><div class="sl-top"><label for="slRate">Interest rate</label><span class="num" id="slRateV"></span></div><input type="range" id="slRate" min="3" max="10" step="0.05"><div class="sl-foot"><span>3%</span><span>10%</span></div></div>
+    </div>
+  </section>
+
   <div class="layout">
     <div class="inputs">
 
       <!-- STEP 1 -->
       <section class="panel" aria-labelledby="s1h">
-        <div class="step-head"><span class="step-no">1</span><div><h2 id="s1h">Household and income</h2><p class="muted small">Who lives in the home and what comes in.</p></div></div>
+        <div class="step-head"><span class="step-no">1</span><div><h2 id="s1h">Who's buying, and what comes in?</h2><p class="muted small">Your household and take-home pay. Rough numbers are fine; you can change anything later.</p></div></div>
         <div class="grid2">
           <div><label for="adults">Adults in the household</label><select id="adults"><option value="1">1</option><option value="2">2</option></select></div>
           <div><label for="children">Children / dependants</label><input id="children" type="number" min="0" max="8" step="1" inputmode="numeric"></div>
@@ -903,7 +980,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
       <!-- STEP 2 -->
       <section class="panel" aria-labelledby="s2h">
-        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">Current spending</h2><p class="muted small">Choose how much detail to give. You can switch at any time.</p></div></div>
+        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">What do you spend now?</h2><p class="muted small">Choose how much detail to give. You can switch at any time.</p></div></div>
         <div class="exp-modes" role="tablist" aria-label="How to enter spending" id="expModes">
           <button type="button" role="tab" data-mode="quick" aria-selected="false"><b>Quick estimate</b><span>One weekly or monthly figure</span></button>
           <button type="button" role="tab" data-mode="detail" aria-selected="false"><b>Detailed</b><span>Category by category</span></button>
@@ -983,13 +1060,13 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
       <!-- STEP 3 -->
       <section class="panel broker-only" aria-labelledby="s3h">
-        <div class="step-head"><span class="step-no">3</span><div><h2 id="s3h">The loan</h2><p class="muted small">How the loan is set, upfront costs and first home buyer help.</p></div></div>
+        <div class="step-head"><span class="step-no">3</span><div><h2 id="s3h">Your deposit and loan</h2><p class="muted small">Savings, deposit, interest rate and any first home buyer help.</p></div></div>
         <div class="seg-toggle" role="group" aria-label="How the loan is set">
           <button type="button" id="modeDeposit" aria-pressed="true">Price minus deposit</button>
           <button type="button" id="modeFixed" aria-pressed="false">Fixed loan amount</button>
         </div>
         <div class="grid2">
-          <div id="depositWrap"><label for="deposit">Deposit the client can put in</label><div class="money"><input id="deposit" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Loan = price minus this deposit.</p></div>
+          <div id="depositWrap"><label for="deposit">Deposit you can put in</label><div class="money"><input id="deposit" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Loan = price minus this deposit.</p></div>
           <div id="loanWrap" hidden><label for="loan">Loan amount wanted</label><div class="money"><input id="loan" type="number" min="0" step="5000" inputmode="decimal"></div><p class="hint">Deposit needed = price minus this loan.</p></div>
           <div><label for="savings">Total savings available</label><div class="money"><input id="savings" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Checked against deposit, stamp duty and fees.</p></div>
           <div><label for="rate">Interest rate (% p.a.)</label><input id="rate" type="number" min="0" max="20" step="0.05" inputmode="decimal"></div>
@@ -1010,7 +1087,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
       <!-- STEP 4 -->
       <section class="panel broker-only" aria-labelledby="s4h" id="stepCommute">
-        <div class="step-head"><span class="step-no">4</span><div><h2 id="s4h">Getting to work</h2><p class="muted small">Today's commute comes out of current fuel spending and each suburb's commute is added.</p></div></div>
+        <div class="step-head"><span class="step-no">4</span><div><h2 id="s4h">How do you get to work?</h2><p class="muted small">Today's commute comes out of current fuel spending and each suburb's commute is added.</p></div></div>
         <div id="commuters" class="commuters"></div>
         <div class="sub-card" style="margin-top:14px">
           <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap">
@@ -1027,7 +1104,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
       <!-- STEP 5 -->
       <section class="panel broker-only" aria-labelledby="s5h">
-        <div class="step-head"><span class="step-no">5</span><div><h2 id="s5h">The home and the suburb</h2><p class="muted small">Describe the home they want. Every suburb's price is estimated for that home, so the comparison is like for like.</p></div></div>
+        <div class="step-head"><span class="step-no">5</span><div><h2 id="s5h">Where would you like to live?</h2><p class="muted small">Describe the home you want. Every suburb's price is estimated for that home, so the comparison is like for like.</p></div></div>
         <div class="sub-card" style="margin-bottom:14px">
           <h3 style="margin-bottom:10px">The home they want</h3>
           <div class="grid2">
@@ -1097,6 +1174,12 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
         </details>
       </section>
 
+      <div class="wiz-nav wiz-only" id="wizNav">
+        <button type="button" id="wizPrev">Back</button>
+        <span class="muted small" id="wizCount"></span>
+        <button type="button" class="primary" id="wizNext">Continue</button>
+      </div>
+      <p class="status-msg err wiz-only" id="wizMsg" aria-live="polite" style="text-align:right"></p>
     </div>
 
     <!-- RESULTS -->
@@ -1195,7 +1278,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     </section>
     <section class="panel" aria-labelledby="sumH">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
-        <h2 id="sumH">Client summary</h2>
+        <h2 id="sumH">Summary to share</h2>
         <div class="btn-row"><button type="button" id="copySummary">Copy summary</button><button type="button" class="primary" id="pdfBtn2">PDF report</button></div>
       </div>
       <p class="status-msg" id="copyMsg" aria-live="polite"></p>
@@ -2124,6 +2207,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     $("rSub").textContent = sub.name;
     $("rCouncil").textContent = sub.council === "Other" ? "Council rate entered by broker" : "City of " + sub.council;
     const pill = $("rPill"); pill.className = "pill " + st.cls; pill.lastElementChild.textContent = st.label;
+    renderHero(s, st, sub);
     $("rNow").textContent = fmt(s.now); $("rNow").classList.toggle("neg", s.now < 0);
     $("rAfter").textContent = fmt(s.after); $("rAfter").classList.toggle("neg", s.after < 0);
     $("rAfterPct").textContent = `per month · ${state.income ? Math.round(s.after / state.income * 100) : 0}% of take-home pay`;
@@ -2364,6 +2448,90 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
 
 
 
+
+  // ---------- Step-by-step flow (one section per page, then the summary) ----------
+  let wizOn = true, wizIdx = 0;
+  const STEP_SHORT = { s1h: "You", s2h: "Spending", s3h: "Deposit & loan", s4h: "Commute", s5h: "Home & suburb", sendH: "Send" };
+  function panelAvail(sec) {
+    const b = document.body.classList;
+    if (sec.hidden) return false;
+    if (sec.classList.contains("broker-only") && (b.contains("intake") || b.contains("openhome"))) return false;
+    if (sec.classList.contains("intake-only") && !b.contains("intake")) return false;
+    return true;
+  }
+  const wizPages = () => [...document.querySelectorAll(".inputs > section.panel")].filter(panelAvail);
+  function renderWiz() {
+    const intake = document.body.classList.contains("intake"), pages = wizPages();
+    document.body.classList.toggle("wiz", wizOn);
+    if (!wizOn) { document.querySelectorAll(".wiz-cur").forEach(x => x.classList.remove("wiz-cur")); return; }
+    wizIdx = Math.max(0, Math.min(wizIdx, pages.length - 1));
+    pages.forEach((p, i) => p.classList.toggle("wiz-cur", i === wizIdx));
+    document.body.classList.toggle("wiz-first", wizIdx === 0);
+    const total = pages.length + (intake ? 0 : 1);
+    $("wizSteps").innerHTML = pages.map((p, i) => { const h = p.querySelector("h2"); return `<li><button type="button" data-wi="${i}" class="${i < wizIdx ? "done" : ""}"${i === wizIdx ? ' aria-current="step"' : ""}>${i + 1}. ${STEP_SHORT[h.id] || h.textContent}</button></li>`; }).join("") +
+      (intake ? "" : `<li><button type="button" data-wi="res">${pages.length + 1}. Results</button></li>`);
+    $("wizSteps").querySelectorAll("[data-wi]").forEach(b => b.onclick = () => { if (b.dataset.wi === "res") wizGo(pages.length); else { wizIdx = Number(b.dataset.wi); renderWiz(); wizScroll(); } });
+    $("wizBar").style.width = ((wizIdx + 1) / total * 100).toFixed(1) + "%";
+    $("wizCount").textContent = `Step ${wizIdx + 1} of ${total}`;
+    $("wizPrev").disabled = wizIdx === 0;
+    const last = wizIdx === pages.length - 1;
+    $("wizNext").hidden = intake && last;
+    $("wizNext").textContent = last ? "See my results" : "Continue";
+    $("wizMsg").textContent = "";
+  }
+  const wizScroll = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  function wizCheck(page) {
+    if (page && page.querySelector("#s1h") && !state.income) return "Add at least one take-home pay to continue.";
+    return "";
+  }
+  function wizGo(target) {
+    const pages = wizPages();
+    if (target > wizIdx) { for (let i = wizIdx; i < Math.min(target, pages.length); i++) { const err = wizCheck(pages[i]); if (err) { wizIdx = i; renderWiz(); $("wizMsg").textContent = err; return; } } }
+    if (target >= pages.length) { wizOn = false; renderWiz(); render(); wizScroll(); return; }
+    wizIdx = Math.max(0, target); renderWiz(); wizScroll();
+  }
+
+  // ---------- Results hero: headline, doughnut and sliders ----------
+  function renderHero(s, st, sub) {
+    const short = s.cashNeeded - state.savings;
+    $("hHead").innerHTML = `<div class="eyebrow">If you buy in ${escapeHtml(sub.name)} for ${fmt(s.price)}</div>
+      <div class="hero-num${s.after < 0 ? " neg" : ""}">${fmt(s.after)}</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>left over each month</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.label}</span></span></div>
+      <div class="hero-facts">
+        <div><span class="muted small">Loan repayment</span><b>${fmt(s.repay)}<span class="muted small" style="font-weight:400"> /month</span></b></div>
+        <div><span class="muted small">Cash at settlement</span><b>${fmt(s.cashNeeded)}</b><span class="small" style="color:var(--${short > 0 ? "bad" : "good"})">${short > 0 ? fmt(short) + " short" : "Covered by savings"}</span></div>
+        <div><span class="muted small">Lender check</span><b style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${s.lenderSurplus >= 0 ? "Likely passes" : "Likely fails"}</b></div>
+      </div>`;
+    // Doughnut: where the take-home pay goes
+    const living = s.kept + s.commuteNew, running = s.pc.total / 12, left = Math.max(0, s.after), gap = Math.max(0, -s.after);
+    const segs = [["Living costs", living, "--seg-living"], ["Loan repayment", s.repay, "--seg-home"], ["Rates, bills and insurance", running, "--seg-run"], [s.after >= 0 ? "Left over" : "Shortfall", s.after >= 0 ? left : gap, s.after >= 0 ? "--seg-surplus" : "--seg-short"]];
+    const total = segs.reduce((a, x) => a + x[1], 0) || 1, R = 80, C = 2 * Math.PI * R, GAP = 2.5;
+    let off = 0;
+    $("hDonut").innerHTML = `<circle cx="100" cy="100" r="${R}" fill="none" stroke="var(--line)" stroke-width="26"/>` + segs.map(([lab, v, col]) => {
+      const len = v / total * C, dash = Math.max(0, len - GAP);
+      const el = len > 0 ? `<circle class="seg" cx="100" cy="100" r="${R}" fill="none" stroke="var(${col})" stroke-width="26" stroke-dasharray="${dash.toFixed(2)} ${(C - dash).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"><title>${lab}: ${fmt(v)} a month (${Math.round(v / total * 100)}%)</title></circle>` : "";
+      off += len; return el; }).join("");
+    $("hDonut").setAttribute("aria-label", "Monthly money: " + segs.map(x => `${x[0]} ${fmt(x[1])}`).join(", "));
+    $("hDonutC").innerHTML = s.after >= 0 ? `<b>${fmt(state.income)}</b>take-home<br>a month` : `<b style="color:var(--bad)">${fmt(gap)}</b>short<br>each month`;
+    $("hLegend").innerHTML = segs.map(([lab, v, col]) => `<li><i style="background:var(${col})"></i><span>${lab}</span><span class="num">${fmt(v)}</span></li>`).join("");
+    // Sliders (ranges follow the selected suburb; values follow the inputs)
+    const est = estPrice(sub), price = priceFor(sub);
+    const sp = $("slPrice"), sd = $("slDep"), sr = $("slRate");
+    if (document.activeElement !== sp) { sp.min = Math.round(est * 0.6 / 5000) * 5000; sp.max = Math.round(est * 1.6 / 5000) * 5000; sp.step = 5000; sp.value = price; }
+    $("slPriceV").textContent = fmt(price); $("slPriceMin").textContent = fmt(Number(sp.min)); $("slPriceMax").textContent = fmt(Number(sp.max));
+    $("slPriceReset").hidden = state.priceOverride[sub.id] === undefined;
+    const depMode = state.loanMode === "deposit";
+    $("slDepL").textContent = depMode ? "Deposit" : "Loan amount";
+    if (document.activeElement !== sd) {
+      sd.step = 5000; sd.min = depMode ? 0 : 100000;
+      sd.max = depMode ? Math.max(Math.round(price * 0.5 / 5000) * 5000, state.deposit) : Math.max(Math.round(price / 5000) * 5000, state.loan);
+      sd.value = depMode ? state.deposit : state.loan;
+    }
+    $("slDepV").textContent = fmt(depMode ? state.deposit : state.loan); $("slDepMin").textContent = fmt(Number(sd.min)); $("slDepMax").textContent = fmt(Number(sd.max));
+    if (document.activeElement !== sr) sr.value = state.rate;
+    $("slRateV").textContent = `${Number(state.rate).toFixed(2)}%`;
+  }
+
   // ---------- Spending: quick estimate, detailed table, bank statements ----------
   // Typical renter bills inside a quick estimate. They're swapped for the new home's costs after buying.
   function quickBills() {
@@ -2410,7 +2578,8 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   // Number the visible steps 1, 2, 3... (steps hide in quick mode and on the client page)
   function renumberSteps() {
     let n = 0;
-    document.querySelectorAll(".inputs > section.panel").forEach(sec => { const no = sec.querySelector(".step-no"); if (!no || sec.hidden || getComputedStyle(sec).display === "none") return; no.textContent = ++n; });
+    document.querySelectorAll(".inputs > section.panel").forEach(sec => { const no = sec.querySelector(".step-no"); if (!no || !panelAvail(sec)) return; no.textContent = ++n; });
+    if (typeof renderWiz === "function" && $("wizSteps")) renderWiz();
   }
   function syncQuickInputs() {
     const q = state.quick;
@@ -2671,7 +2840,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       it.innerHTML = `<div><b>${escapeHtml(v.name || "Unnamed")}</b><div class="meta">${escapeHtml(v.suburb || "")} · ${fmt(v.after || 0)} left over · ${new Date(v.updatedAt || 0).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}</div></div>
         <div class="btn-row"><button type="button" class="primary">Open</button><button type="button" class="danger">Delete</button></div>`;
       const [open, del] = it.querySelectorAll("button");
-      open.onclick = () => { loadState(v.state); currentClientId = d.id; dirty = false; updateSavedState(); closeAll(); };
+      open.onclick = () => { loadState(v.state); currentClientId = d.id; dirty = false; updateSavedState(); closeAll(); wizOn = false; renderWiz(); render(); };
       let armed = false;
       del.onclick = async () => { if (!armed) { armed = true; del.textContent = "Confirm delete"; setTimeout(() => { armed = false; del.textContent = "Delete"; }, 3000); return; } try { await db.collection("clients").doc(d.id).delete(); if (currentClientId === d.id) currentClientId = null; } catch (e) { del.textContent = "Couldn't delete"; } };
       list.appendChild(it);
@@ -3094,7 +3263,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   $("pdfBtn").onclick = makePdf; $("pdfBtn2").onclick = makePdf;
   $("saveClient").onclick = saveClient;
   $("openClients").onclick = async () => { renderClientList(); openDlg("dlgClients"); if (db && canEdit) { try { const q = await db.collection("clients").orderBy("updatedAt", "desc").limit(200).get(); clientDocs = q.docs; renderClientList(); } catch (e) { /* the live list still applies */ } } };
-  $("newClient").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false; syncInputs(); $("exampleNote").hidden = true; setStatus(""); changed(); closeAll(); $("clientName").focus(); };
+  $("newClient").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false; syncInputs(); $("exampleNote").hidden = true; setStatus(""); changed(); closeAll(); wizOn = true; wizIdx = 0; renderWiz(); $("clientName").focus(); };
   $("openIntake").onclick = () => openDlg("dlgIntake");
   $("previewIntake").onclick = () => { previewing = true; closeAll(); applyMode(); window.scrollTo(0, 0); };
   $("backToBroker").onclick = () => { previewing = false; applyMode(); };
@@ -3106,7 +3275,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
       const f = $("intakeFile").files[0];
       const text = f ? await f.text() : $("intakePaste").value;
       if (!text.trim()) { msg.className = "status-msg err"; msg.textContent = "Choose the client's file or paste their text."; return; }
-      loadIntake(fromCode(text)); closeAll();
+      loadIntake(fromCode(text)); closeAll(); wizOn = false; renderWiz(); render();
     } catch (e) { msg.className = "status-msg err"; msg.textContent = "That doesn't look like a Suburb Fit client file."; }
   };
   $("intakeSave").onclick = intakeSave; $("intakeCode").onclick = showCode;
@@ -3137,6 +3306,13 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
     $(id + "F").addEventListener("change", e => { state.quick[k].freq = e.target.value; applyQuick(); changed(); });
   });
   $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round(hemPlaceholder() / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
+  $("wizNext").onclick = () => wizGo(wizIdx + 1);
+  $("wizPrev").onclick = () => wizGo(wizIdx - 1);
+  $("wizEdit").onclick = () => { wizOn = true; wizIdx = 0; renderWiz(); wizScroll(); };
+  $("slPrice").addEventListener("input", e => { const sub = subById(state.suburb); state.priceOverride[sub.id] = Number(e.target.value); $("price").value = e.target.value; changed(); });
+  $("slPriceReset").onclick = () => { delete state.priceOverride[state.suburb]; syncPrice(); changed(); };
+  $("slDep").addEventListener("input", e => { const v = Number(e.target.value); if (state.loanMode === "deposit") { state.deposit = v; $("deposit").value = v; } else { state.loan = v; $("loan").value = v; } changed(); });
+  $("slRate").addEventListener("input", e => { state.rate = Number(e.target.value); $("rate").value = state.rate; changed(); });
   bindNum("planSave", "planSave", { nullable: true }); bindNum("priceGrowth", "priceGrowth");
   $("checkIn").onclick = recordCheckIn;
   document.addEventListener("click", e => { if (e.target.closest("[data-privacy]")) openDlg("dlgPrivacy"); });
@@ -3160,7 +3336,7 @@ footer.fine { margin-top: 26px; font-size: 0.79rem; color: var(--muted); max-wid
   // ---------- Start ----------
   syncInputs();
   if (isIntake() || isOpen()) applyMode(); else loadSample();
-  dirty = false; updateSavedState(); applyBrand();
+  dirty = false; updateSavedState(); applyBrand(); renumberSteps();
 
   // Light up storage features when the viewer provides them
   (async () => {
