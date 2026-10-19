@@ -900,6 +900,10 @@ body.wiz .entries-bar { display: none; }
 .lead-done { grid-template-columns: minmax(0, 1fr); }
 .lead-done h3 { font-size: 1.15rem; }
 .lead-done pre { white-space: pre-wrap; font: inherit; font-size: 0.84rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 0; max-height: 260px; overflow: auto; }
+.lender-note { margin-top: 14px; border: 1px solid color-mix(in srgb, var(--warn) 35%, var(--line)); background: var(--warn-soft); border-radius: 12px; padding: 14px 16px; font-size: 0.9rem; display: grid; gap: 8px; }
+.lender-note b.lh { font-size: 0.98rem; }
+.lender-note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.lender-note .lsub { font-weight: 600; margin-top: 2px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1315,6 +1319,7 @@ body.wiz .entries-bar { display: none; }
           <div role="tabpanel" id="pane-lender" aria-labelledby="tab-lender" hidden>
             <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:6px"><span class="muted small">A rough guide, not a lender's serviceability result.</span><span class="pill" id="lPill"><span class="dot"></span><span></span></span></div>
             <table class="breakdown"><tbody id="rLender"></tbody></table>
+            <div class="lender-note" id="lenderWhyTab" hidden></div>
           </div>
           <div role="tabpanel" id="pane-repay" aria-labelledby="tab-repay" hidden>
             <div class="slider-row"><div class="lbl"><label for="rateShift" style="margin:0">If rates change</label><span class="num" id="rateShiftLbl"></span></div><input id="rateShift" type="range" min="-1" max="3" step="0.25"></div>
@@ -1939,12 +1944,35 @@ body.wiz .entries-bar { display: none; }
     return { months, interest, base };
   }
 
+  // Budget status, downgraded to "Lender risk" when the budget is fine but a lender's stricter test fails,
+  // so a suburb never shows green while a lender would likely say no.
   function status(s) {
-    const pct = s.after / (state.income || 1);
-    if (s.after < 0) return { cls: "bad", label: "Shortfall" };
-    if (pct < 0.05) return { cls: "bad", label: "Stretched" };
-    if (pct < 0.15) return { cls: "warn", label: "Tight" };
-    return { cls: "good", label: "Comfortable" };
+    const pct = s.after / (state.income || 1), lenderOk = s.lenderSurplus >= 0;
+    let cls, budget;
+    if (s.after < 0) { cls = "bad"; budget = "Shortfall"; }
+    else if (pct < 0.05) { cls = "bad"; budget = "Stretched"; }
+    else if (pct < 0.15) { cls = "warn"; budget = "Tight"; }
+    else { cls = "good"; budget = "Comfortable"; }
+    if (!lenderOk && cls !== "bad") return { cls: "warn", label: "Lender risk", budget, lenderOk };
+    return { cls, label: budget, budget, lenderOk };
+  }
+  // Plain-English reasons a lender's test fails, and what would fix it
+  function lenderWhy(s) {
+    const testRate = (state.rate + state.buffer).toFixed(2), reasons = [], fixes = [], gap = -s.lenderSurplus;
+    reasons.push(`Lenders test the repayment at ${testRate}% rather than ${state.rate}%, in case rates rise. That adds ${fmt(s.repayStress - s.repay)} a month to the repayment they check.`);
+    if (s.lenderLiving > s.declaredLiving) reasons.push(`They use a minimum living cost of ${fmt(s.lenderLiving)} a month for this household, higher than the ${fmt(s.declaredLiving)} entered.`);
+    if (s.cardCommit > 0) reasons.push(`They count ${fmt(state.cardLimits)} of credit card limits as ${fmt(s.cardCommit)} a month in repayments, even if the cards are paid off.`);
+    if (s.debtNow > 0) reasons.push(`Existing loan and buy now pay later repayments of ${fmt(s.debtNow)} a month are included.`);
+    if (gap > 0) {
+      const less = Math.ceil(gap / repayment(1, state.rate + state.buffer, state.term) / 1000) * 1000;
+      fixes.push(`Borrow about ${fmt(less)} less, with a bigger deposit or a cheaper home.`);
+      if (s.cardCommit > 0) {
+        const cut = Math.ceil(gap / (state.cardRate / 100) / 1000) * 1000;
+        fixes.push(cut <= state.cardLimits ? `Lower or close credit cards: cutting limits by about ${fmt(cut)} would be enough on its own.` : `Lowering or closing credit cards would help (each $1,000 of limit counts as ${fmt(1000 * state.cardRate / 100)} a month).`);
+      }
+      fixes.push("A broker can check lenders whose assessment suits this situation better.");
+    }
+    return { reasons, fixes, gap, testRate };
   }
 
   // ---------- CSV parsing ----------
@@ -2374,6 +2402,7 @@ body.wiz .entries-bar { display: none; }
 
     const lst = s.lenderSurplus >= 0 ? { cls: "good", label: "Likely passes" } : { cls: "bad", label: "Likely fails" };
     const lp = $("lPill"); lp.className = "pill " + lst.cls; lp.lastElementChild.textContent = lst.label;
+    $("lenderWhyTab").hidden = s.lenderSurplus >= 0; if (s.lenderSurplus < 0) $("lenderWhyTab").innerHTML = lenderNoteHtml(s, st);
     const usingHem = s.lenderLiving > s.declaredLiving;
     $("rLender").innerHTML = `
       <tr><td>Take-home pay</td><td class="r num">${fmt(state.income)}</td></tr>
@@ -2488,7 +2517,7 @@ body.wiz .entries-bar { display: none; }
       ["Loan", `${fmt(s.loan)} at ${state.rate}% over ${state.term} years (${Math.round(s.lvr * 100)}% of price)`],
       ["Monthly repayment", `${fmt(s.repay)} (${fmt(s.repayStress)} at the lender test rate)`],
       ["Left over now", `${fmt(s.now)} a month`],
-      ["Left over after buying", `${fmt(s.after)} a month (${st.label.toLowerCase()})`],
+      ["Left over after buying", `${fmt(s.after)} a month (${st.budget.toLowerCase()}${st.lenderOk ? "" : ", but a lender may say no"})`],
       ["Lender-style check", `${lst.label} (${fmt(s.lenderSurplus)} surplus)`],
       ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(state.savings)} savings`],
       ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
@@ -2667,17 +2696,28 @@ body.wiz .entries-bar { display: none; }
     wizIdx = Math.max(0, target); renderWiz(); wizScroll();
   }
 
+
+  function lenderNoteHtml(s, st) {
+    const w = lenderWhy(s);
+    const head = st.budget === "Comfortable" || st.budget === "Tight"
+      ? `Your budget looks ${st.budget.toLowerCase()}, but a lender would likely say no at this price.`
+      : "A lender would likely say no at this price.";
+    return `<b class="lh">${head}</b><span>The budget uses your real spending at today's rate. A lender's test is stricter:</span>
+      <ul>${w.reasons.map(r => `<li>${r}</li>`).join("")}</ul>
+      <span class="lsub">What would help</span><ul>${w.fixes.map(f => `<li>${f}</li>`).join("")}</ul>`;
+  }
+
   // ---------- Results hero: headline, doughnut and sliders ----------
   function renderHero(s, st, sub) {
     const short = s.cashNeeded - state.savings;
     $("hHead").innerHTML = `<div class="eyebrow">If you buy in ${escapeHtml(sub.name)} for ${fmt(s.price)}</div>
       <div class="hero-num${s.after < 0 ? " neg" : ""}">${fmt(s.after)}</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>left over each month</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.label}</span></span></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>left over each month</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.lenderOk ? st.label : `${st.budget} budget, lender risk`}</span></span></div>
       <div class="hero-facts">
         <div><span class="muted small">Loan repayment</span><b>${fmt(s.repay)}<span class="muted small" style="font-weight:400"> /month</span></b></div>
         <div><span class="muted small">Cash at settlement</span><b>${fmt(s.cashNeeded)}</b><span class="small" style="color:var(--${short > 0 ? "bad" : "good"})">${short > 0 ? fmt(short) + " short" : "Covered by savings"}</span></div>
         <div><span class="muted small">Lender check</span><b style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${s.lenderSurplus >= 0 ? "Likely passes" : "Likely fails"}</b></div>
-      </div>`;
+      </div>${st.lenderOk ? "" : `<div class="lender-note">${lenderNoteHtml(s, st)}</div>`}`;
     // Doughnut: where the take-home pay goes
     const living = s.kept + s.commuteNew, running = s.pc.total / 12, left = Math.max(0, s.after), gap = Math.max(0, -s.after);
     const segs = [["Living costs", living, "--seg-living"], ["Loan repayment", s.repay, "--seg-home"], ["Rates, bills and insurance", running, "--seg-run"], [s.after >= 0 ? "Left over" : "Shortfall", s.after >= 0 ? left : gap, s.after >= 0 ? "--seg-surplus" : "--seg-short"]];
@@ -2793,7 +2833,7 @@ body.wiz .entries-bar { display: none; }
     const checks = [
       [state.savings >= s.cashNeeded, `Savings cover the ${fmt(s.cashNeeded)} needed at settlement`, `${fmt(s.cashNeeded - state.savings)} more savings needed`],
       [s.lvr <= 0.95, "Deposit is at least 5% of the price", `Deposit is under 5% (${Math.round((1 - s.lvr) * 100)}%), below most lenders' minimum`],
-      [s.after >= state.income * 0.05, `Budget after buying is ${st.label.toLowerCase()} (${fmt(s.after)} left each month)`, `Budget after buying is ${st.label.toLowerCase()} (${fmt(s.after)} a month)`],
+      [s.after >= state.income * 0.05, `Budget after buying is ${st.budget.toLowerCase()} (${fmt(s.after)} left each month)`, `Budget after buying is ${st.budget.toLowerCase()} (${fmt(s.after)} a month)`],
       [s.lenderSurplus >= 0, "Likely passes a lender's serviceability check", "Likely fails a lender's serviceability check"]
     ];
     const ready = checks.every(c => c[0]);
@@ -2926,7 +2966,7 @@ body.wiz .entries-bar { display: none; }
         `Cash needed at settlement: ${fmt(s.cashNeeded)} against savings of ${fmt(state.savings)}`]],
       ["Affordability and serviceability", [
         `Repayment: ${fmt(s.repay)} a month; ${fmt(s.repayStress)} at the ${(state.rate + state.buffer).toFixed(2)}% test rate`,
-        `Left over now: ${fmt(s.now)} a month. After buying: ${fmt(s.after)} a month (${st.label.toLowerCase()})`,
+        `Left over now: ${fmt(s.now)} a month. After buying: ${fmt(s.after)} a month (${st.budget.toLowerCase()}${st.lenderOk ? "" : ", lender check likely fails"})`,
         `Lender-style check: ${s.lenderSurplus >= 0 ? "likely passes" : "likely fails"}, ${fmt(s.lenderSurplus)} surplus`]],
       ["Suburbs considered", listSubs().map(x => { const r = scenario(x); return `${x.name}: ${fmt(r.price)}, ${fmt(r.after)} left over (${status(r).label.toLowerCase()}), lender check ${r.lenderSurplus >= 0 ? "passes" : "fails"}`; })],
       ["Risks and points discussed", [...buildFlags(s, sub, s.cashNeeded - state.savings).map(f => f[2]), ...take.text.slice(1)]],
