@@ -912,6 +912,10 @@ body.wiz .entries-bar { display: none; }
 .own-result table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .own-result td { padding: 3px 0; } .own-result td.r { text-align: right; font-variant-numeric: tabular-nums; }
 .own-result tr.t td { border-top: 1px solid var(--line); font-weight: 600; padding-top: 6px; }
+.own-est { margin-bottom: 14px; }
+.oe-out { margin-top: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
+.oe-out .big { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; }
+.own-notes { margin: 6px 0 0; padding-left: 18px; font-size: 0.84rem; color: var(--muted); display: grid; gap: 3px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1103,7 +1107,7 @@ body.wiz .entries-bar { display: none; }
 
         <div id="expQuick" class="exp-pane">
           <div class="grid2">
-            <div><label for="qRent">Rent or board you pay now</label><div class="pay-row"><div class="money"><input id="qRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qRentF" aria-label="Rent frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option></select></div><p class="hint">Leave blank if you don't pay rent. This stops once you buy.</p></div>
+            <div><label for="qRent">Rent, board or mortgage repayments you pay now</label><div class="pay-row"><div class="money"><input id="qRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qRentF" aria-label="Rent frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option></select></div><p class="hint">Whatever you pay for the home you live in now. It stops once you buy (if you keep a property you own, its loan is counted separately in step 4).</p></div>
             <div><label for="qDebt">Loan, credit card and Afterpay repayments</label><div class="pay-row"><div class="money"><input id="qDebt" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qDebtF" aria-label="Repayment frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly" selected>Monthly</option></select></div><p class="hint">Car loans, personal loans, credit cards, buy now pay later.</p></div>
           </div>
           <div class="quick-main">
@@ -1225,12 +1229,26 @@ body.wiz .entries-bar { display: none; }
           <button type="button" role="radio" data-own="keep" aria-checked="false"><b>Yes, I'll keep it</b><span>Borrow against its equity, maybe rent it out</span></button>
         </div>
         <div id="ownFields">
+          <details class="fold own-est" id="ownEst">
+            <summary>Not sure what it's worth? Estimate it</summary>
+            <div class="inner">
+              <div class="grid2">
+                <div><label for="oeSub">Suburb</label><select id="oeSub"></select></div>
+                <div><label for="oeBeds">Bedrooms</label><select id="oeBeds"><option>1</option><option>2</option><option selected>3</option><option>4</option><option value="5">5+</option></select></div>
+                <div><label for="oeBaths">Bathrooms</label><select id="oeBaths"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+                <div><label for="oeLand">Block size (m²)</label><input id="oeLand" type="number" min="0" step="10" inputmode="numeric" placeholder="Typical for the suburb"></div>
+              </div>
+              <div class="oe-out" id="oeOut"></div>
+              <p class="hint">Based on SA Valuer-General house sales for the 12 months to June 2026, adjusted for bedrooms, bathrooms and block size. Condition, renovations and street matter too, so for a closer figure check an online estimate on <a href="https://www.realestate.com.au" target="_blank" rel="noopener">realestate.com.au</a> or <a href="https://www.domain.com.au" target="_blank" rel="noopener">domain.com.au</a>, or ask a local agent for an appraisal.</p>
+            </div>
+          </details>
           <div class="grid2">
             <div><label for="ownValue">What it's worth now (estimate)</label><div class="money"><input id="ownValue" type="number" min="0" step="5000" inputmode="decimal" placeholder="0"></div></div>
             <div><label for="ownLoan">Loan still owing on it</label><div class="money"><input id="ownLoan" type="number" min="0" step="1000" inputmode="decimal" placeholder="0"></div></div>
             <div class="own-sell"><label for="ownSellCost">Selling costs (% of the sale price)</label><input id="ownSellCost" type="number" min="0" max="10" step="0.1" inputmode="decimal"><p class="hint">Agent commission, marketing and legal costs. Often around 2 to 3%.</p></div>
             <div class="own-keep"><label for="ownRepay">Current repayment on that loan (monthly)</label><div class="money"><input id="ownRepay" type="number" min="0" step="10" inputmode="decimal"></div><p class="hint" id="ownRepayHint"></p></div>
-            <div class="own-keep"><label for="ownRent">Rent you'd get if you rent it out (weekly)</label><div class="money"><input id="ownRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><p class="hint">Leave blank if it won't be rented. 75% is counted, to allow for agent fees, vacancies and costs.</p></div>
+            <div class="own-keep"><label for="ownRent">Rent you'd get if you rent it out (weekly)</label><div class="money"><input id="ownRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><p class="hint">Leave blank if it won't be rented. 75% is counted, to allow for agent fees and empty weeks.</p></div>
+            <div class="own-keep"><label for="ownHold">Its yearly costs (council rates, ESL, water, insurance)</label><div class="money"><input id="ownHold" type="number" min="0" step="100" inputmode="decimal"></div><p class="hint" id="ownHoldHint"></p></div>
             <div class="own-keep"><label for="ownEqUse">Equity to use for this purchase</label><div class="money"><input id="ownEqUse" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint" id="ownEqHint"></p></div>
           </div>
           <div class="own-result" id="ownResult"></div>
@@ -1739,7 +1757,7 @@ body.wiz .entries-bar { display: none; }
   ];
 
   const CATS = [
-    { id: "rent", label: "Rent or current housing", replaced: true },
+    { id: "rent", label: "Rent, board or mortgage on the home you live in", replaced: true },
     { id: "power", label: "Electricity", replaced: true },
     { id: "water", label: "Water", replaced: true },
     { id: "homeins", label: "Home and contents or renters insurance", replaced: true },
@@ -1807,7 +1825,7 @@ body.wiz .entries-bar { display: none; }
       insBase: 2559, insQuote: 0, petrol: {}, petrolAvg: 238.8, fuelPrice: 2.388, fuelUse: 8, ptFare: 4.55, ptPass: 119.10,
       property: { suburb: null, address: "", cv: 0, rates: 0, esl: 0, waterQ: 0 },
       rateShift: 0, extraRepay: 0, offsetBal: 0,
-      own: "none", ownValue: 0, ownLoan: 0, ownSellCost: 2.5, ownRepay: null, ownRent: 0, ownEqUse: null,
+      own: "none", ownValue: 0, ownLoan: 0, ownSellCost: 2.5, ownRepay: null, ownRent: 0, ownEqUse: null, ownHold: null, ownEst: { sub: "", beds: 3, baths: 2, land: 0 },
       expMode: "quick", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
       intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
       goals: { purpose: "First home to live in", time: "3 to 6 months", rateType: "Variable", features: [], priorities: "", notes: "", reviewed: false },
@@ -1876,13 +1894,13 @@ body.wiz .entries-bar { display: none; }
   const DEF_BED_RATIO = { 1: 0.65, 2: 0.78, 3: 1, 4: 1.18, 5: 1.40 };
   const TYP_BATH = { 1: 1, 2: 1, 3: 2, 4: 2, 5: 3 };
   const BATH_STEP = 0.04, LAND_SHARE = 0.6, LAND_CURVE = 0.7;
-  function priceParts(sub) {
-    const b = state.bedrooms;
+  function priceParts(sub, h) {
+    const b = h ? h.beds : state.bedrooms, baths = h ? h.baths : state.bathrooms, land = h ? h.land : state.landSize;
     const bedRatio = sub.bed && sub.salesMedian ? sub.bed[b] / sub.salesMedian : DEF_BED_RATIO[b];
     const base = sub.median * bedRatio;
-    const bathF = 1 + BATH_STEP * (state.bathrooms - TYP_BATH[b]);
+    const bathF = 1 + BATH_STEP * (baths - TYP_BATH[b]);
     const typLand = sub.typLand || 600;
-    const landF = state.landSize > 0 ? 1 + LAND_SHARE * (Math.pow(state.landSize / typLand, LAND_CURVE) - 1) : 1;
+    const landF = land > 0 ? 1 + LAND_SHARE * (Math.pow(land / typLand, LAND_CURVE) - 1) : 1;
     const est = Math.round(base * bathF * landF / 1000) * 1000;
     return { base, bathAdj: base * (bathF - 1), landAdj: base * bathF * (landF - 1), est, typLand };
   }
@@ -1964,10 +1982,11 @@ body.wiz .entries-bar { display: none; }
     const eqUsed = ownEquityUsed(), eqRepay = keep ? repayment(eqUsed, state.rate, state.term) : 0, eqStress = keep ? repayment(eqUsed, state.rate + state.buffer, state.term) : 0;
     const ownRepay = keep ? ownRepayMonthly() : 0, ownStress = keep ? repayment(state.ownLoan, state.rate + state.buffer, 25) : 0;
     const rentNet = keep ? (state.ownRent || 0) * 52 / 12 * 0.75 : 0;
-    const ownNet = eqRepay + ownRepay - rentNet;
-    const after2 = after - ownNet, afterStress2 = afterStress - (eqStress + ownStress - rentNet);
-    const lenderSurplus = state.income - helpDeduct - lenderLiving - debtNow - cardCommit - repayStress - pc.total / 12 - (eqStress + ownStress - rentNet);
-    return { eqUsed, eqRepay, ownRepay, rentNet, ownNet, funds: funds(), propCash: propCash(), sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after: after2, afterStress: afterStress2, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
+    const ownHold = keep ? ownHoldYearly() / 12 : 0;
+    const ownNet = eqRepay + ownRepay + ownHold - rentNet;
+    const after2 = after - ownNet, afterStress2 = afterStress - (eqStress + ownStress + ownHold - rentNet);
+    const lenderSurplus = state.income - helpDeduct - lenderLiving - debtNow - cardCommit - repayStress - pc.total / 12 - (eqStress + ownStress + ownHold - rentNet);
+    return { eqUsed, eqRepay, ownRepay, rentNet, ownHold, ownNet, funds: funds(), propCash: propCash(), sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after: after2, afterStress: afterStress2, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
   }
 
   // Loan payoff with extra repayments and an offset account
@@ -1988,6 +2007,9 @@ body.wiz .entries-bar { display: none; }
   const propCash = () => state.own === "sell" ? ownSaleCash() : ownEquityUsed();
   const funds = () => state.savings + propCash();
   const ownRepayMonthly = () => state.ownRepay ?? Math.round(repayment(state.ownLoan, state.rate, 25));
+  // Yearly holding costs if no figure entered: SA-style council rate, ESL and SA Water supply charges, plus building and landlord insurance
+  const ownHoldEst = () => { const v = state.ownValue || 0; if (!v) return 0; return Math.round(Math.max(v * 0.0017, 1258) + 50 + v * 0.8 * 0.4 * 0.000324 + 352 + Math.max(v / 1000 * 0.593, 415.4) + 2000); };
+  const ownHoldYearly = () => state.ownHold ?? ownHoldEst();
 
   // Budget status, downgraded to "Lender risk" when the budget is fine but a lender's stricter test fails,
   // so a suburb never shows green while a lender would likely say no.
@@ -2432,6 +2454,7 @@ body.wiz .entries-bar { display: none; }
       ${state.own === "keep" ? `<tr><td>Property you're keeping</td><td class="r num">${s.ownNet > 0 ? "−" : "+"}${fmt(Math.abs(s.ownNet)).replace("−", "")}</td></tr>
       <tr class="sub"><td>Its loan repayment</td><td class="r num">−${fmt(s.ownRepay)}</td></tr>
       ${s.eqRepay ? `<tr class="sub"><td>Repayment on ${fmt(s.eqUsed)} of equity used</td><td class="r num">−${fmt(s.eqRepay)}</td></tr>` : ""}
+      <tr class="sub"><td>Its rates, water and insurance</td><td class="r num">−${fmt(s.ownHold)}</td></tr>
       ${s.rentNet ? `<tr class="sub"><td>Rent (75% of ${fmt(state.ownRent)} a week)</td><td class="r num">+${fmt(s.rentNet)}</td></tr>` : ""}` : ""}
       <tr class="total"><td>Left over each month</td><td class="r num">${fmt(s.after)}</td></tr>`;
 
@@ -2463,7 +2486,7 @@ body.wiz .entries-bar { display: none; }
       <tr><td>Credit cards (${state.cardRate}% of ${fmt(state.cardLimits)})</td><td class="r num">−${fmt(s.cardCommit)}</td></tr>
       <tr><td>Repayment at ${(state.rate + state.buffer).toFixed(2)}%</td><td class="r num">−${fmt(s.repayStress)}</td></tr>
       <tr><td>Property running costs</td><td class="r num">−${fmt(s.pc.total / 12)}</td></tr>
-      ${state.own === "keep" ? `<tr><td>Property you're keeping (loans tested at ${(state.rate + state.buffer).toFixed(2)}%, rent at 75%)</td><td class="r num">−${fmt(repayment(state.ownLoan, state.rate + state.buffer, 25) + repayment(s.eqUsed, state.rate + state.buffer, state.term) - s.rentNet)}</td></tr>` : ""}
+      ${state.own === "keep" ? `<tr><td>Property you're keeping (loans tested at ${(state.rate + state.buffer).toFixed(2)}%, rent at 75%)</td><td class="r num">−${fmt(repayment(state.ownLoan, state.rate + state.buffer, 25) + repayment(s.eqUsed, state.rate + state.buffer, state.term) + s.ownHold - s.rentNet)}</td></tr>` : ""}
       <tr class="total"><td>Surplus on the lender's test</td><td class="r num" style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${fmt(s.lenderSurplus)}</td></tr>
 `;
     $("hemHint").textContent = `Blank uses a rough placeholder (${fmt(hemPlaceholder())} a month here). Enter the lender's HEM figure.`;
@@ -2765,8 +2788,21 @@ body.wiz .entries-bar { display: none; }
     $("ownFields").hidden = mode === "none"; $("ownFields").className = mode;
     if (!quiet) changed();
   }
+  function renderOwnEst() {
+    const sel = $("oeSub");
+    if (sel.options.length !== subs().length) sel.innerHTML = subs().map(x => `<option value="${x.id}">${escapeHtml(x.name)}</option>`).join("");
+    const e = state.ownEst; if (!e.sub || !subs().some(x => x.id === e.sub)) e.sub = state.suburb;
+    if (document.activeElement !== sel) sel.value = e.sub;
+    $("oeBeds").value = String(e.beds); $("oeBaths").value = String(e.baths); if (document.activeElement !== $("oeLand")) $("oeLand").value = e.land || "";
+    const sub = subById(e.sub), pp = priceParts(sub, { beds: e.beds, baths: e.baths, land: e.land });
+    $("oeOut").innerHTML = `<div><div class="small muted">Estimated value: ${e.beds >= 5 ? "5+" : e.beds}-bed, ${e.baths}-bath house in ${escapeHtml(sub.name)}${e.land ? ` on ${e.land.toLocaleString("en-AU")} m²` : ` on a typical ${pp.typLand} m² block`}</div><div class="big num">${fmt(pp.est)}</div><div class="small muted">Suburb median ${fmt(sub.median)}${sub.sales ? ` from ${sub.sales} sales` : ""}${sub.sales && sub.sales < 15 ? ", few sales so treat with care" : ""}</div></div>
+      <button type="button" class="primary" id="oeUse">Use ${fmt(pp.est)}</button>`;
+    $("oeUse").onclick = () => { state.ownValue = pp.est; $("ownValue").value = pp.est; $("ownEst").open = false; changed(); };
+  }
   function renderOwn(s) {
     if (state.own === "none") return;
+    renderOwnEst();
+    $("ownHoldHint").textContent = state.ownHold === null ? `Blank uses an estimate of ${fmt(ownHoldEst())} a year from its value.` : "";
     const est = Math.round(repayment(state.ownLoan, state.rate, 25));
     $("ownRepayHint").textContent = state.ownRepay === null ? `Blank uses an estimate of ${fmt(est)} a month.` : "";
     $("ownEqHint").textContent = `Blank uses all usable equity: ${fmt(ownMaxEquity())}.`;
@@ -2776,13 +2812,15 @@ body.wiz .entries-bar { display: none; }
       r.innerHTML = `<div class="small muted">Money from the sale for this purchase</div><div class="big num">${fmt(net)}</div>
         <table><tr><td>Sale price (estimate)</td><td class="r">${fmt(gross)}</td></tr><tr><td>Selling costs (${state.ownSellCost}%)</td><td class="r">−${fmt(cost)}</td></tr><tr><td>Loan paid off</td><td class="r">−${fmt(state.ownLoan)}</td></tr>
         <tr class="t"><td>Total for deposit and costs (with ${fmt(state.savings)} savings)</td><td class="r">${fmt(funds())}</td></tr></table>
+        <ul class="own-notes"><li>The sale money is only available once that sale settles. Buying first may need a bridging loan.</li><li>If it's an investment property rather than your home, capital gains tax may reduce what you keep.</li></ul>
         ${state.loanMode === "deposit" ? `<div class="btn-row"><button type="button" id="ownToDep">Put it towards my deposit</button><span class="small muted">Sets the deposit to what's left after stamp duty and costs for ${escapeHtml(s.sub.name)}.</span></div>` : ""}`;
     } else {
       const max = ownMaxEquity(), used = ownEquityUsed();
       r.innerHTML = `<div class="small muted">Usable equity</div><div class="big num">${fmt(max)}</div>
         <table><tr><td>80% of ${fmt(state.ownValue)} (what lenders usually lend against without mortgage insurance)</td><td class="r">${fmt(state.ownValue * 0.8)}</td></tr><tr><td>Loan still owing</td><td class="r">−${fmt(state.ownLoan)}</td></tr>
         <tr class="t"><td>Using ${fmt(used)}: total for deposit and costs (with ${fmt(state.savings)} savings)</td><td class="r">${fmt(funds())}</td></tr></table>
-        <p class="small">Equity is borrowed against your current home, so it adds about ${fmt(s.eqRepay)} a month in repayments. Your current loan repayment of ${fmt(s.ownRepay)} a month continues${state.ownRent ? `, and rent adds about ${fmt(s.rentNet)} a month` : ""}. These are included in your results.</p>
+        <p class="small">Equity is borrowed against your current home, so it adds about ${fmt(s.eqRepay)} a month in repayments. Your current loan repayment of ${fmt(s.ownRepay)} and its costs of about ${fmt(s.ownHold)} a month continue${state.ownRent ? `, and rent adds about ${fmt(s.rentNet)} a month` : ""}. These are included in your results.</p>
+        <ul class="own-notes"><li>Some lenders go above 80% with mortgage insurance, and all of them check you can afford both loans (the lender check covers this).</li><li>If it's rented, SA land tax may apply and tax deductions may help. Neither is included here, so ask an accountant.</li></ul>
         ${state.loanMode === "deposit" ? `<div class="btn-row"><button type="button" id="ownToDep">Put it towards my deposit</button><span class="small muted">Sets the deposit to what's left after stamp duty and costs for ${escapeHtml(s.sub.name)}.</span></div>` : ""}`;
     }
     const btn = $("ownToDep");
@@ -3148,6 +3186,7 @@ body.wiz .entries-bar { display: none; }
     if (!subs().some(s => s.id === state.suburb)) state.suburb = "seaton";
     state.goals = Object.assign(defaultState().goals, (saved && saved.goals) || {});
     if (!(saved && saved.expMode)) state.expMode = state.months ? "upload" : "detail";
+    if (!state.ownEst) state.ownEst = defaultState().ownEst;
     $("exampleNote").hidden = true; setStatus(state.months ? `<span class="ok">Loaded saved figures</span> (${state.months.toFixed(1)} months of statements).` : "");
     syncInputs(); changed();
   }
@@ -3606,7 +3645,12 @@ body.wiz .entries-bar { display: none; }
   document.querySelectorAll("#ownModes [data-own]").forEach(b => b.addEventListener("click", () => setOwn(b.dataset.own)));
   bindNum("ownValue", "ownValue", { blankZero: true }); bindNum("ownLoan", "ownLoan", { blankZero: true }); bindNum("ownSellCost", "ownSellCost");
   bindNum("ownRepay", "ownRepay", { nullable: true }); bindNum("ownRent", "ownRent", { blankZero: true }); bindNum("ownEqUse", "ownEqUse", { nullable: true });
+  bindNum("ownHold", "ownHold", { nullable: true });
   bindings.push(() => setOwn(state.own || "none", true));
+  $("oeSub").addEventListener("change", e => { state.ownEst.sub = e.target.value; renderOwnEst(); });
+  $("oeBeds").addEventListener("change", e => { state.ownEst.beds = parseInt(e.target.value, 10); renderOwnEst(); });
+  $("oeBaths").addEventListener("change", e => { state.ownEst.baths = parseInt(e.target.value, 10); renderOwnEst(); });
+  $("oeLand").addEventListener("input", e => { state.ownEst.land = num(e.target.value); renderOwnEst(); });
   $("toLead").onclick = () => { $("leadPanel").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => $("lName").focus({ preventScroll: true }), 400); };
   $("toggleEntries").onclick = () => {
     const on = !document.body.classList.contains("show-entries");
