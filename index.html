@@ -511,7 +511,7 @@ header.top .lede { max-width: 64ch; color: var(--muted); margin-top: 6px; }
 .prop-price { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; }
 /* Step-by-step flow */
 .wiz-top { max-width: 760px; margin: 0 auto 16px; }
-body:not(.wiz) .wiz-top, body.openhome .wiz-top { display: none !important; }
+body.openhome .wiz-top { display: none !important; }
 .wiz-steps { list-style: none; margin: 0 0 8px; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; }
 .wiz-steps button { border: 0; background: none; padding: 4px 8px; border-radius: 99px; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
 .wiz-steps button[aria-current="step"] { background: var(--accent); color: var(--surface); }
@@ -876,6 +876,18 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.6rem; }
 @media (max-width: 640px) { .panel { padding: 18px; } body.wiz .inputs > section.panel.wiz-cur { padding: 22px 18px; } .res-hero { padding: 20px; } }
 .exp-table th, .mini-table th, .region-h { text-transform: none; letter-spacing: 0; font-size: 0.8rem; font-weight: 600; }
 .draft-tag, .demo-tag { text-transform: none; letter-spacing: 0; font-size: 0.76rem; }
+.pay-block > .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pay-block > .grid2 > div:nth-child(3) { grid-column: 1 / -1; }
+.pay-block .pay-row { grid-template-columns: minmax(0, 1fr) minmax(130px, auto); }
+.pay-block .pay-row input { font-size: 1.05rem; }
+@media (max-width: 560px) { .pay-block > .grid2 { grid-template-columns: minmax(0, 1fr); } }
+/* Results page: entries hidden until asked for */
+body:not(.wiz):not(.show-entries) .inputs { display: none; }
+body:not(.wiz):not(.show-entries) .layout { grid-template-columns: minmax(0, 1fr); }
+body:not(.wiz) .wiz-top { max-width: 1280px; position: sticky; top: 0; z-index: 20; background: var(--bg); padding: 10px 0 8px; margin-bottom: 14px; }
+body.openhome .wiz-top { display: none !important; }
+.entries-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; }
+body.wiz .entries-bar { display: none; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1007,7 +1019,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.6rem; }
 
   <section class="res-hero broker-only" id="resHero" aria-labelledby="heroH">
     <div class="hero-top">
-      <div><div class="eyebrow">Your results</div><h2 id="heroH">Here's how buying looks</h2><p class="muted small">Everything you entered is below on one page. Change anything and the results update straight away.</p></div>
+      <div><div class="eyebrow">Your results</div><h2 id="heroH">Here's how buying looks</h2><p class="muted small">Tap any step above to go back and change it, or use View all your entries to see and edit everything on one page.</p></div>
       <button type="button" id="wizEdit">Go through the steps again</button>
     </div>
     <div class="hero-grid">
@@ -1024,6 +1036,12 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.6rem; }
       <div class="slider"><div class="sl-top"><label for="slRate">Interest rate</label><span class="num" id="slRateV"></span></div><input type="range" id="slRate" min="3" max="10" step="0.05"><div class="sl-foot"><span>3%</span><span>10%</span></div></div>
     </div>
   </section>
+
+  <div class="entries-bar broker-only" id="entriesBar">
+    <div><b>Your entries</b> <span class="muted small" id="entriesSub">Income, spending, loan and home details you entered.</span></div>
+    <button type="button" id="toggleEntries" aria-expanded="false" aria-controls="entriesStart">View all your entries</button>
+  </div>
+  <span id="entriesStart"></span>
 
   <div class="layout">
     <div class="inputs">
@@ -2536,7 +2554,15 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.6rem; }
   function renderWiz() {
     const intake = document.body.classList.contains("intake"), pages = wizPages();
     document.body.classList.toggle("wiz", wizOn);
-    if (!wizOn) { document.querySelectorAll(".wiz-cur").forEach(x => x.classList.remove("wiz-cur")); return; }
+    if (!wizOn) {
+      document.querySelectorAll(".wiz-cur").forEach(x => x.classList.remove("wiz-cur"));
+      document.body.classList.remove("wiz-first");
+      $("wizSteps").innerHTML = pages.map((p, i) => { const h = p.querySelector("h2"); return `<li><button type="button" class="done" data-wi="${i}">${i + 1}. ${STEP_SHORT[h.id] || h.textContent}</button></li>`; }).join("") +
+        (intake ? "" : `<li><button type="button" aria-current="step">${pages.length + 1}. Results</button></li>`);
+      $("wizSteps").querySelectorAll("[data-wi]").forEach(b => b.onclick = () => { wizOn = true; wizIdx = Number(b.dataset.wi); renderWiz(); wizScroll(); });
+      $("wizBar").style.width = "100%";
+      return;
+    }
     wizIdx = Math.max(0, Math.min(wizIdx, pages.length - 1));
     pages.forEach((p, i) => p.classList.toggle("wiz-cur", i === wizIdx));
     document.body.classList.toggle("wiz-first", wizIdx === 0);
@@ -3381,6 +3407,13 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.6rem; }
   $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round(hemPlaceholder() / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
   $("moreMenu").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("moreMenu").open = false; }));
   document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
+  $("toggleEntries").onclick = () => {
+    const on = !document.body.classList.contains("show-entries");
+    document.body.classList.toggle("show-entries", on);
+    $("toggleEntries").textContent = on ? "Hide your entries" : "View all your entries";
+    $("toggleEntries").setAttribute("aria-expanded", String(on));
+    if (on) document.querySelector(".layout").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   $("wizNext").onclick = () => wizGo(wizIdx + 1);
   $("wizPrev").onclick = () => wizGo(wizIdx - 1);
   $("wizEdit").onclick = () => { wizOn = true; wizIdx = 0; renderWiz(); wizScroll(); };
