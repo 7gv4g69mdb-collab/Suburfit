@@ -904,6 +904,14 @@ body.wiz .entries-bar { display: none; }
 .lender-note b.lh { font-size: 0.98rem; }
 .lender-note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 .lender-note .lsub { font-weight: 600; margin-top: 2px; }
+#ownModes button[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+#ownFields .own-sell, #ownFields .own-keep { display: none; }
+#ownFields.sell .own-sell, #ownFields.keep .own-keep { display: block; }
+.own-result { margin-top: 16px; border-radius: 12px; padding: 16px; background: var(--accent-soft); display: grid; gap: 8px; }
+.own-result .big { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
+.own-result table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.own-result td { padding: 3px 0; } .own-result td.r { text-align: right; font-variant-numeric: tabular-nums; }
+.own-result tr.t td { border-top: 1px solid var(--line); font-weight: 600; padding-top: 6px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1192,8 +1200,8 @@ body.wiz .entries-bar { display: none; }
       </section>
 
       <!-- STEP 4 -->
-      <section class="panel broker-only" aria-labelledby="s4h" id="stepCommute">
-        <div class="step-head"><span class="step-no">4</span><div><h2 id="s4h">How do you get to work?</h2><p class="muted small">Today's commute comes out of current fuel spending and each suburb's commute is added.</p></div></div>
+      <section class="panel broker-only" aria-labelledby="s4c" id="stepCommute" hidden>
+        <div class="step-head"><span class="step-no">4</span><div><h2 id="s4c">How do you get to work?</h2><p class="muted small">Today's commute comes out of current fuel spending and each suburb's commute is added.</p></div></div>
         <div id="commuters" class="commuters"></div>
         <div class="sub-card" style="margin-top:14px">
           <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap">
@@ -1205,6 +1213,27 @@ body.wiz .entries-bar { display: none; }
             <tbody id="petrolBody"></tbody>
             <tfoot><tr><td colspan="3">Today's commute from where they live now</td><td class="r num" id="petrolNow"></td></tr></tfoot>
           </table></div>
+        </div>
+      </section>
+
+      <!-- STEP: property owned now -->
+      <section class="panel broker-only" aria-labelledby="s4h" id="stepOwn">
+        <div class="step-head"><span class="step-no">4</span><div><h2 id="s4h">Do you own a property now?</h2><p class="muted small">If you'll sell it or borrow against it, that money can go towards this purchase.</p></div></div>
+        <div class="exp-modes" role="radiogroup" aria-label="Property you own now" id="ownModes">
+          <button type="button" role="radio" data-own="none" aria-checked="false"><b>No</b><span>I don't own a property</span></button>
+          <button type="button" role="radio" data-own="sell" aria-checked="false"><b>Yes, I'll sell it</b><span>Use the sale money for this purchase</span></button>
+          <button type="button" role="radio" data-own="keep" aria-checked="false"><b>Yes, I'll keep it</b><span>Borrow against its equity, maybe rent it out</span></button>
+        </div>
+        <div id="ownFields">
+          <div class="grid2">
+            <div><label for="ownValue">What it's worth now (estimate)</label><div class="money"><input id="ownValue" type="number" min="0" step="5000" inputmode="decimal" placeholder="0"></div></div>
+            <div><label for="ownLoan">Loan still owing on it</label><div class="money"><input id="ownLoan" type="number" min="0" step="1000" inputmode="decimal" placeholder="0"></div></div>
+            <div class="own-sell"><label for="ownSellCost">Selling costs (% of the sale price)</label><input id="ownSellCost" type="number" min="0" max="10" step="0.1" inputmode="decimal"><p class="hint">Agent commission, marketing and legal costs. Often around 2 to 3%.</p></div>
+            <div class="own-keep"><label for="ownRepay">Current repayment on that loan (monthly)</label><div class="money"><input id="ownRepay" type="number" min="0" step="10" inputmode="decimal"></div><p class="hint" id="ownRepayHint"></p></div>
+            <div class="own-keep"><label for="ownRent">Rent you'd get if you rent it out (weekly)</label><div class="money"><input id="ownRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><p class="hint">Leave blank if it won't be rented. 75% is counted, to allow for agent fees, vacancies and costs.</p></div>
+            <div class="own-keep"><label for="ownEqUse">Equity to use for this purchase</label><div class="money"><input id="ownEqUse" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint" id="ownEqHint"></p></div>
+          </div>
+          <div class="own-result" id="ownResult"></div>
         </div>
       </section>
 
@@ -1715,7 +1744,7 @@ body.wiz .entries-bar { display: none; }
     { id: "water", label: "Water", replaced: true },
     { id: "homeins", label: "Home and contents or renters insurance", replaced: true },
     { id: "groceries", label: "Groceries" },
-    { id: "fuel", label: "Fuel and public transport", note: "Today's commute is swapped for the new suburb's commute" },
+    { id: "fuel", label: "Petrol and public transport (average a week)" },
     { id: "car", label: "Other car costs (rego, servicing, parking)" },
     { id: "gas", label: "Gas" },
     { id: "phone", label: "Phone and internet" },
@@ -1778,12 +1807,13 @@ body.wiz .entries-bar { display: none; }
       insBase: 2559, insQuote: 0, petrol: {}, petrolAvg: 238.8, fuelPrice: 2.388, fuelUse: 8, ptFare: 4.55, ptPass: 119.10,
       property: { suburb: null, address: "", cv: 0, rates: 0, esl: 0, waterQ: 0 },
       rateShift: 0, extraRepay: 0, offsetBal: 0,
+      own: "none", ownValue: 0, ownLoan: 0, ownSellCost: 2.5, ownRepay: null, ownRent: 0, ownEqUse: null,
       expMode: "quick", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
       intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
       goals: { purpose: "First home to live in", time: "3 to 6 months", rateType: "Variable", features: [], priorities: "", notes: "", reviewed: false },
       shortlist: ["fulham", "lockleys", "westbeach", "seaton", "royalpark", "flinderspark", "findon", "henleybeach", "hendon", "woodvillewest"]
     };
-    CAT_IDS.forEach(id => s.expenses[id] = { amount: 0, freq: "monthly" });
+    CAT_IDS.forEach(id => s.expenses[id] = { amount: 0, freq: id === "fuel" ? "weekly" : "monthly" });
     return s;
   }
   let state = defaultState();
@@ -1913,7 +1943,7 @@ body.wiz .entries-bar { display: none; }
     const repayStress = repayment(loan, state.rate + state.buffer, state.term);
     const commute = commuteFor(sub);
     // Quick estimate: fuel and transport are part of the one spending figure and assumed the same in every suburb
-    const quickMode = state.expMode === "quick";
+    const quickMode = true; // petrol and transport are part of spending and assumed the same in every suburb
     const commuteNew = quickMode ? 0 : commute.reduce((a, c) => a + c.cost, 0);
     const commuteNow = quickMode ? 0 : commute.reduce((a, c) => a + c.now, 0);
     let currentTotal = 0, kept = 0;
@@ -1929,8 +1959,15 @@ body.wiz .entries-bar { display: none; }
     const lenderLiving = Math.max(declaredLiving, hem());
     const cardCommit = state.cardLimits * state.cardRate / 100;
     const helpMonthly = 0, helpDeduct = 0; // take-home pay already has tax and any HELP repayments taken out
-    const lenderSurplus = state.income - helpDeduct - lenderLiving - debtNow - cardCommit - repayStress - pc.total / 12;
-    return { sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after, afterStress, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
+    // Keeping a property: its loan keeps being repaid, equity borrowed against it adds a repayment, rent helps
+    const keep = state.own === "keep";
+    const eqUsed = ownEquityUsed(), eqRepay = keep ? repayment(eqUsed, state.rate, state.term) : 0, eqStress = keep ? repayment(eqUsed, state.rate + state.buffer, state.term) : 0;
+    const ownRepay = keep ? ownRepayMonthly() : 0, ownStress = keep ? repayment(state.ownLoan, state.rate + state.buffer, 25) : 0;
+    const rentNet = keep ? (state.ownRent || 0) * 52 / 12 * 0.75 : 0;
+    const ownNet = eqRepay + ownRepay - rentNet;
+    const after2 = after - ownNet, afterStress2 = afterStress - (eqStress + ownStress - rentNet);
+    const lenderSurplus = state.income - helpDeduct - lenderLiving - debtNow - cardCommit - repayStress - pc.total / 12 - (eqStress + ownStress - rentNet);
+    return { eqUsed, eqRepay, ownRepay, rentNet, ownNet, funds: funds(), propCash: propCash(), sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after: after2, afterStress: afterStress2, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
   }
 
   // Loan payoff with extra repayments and an offset account
@@ -1943,6 +1980,14 @@ body.wiz .entries-bar { display: none; }
     }
     return { months, interest, base };
   }
+
+  // ---------- Property owned now ----------
+  const ownMaxEquity = () => Math.max(0, state.ownValue * 0.8 - state.ownLoan);
+  const ownEquityUsed = () => state.own === "keep" ? Math.min(state.ownEqUse ?? ownMaxEquity(), ownMaxEquity()) : 0;
+  const ownSaleCash = () => state.own === "sell" ? Math.max(0, state.ownValue * (1 - (state.ownSellCost || 0) / 100) - state.ownLoan) : 0;
+  const propCash = () => state.own === "sell" ? ownSaleCash() : ownEquityUsed();
+  const funds = () => state.savings + propCash();
+  const ownRepayMonthly = () => state.ownRepay ?? Math.round(repayment(state.ownLoan, state.rate, 25));
 
   // Budget status, downgraded to "Lender risk" when the budget is fine but a lender's stricter test fails,
   // so a suburb never shows green while a lender would likely say no.
@@ -2360,13 +2405,13 @@ body.wiz .entries-bar { display: none; }
     $("rSub").textContent = sub.name;
     $("rCouncil").textContent = sub.council === "Other" ? "Council rate entered by broker" : "City of " + sub.council;
     const pill = $("rPill"); pill.className = "pill " + st.cls; pill.lastElementChild.textContent = st.label;
-    renderHero(s, st, sub); renderLeadIntro();
+    renderHero(s, st, sub); renderLeadIntro(); renderOwn(s);
     $("rNow").textContent = fmt(s.now); $("rNow").classList.toggle("neg", s.now < 0);
     $("rAfter").textContent = fmt(s.after); $("rAfter").classList.toggle("neg", s.after < 0);
     $("rAfterPct").textContent = `per month · ${state.income ? Math.round(s.after / state.income * 100) : 0}% of take-home pay`;
     $("rRepay").textContent = fmt(s.repay);
     $("rRepaySub").textContent = `${fmt(s.loan)} at ${state.rate}%`;
-    const short = s.cashNeeded - state.savings;
+    const short = s.cashNeeded - funds();
     $("rCashK").textContent = fmt(s.cashNeeded);
     $("rCashSub").innerHTML = short > 0 ? `<span style="color:var(--bad)">${fmt(short)} short</span>` : `${fmt(-short)} to spare`;
 
@@ -2382,8 +2427,12 @@ body.wiz .entries-bar { display: none; }
       <tr class="sub"><td>Water and sewerage${pcp && state.property.waterQ > 0 ? fromListing : ""}</td><td class="r num">${m(s.pc.water)}</td></tr>
       <tr class="sub"><td>Electricity</td><td class="r num">${m(s.pc.power)}</td></tr>
       <tr class="sub"><td>Home and contents insurance${state.insQuote > 0 ? '<span class="tag-ok">Quote</span>' : est}</td><td class="r num">${m(s.pc.insurance)}</td></tr>
-      ${state.expMode === "quick" ? `<tr class="sub"><td>Fuel and transport: included in living costs, same in every suburb</td><td></td></tr>` : `<tr><td>Commute to work <span class="muted small">(about ${fmt(weekly(s.commuteNew))} a week)</span></td><td class="r num">−${fmt(s.commuteNew)}</td></tr>
+      ${true ? `<tr class="sub"><td>Petrol and transport: included in living costs, same in every suburb</td><td></td></tr>` : `<tr><td>Commute to work <span class="muted small">(about ${fmt(weekly(s.commuteNew))} a week)</span></td><td class="r num">−${fmt(s.commuteNew)}</td></tr>
       ${s.commute.map((c, i) => state.commuters[i].on ? `<tr class="sub"><td>Borrower ${i + 1}: ${c.wp ? c.wp.name : ""}${c.km ? `, ${c.km.toFixed(0)} km each way` : ""}${state.commuters[i].mode === "pt" && c.km ? " by public transport" : ""}</td><td class="r num">${fmt(c.cost)}</td></tr>` : "").join("")}`}
+      ${state.own === "keep" ? `<tr><td>Property you're keeping</td><td class="r num">${s.ownNet > 0 ? "−" : "+"}${fmt(Math.abs(s.ownNet)).replace("−", "")}</td></tr>
+      <tr class="sub"><td>Its loan repayment</td><td class="r num">−${fmt(s.ownRepay)}</td></tr>
+      ${s.eqRepay ? `<tr class="sub"><td>Repayment on ${fmt(s.eqUsed)} of equity used</td><td class="r num">−${fmt(s.eqRepay)}</td></tr>` : ""}
+      ${s.rentNet ? `<tr class="sub"><td>Rent (75% of ${fmt(state.ownRent)} a week)</td><td class="r num">+${fmt(s.rentNet)}</td></tr>` : ""}` : ""}
       <tr class="total"><td>Left over each month</td><td class="r num">${fmt(s.after)}</td></tr>`;
 
     $("rCash").innerHTML = `
@@ -2394,6 +2443,7 @@ body.wiz .entries-bar { display: none; }
       ${s.grant ? `<tr><td>First Home Owner Grant</td><td class="r num" style="color:var(--good)">−${fmt(s.grant)}</td></tr>` : ""}
       <tr class="total"><td>Cash needed at settlement</td><td class="r num">${fmt(s.cashNeeded)}</td></tr>
       <tr class="sub"><td>Savings available</td><td class="r num">${fmt(state.savings)}</td></tr>
+      ${s.propCash ? `<tr class="sub"><td>${state.own === "sell" ? "From selling your current property" : "Equity from your current property"}</td><td class="r num">${fmt(s.propCash)}</td></tr>` : ""}
       <tr class="sub"><td>${short > 0 ? "Short by" : "Savings left after settlement"}</td><td class="r num" style="color:var(--${short > 0 ? "bad" : "good"})">${fmt(Math.abs(short))}</td></tr>`;
 
     const flags = buildFlags(s, sub, short);
@@ -2413,6 +2463,7 @@ body.wiz .entries-bar { display: none; }
       <tr><td>Credit cards (${state.cardRate}% of ${fmt(state.cardLimits)})</td><td class="r num">−${fmt(s.cardCommit)}</td></tr>
       <tr><td>Repayment at ${(state.rate + state.buffer).toFixed(2)}%</td><td class="r num">−${fmt(s.repayStress)}</td></tr>
       <tr><td>Property running costs</td><td class="r num">−${fmt(s.pc.total / 12)}</td></tr>
+      ${state.own === "keep" ? `<tr><td>Property you're keeping (loans tested at ${(state.rate + state.buffer).toFixed(2)}%, rent at 75%)</td><td class="r num">−${fmt(repayment(state.ownLoan, state.rate + state.buffer, 25) + repayment(s.eqUsed, state.rate + state.buffer, state.term) - s.rentNet)}</td></tr>` : ""}
       <tr class="total"><td>Surplus on the lender's test</td><td class="r num" style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${fmt(s.lenderSurplus)}</td></tr>
 `;
     $("hemHint").textContent = `Blank uses a rough placeholder (${fmt(hemPlaceholder())} a month here). Enter the lender's HEM figure.`;
@@ -2519,10 +2570,10 @@ body.wiz .entries-bar { display: none; }
       ["Left over now", `${fmt(s.now)} a month`],
       ["Left over after buying", `${fmt(s.after)} a month (${st.budget.toLowerCase()}${st.lenderOk ? "" : ", but a lender may say no"})`],
       ["Lender-style check", `${lst.label} (${fmt(s.lenderSurplus)} surplus)`],
-      ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(state.savings)} savings`],
+      ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(funds())} available${s.propCash ? ` (savings ${fmt(state.savings)} plus ${fmt(s.propCash)} from current property)` : ""}`],
       ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
     ];
-    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], ["Home and contents insurance", fmt(s.pc.insurance / 12)], ...(state.expMode === "quick" ? [] : [["Commute to work", fmt(s.commuteNew)]])];
+    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], ["Home and contents insurance", fmt(s.pc.insurance / 12)]];
     const compare = listSubs().map(sub => { const x = scenario(sub); return { name: sub.name, price: x.price, after: x.after, status: status(x).label, sel: sub.id === state.suburb }; });
     const notes = flags.map(f => f[2]);
     lastReport = { take, name, today, lines, costs, compare, notes, s, st, lst, cash: [["Deposit", fmt(s.depositNeeded)], ["Stamp duty", fmt(state.dutyOnLoan ? 0 : s.duty)], ...(s.lmi && !state.lmiOnLoan ? [["Mortgage insurance", fmt(s.lmi)]] : []), ["Legal and registration", fmt(state.otherCosts)], ...(s.grant ? [["First Home Owner Grant", "-" + fmt(s.grant)]] : []), ["Cash needed", fmt(s.cashNeeded)]] };
@@ -2577,7 +2628,7 @@ body.wiz .entries-bar { display: none; }
     h2(`${R.s.sub.name}: ${R.st.label}`);
     R.lines.forEach(([k, v]) => row(k, v));
     y += 6; h2("Monthly home costs"); R.costs.forEach(([k, v]) => row(k, v)); row("Left over each month", fmt(R.s.after), true);
-    y += 6; h2("Upfront cash"); R.cash.forEach(([k, v], i) => row(k, v, i === R.cash.length - 1)); row("Savings available", fmt(state.savings));
+    y += 6; h2("Upfront cash"); R.cash.forEach(([k, v], i) => row(k, v, i === R.cash.length - 1)); row("Savings available", fmt(state.savings)); if (propCash()) row(state.own === "sell" ? "From selling current property" : "Equity from current property", fmt(propCash()));
     y += 6; h2("All suburbs compared");
     ensure(18); doc.setFontSize(8.5); doc.setTextColor(88, 104, 119); doc.text("SUBURB", M, y); doc.text("PRICE", W - M - 200, y, { align: "right" }); doc.text("LEFT OVER / MONTH", W - M - 90, y, { align: "right" }); doc.text("STATUS", W - M, y, { align: "right" }); y += 14; doc.setTextColor(20, 30, 43);
     R.compare.forEach(c => { ensure(16); doc.setFont("helvetica", c.sel ? "bold" : "normal"); doc.setFontSize(10); doc.text(clean(c.name), M, y); doc.text(clean(fmt(c.price)), W - M - 200, y, { align: "right" }); doc.text(clean(fmt(c.after)), W - M - 90, y, { align: "right" }); doc.text(c.status, W - M, y, { align: "right" }); y += 15; });
@@ -2648,7 +2699,7 @@ body.wiz .entries-bar { display: none; }
 
   // ---------- Step-by-step flow (one section per page, then the summary) ----------
   let wizOn = true, wizIdx = 0;
-  const STEP_SHORT = { s1h: "You", s2h: "Spending", s3h: "Deposit & loan", s4h: "Commute", s5h: "Home & suburb", sendH: "Send" };
+  const STEP_SHORT = { s1h: "You", s2h: "Spending", s3h: "Deposit & loan", s4h: "Current property", s5h: "Home & suburb", sendH: "Send" };
   function panelAvail(sec) {
     const b = document.body.classList;
     if (sec.hidden) return false;
@@ -2707,9 +2758,40 @@ body.wiz .entries-bar { display: none; }
       <span class="lsub">What would help</span><ul>${w.fixes.map(f => `<li>${f}</li>`).join("")}</ul>`;
   }
 
+
+  function setOwn(mode, quiet) {
+    state.own = mode;
+    document.querySelectorAll("#ownModes [data-own]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.own === mode)));
+    $("ownFields").hidden = mode === "none"; $("ownFields").className = mode;
+    if (!quiet) changed();
+  }
+  function renderOwn(s) {
+    if (state.own === "none") return;
+    const est = Math.round(repayment(state.ownLoan, state.rate, 25));
+    $("ownRepayHint").textContent = state.ownRepay === null ? `Blank uses an estimate of ${fmt(est)} a month.` : "";
+    $("ownEqHint").textContent = `Blank uses all usable equity: ${fmt(ownMaxEquity())}.`;
+    const r = $("ownResult");
+    if (state.own === "sell") {
+      const gross = state.ownValue, cost = gross * (state.ownSellCost || 0) / 100, net = ownSaleCash();
+      r.innerHTML = `<div class="small muted">Money from the sale for this purchase</div><div class="big num">${fmt(net)}</div>
+        <table><tr><td>Sale price (estimate)</td><td class="r">${fmt(gross)}</td></tr><tr><td>Selling costs (${state.ownSellCost}%)</td><td class="r">−${fmt(cost)}</td></tr><tr><td>Loan paid off</td><td class="r">−${fmt(state.ownLoan)}</td></tr>
+        <tr class="t"><td>Total for deposit and costs (with ${fmt(state.savings)} savings)</td><td class="r">${fmt(funds())}</td></tr></table>
+        ${state.loanMode === "deposit" ? `<div class="btn-row"><button type="button" id="ownToDep">Put it towards my deposit</button><span class="small muted">Sets the deposit to what's left after stamp duty and costs for ${escapeHtml(s.sub.name)}.</span></div>` : ""}`;
+    } else {
+      const max = ownMaxEquity(), used = ownEquityUsed();
+      r.innerHTML = `<div class="small muted">Usable equity</div><div class="big num">${fmt(max)}</div>
+        <table><tr><td>80% of ${fmt(state.ownValue)} (what lenders usually lend against without mortgage insurance)</td><td class="r">${fmt(state.ownValue * 0.8)}</td></tr><tr><td>Loan still owing</td><td class="r">−${fmt(state.ownLoan)}</td></tr>
+        <tr class="t"><td>Using ${fmt(used)}: total for deposit and costs (with ${fmt(state.savings)} savings)</td><td class="r">${fmt(funds())}</td></tr></table>
+        <p class="small">Equity is borrowed against your current home, so it adds about ${fmt(s.eqRepay)} a month in repayments. Your current loan repayment of ${fmt(s.ownRepay)} a month continues${state.ownRent ? `, and rent adds about ${fmt(s.rentNet)} a month` : ""}. These are included in your results.</p>
+        ${state.loanMode === "deposit" ? `<div class="btn-row"><button type="button" id="ownToDep">Put it towards my deposit</button><span class="small muted">Sets the deposit to what's left after stamp duty and costs for ${escapeHtml(s.sub.name)}.</span></div>` : ""}`;
+    }
+    const btn = $("ownToDep");
+    if (btn) btn.onclick = () => { const price = priceFor(s.sub), duty = state.fhb && state.newBuild ? 0 : stampDuty(price); state.deposit = Math.max(0, Math.min(price, Math.round((funds() - duty - state.otherCosts) / 1000) * 1000)); $("deposit").value = state.deposit; changed(); };
+  }
+
   // ---------- Results hero: headline, doughnut and sliders ----------
   function renderHero(s, st, sub) {
-    const short = s.cashNeeded - state.savings;
+    const short = s.cashNeeded - funds();
     $("hHead").innerHTML = `<div class="eyebrow">If you buy in ${escapeHtml(sub.name)} for ${fmt(s.price)}</div>
       <div class="hero-num${s.after < 0 ? " neg" : ""}">${fmt(s.after)}</div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>left over each month</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.lenderOk ? st.label : `${st.budget} budget, lender risk`}</span></span></div>
@@ -2720,7 +2802,7 @@ body.wiz .entries-bar { display: none; }
       </div>${st.lenderOk ? "" : `<div class="lender-note">${lenderNoteHtml(s, st)}</div>`}`;
     // Doughnut: where the take-home pay goes
     const living = s.kept + s.commuteNew, running = s.pc.total / 12, left = Math.max(0, s.after), gap = Math.max(0, -s.after);
-    const segs = [["Living costs", living, "--seg-living"], ["Loan repayment", s.repay, "--seg-home"], ["Rates, bills and insurance", running, "--seg-run"], [s.after >= 0 ? "Left over" : "Shortfall", s.after >= 0 ? left : gap, s.after >= 0 ? "--seg-surplus" : "--seg-short"]];
+    const segs = [["Living costs", living, "--seg-living"], [state.own === "keep" ? "Loan repayments" : "Loan repayment", s.repay + Math.max(0, s.ownNet), "--seg-home"], ["Rates, bills and insurance", running, "--seg-run"], [s.after >= 0 ? "Left over" : "Shortfall", s.after >= 0 ? left : gap, s.after >= 0 ? "--seg-surplus" : "--seg-short"]];
     const total = segs.reduce((a, x) => a + x[1], 0) || 1, R = 80, C = 2 * Math.PI * R, GAP = 2.5;
     let off = 0;
     $("hDonut").innerHTML = `<circle cx="100" cy="100" r="${R}" fill="none" stroke="var(--line)" stroke-width="26"/>` + segs.map(([lab, v, col]) => {
@@ -2728,7 +2810,7 @@ body.wiz .entries-bar { display: none; }
       const el = len > 0 ? `<circle class="seg" cx="100" cy="100" r="${R}" fill="none" stroke="var(${col})" stroke-width="26" stroke-dasharray="${dash.toFixed(2)} ${(C - dash).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"><title>${lab}: ${fmt(v)} a month (${Math.round(v / total * 100)}%)</title></circle>` : "";
       off += len; return el; }).join("");
     $("hDonut").setAttribute("aria-label", "Monthly money: " + segs.map(x => `${x[0]} ${fmt(x[1])}`).join(", "));
-    $("hDonutC").innerHTML = s.after >= 0 ? `<b>${fmt(state.income)}</b>take-home<br>a month` : `<b style="color:var(--bad)">${fmt(gap)}</b>short<br>each month`;
+    $("hDonutC").innerHTML = s.after >= 0 ? `<b>${fmt(state.income + Math.max(0, -s.ownNet))}</b>${s.ownNet < 0 ? "income incl. rent" : "take-home"}<br>a month` : `<b style="color:var(--bad)">${fmt(gap)}</b>short<br>each month`;
     $("hLegend").innerHTML = segs.map(([lab, v, col]) => `<li><i style="background:var(${col})"></i><span>${lab}</span><span class="num">${fmt(v)}</span></li>`).join("");
     // Sliders (ranges follow the selected suburb; values follow the inputs)
     const est = estPrice(sub), price = priceFor(sub);
@@ -2771,7 +2853,7 @@ body.wiz .entries-bar { display: none; }
     $("qTotal").textContent = fmt(total);
     $("qTotalSub").textContent = total ? `a month in total · about ${fmt(total * 12 / 52)} a week` : "a month in total";
     const billsIn = Math.min(monthly(q.spend), b.power + b.water + b.homeins);
-    $("qNote").textContent = monthly(q.spend) ? `About ${fmt(billsIn)} a month of that is treated as power, water and contents insurance, and swapped for the new home's own costs after buying. Fuel and transport are assumed to stay the same wherever you buy. For a suburb-by-suburb commute comparison, choose Detailed or Bank statements.` : "";
+    $("qNote").textContent = monthly(q.spend) ? `About ${fmt(billsIn)} a month of that is treated as power, water and contents insurance, and swapped for the new home's own costs after buying. Petrol and transport are assumed to stay the same wherever you buy.` : "";
   }
   function quickFromDetail() {
     const total = CATS.reduce((a, c) => a + monthly(state.expenses[c.id]), 0), rent = monthly(state.expenses.rent), debt = monthly(state.expenses.debt);
@@ -2779,15 +2861,10 @@ body.wiz .entries-bar { display: none; }
   }
   function setExpMode(mode, quiet) {
     if (mode === "quick" && state.expMode !== "quick") { quickFromDetail(); syncQuickInputs(); applyQuick(); }
-    // Leaving quick mode: split today's commute out of "other" so it can be swapped for each suburb's commute
-    if (mode !== "quick" && state.expMode === "quick" && !monthly(state.expenses.fuel)) {
-      const fuel = Math.min(Math.round(commuteToday()), monthly(state.expenses.other));
-      state.expenses.fuel = { amount: fuel, freq: "monthly" }; state.expenses.other = { amount: Math.round(monthly(state.expenses.other) - fuel), freq: "monthly" }; renderExpenses();
-    }
     state.expMode = mode;
     document.querySelectorAll("#expModes [data-mode]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
     $("expQuick").hidden = mode !== "quick"; $("expUpload").hidden = mode !== "upload"; $("expDetail").hidden = mode === "quick";
-    $("stepCommute").hidden = mode === "quick"; renumberSteps();
+    renumberSteps();
     $("detailLead").textContent = mode === "upload" ? (state.months ? "Filled in from the statements. Adjust any amount." : "Upload statements above and this table fills in automatically.") : "Enter what you spend in each category. Use whichever frequency is easiest.";
     if (!quiet) changed();
   }
@@ -2809,11 +2886,11 @@ body.wiz .entries-bar { display: none; }
   // Months until savings cover the cash needed at settlement, with prices growing while they save
   function monthsToReach(sub, save) {
     const s0 = scenario(sub);
-    if (state.savings >= s0.cashNeeded) return 0;
+    if (funds() >= s0.cashNeeded) return 0;
     if (save <= 0) return null;
     const g = (state.priceGrowth || 0) / 100, base = priceFor(sub);
     for (let m = 1; m <= 240; m++) {
-      const have = state.savings + save * m;
+      const have = funds() + save * m;
       const need = g ? withState({ priceOverride: { ...state.priceOverride, [sub.id]: base * Math.pow(1 + g, m / 12) } }, () => scenario(sub)).cashNeeded : s0.cashNeeded;
       if (have >= need) return m;
     }
@@ -2824,14 +2901,14 @@ body.wiz .entries-bar { display: none; }
     const save = planSave(s), m = monthsToReach(sub, save), st = status(s);
     $("planSaveHint").textContent = state.planSave === null ? `Blank uses what's left over now: ${fmt(Math.max(0, s.now))} a month.` : `Left over now is ${fmt(s.now)} a month.`;
     if (document.activeElement !== $("planSave")) $("planSave").value = state.planSave ?? "";
-    const pct = Math.max(0, Math.min(100, state.savings / Math.max(1, s.cashNeeded) * 100));
+    const pct = Math.max(0, Math.min(100, funds() / Math.max(1, s.cashNeeded) * 100));
     $("pathHead").innerHTML = `<div><div class="eyebrow">${escapeHtml(sub.name)} · cash needed ${fmt(s.cashNeeded)}</div><div class="when">${whenText(m)}</div>
-        <div class="small muted">${m === 0 ? `Savings of ${fmt(state.savings)} already cover settlement.` : m === null ? `Saving ${fmt(save)} a month won't catch up with prices. Try a cheaper suburb or saving more.` : `Saving ${fmt(save)} a month${state.priceGrowth ? `, with prices up ${state.priceGrowth}% a year` : ""}. ${m} month${m > 1 ? "s" : ""} away.`}</div></div>
+        <div class="small muted">${m === 0 ? `${fmt(funds())} available already covers settlement.` : m === null ? `Saving ${fmt(save)} a month won't catch up with prices. Try a cheaper suburb or saving more.` : `Saving ${fmt(save)} a month${state.priceGrowth ? `, with prices up ${state.priceGrowth}% a year` : ""}. ${m} month${m > 1 ? "s" : ""} away.`}</div></div>
       <div class="num" style="font-weight:700">${Math.round(pct)}%</div>
       <div class="progress" role="img" aria-label="${Math.round(pct)}% of the cash needed is saved"><span style="width:${pct.toFixed(1)}%"></span></div>`;
     $("pathSubName").textContent = sub.name;
     const checks = [
-      [state.savings >= s.cashNeeded, `Savings cover the ${fmt(s.cashNeeded)} needed at settlement`, `${fmt(s.cashNeeded - state.savings)} more savings needed`],
+      [funds() >= s.cashNeeded, `Money available covers the ${fmt(s.cashNeeded)} needed at settlement`, `${fmt(s.cashNeeded - funds())} more savings needed`],
       [s.lvr <= 0.95, "Deposit is at least 5% of the price", `Deposit is under 5% (${Math.round((1 - s.lvr) * 100)}%), below most lenders' minimum`],
       [s.after >= state.income * 0.05, `Budget after buying is ${st.budget.toLowerCase()} (${fmt(s.after)} left each month)`, `Budget after buying is ${st.budget.toLowerCase()} (${fmt(s.after)} a month)`],
       [s.lenderSurplus >= 0, "Likely passes a lender's serviceability check", "Likely fails a lender's serviceability check"]
@@ -2888,7 +2965,7 @@ body.wiz .entries-bar { display: none; }
     const goal = state.takeGoal ?? 0.15, goalLabel = GOALS[String(goal)] || "Comfortable";
     const target = state.income * goal, gap = target - s.after, sub = s.sub;
     const perDollar = repayment(1, state.rate, state.term), perDollarStress = repayment(1, state.rate + state.buffer, state.term);
-    const short = s.cashNeeded - state.savings;
+    const short = s.cashNeeded - funds();
     const levers = [], text = [];
     const meets = gap <= 0;
     const head = meets
@@ -2922,7 +2999,7 @@ body.wiz .entries-bar { display: none; }
       text.push(`Save another ${fmt(short)} for settlement${months ? ` (about ${months} months at the current rate)` : ""}.`);
     }
     // Suburbs that work as they are
-    const ok = subs().map(x => scenario(x)).filter(x => x.after >= target && x.lenderSurplus >= 0 && x.cashNeeded <= state.savings).sort((a, b) => b.price - a.price);
+    const ok = subs().map(x => scenario(x)).filter(x => x.after >= target && x.lenderSurplus >= 0 && x.cashNeeded <= funds()).sort((a, b) => b.price - a.price);
     const best = ok.slice(0, 5);
     text.push(best.length ? `Suburbs that meet the goal, pass the lender check and are covered by savings: ${best.map(x => `${x.sub.name} (${fmt(x.price)})`).join(", ")}.` : "No suburb in the list meets the goal, passes the lender check and is covered by savings for this home.");
     return { goal, goalLabel, target, gap, meets, head, levers, best, okCount: ok.length, text };
@@ -2955,6 +3032,7 @@ body.wiz .entries-bar { display: none; }
         `Existing loan and BNPL repayments: ${fmt(s.debtNow)} a month`,
         `Credit card limits: ${fmt(state.cardLimits)}`,
         `Savings: ${fmt(state.savings)}`,
+        ...(state.own === "none" ? ["Owns a property now: no"] : [`Owns a property worth about ${fmt(state.ownValue)} with ${fmt(state.ownLoan)} owing; plans to ${state.own === "sell" ? `sell it (about ${fmt(ownSaleCash())} after the loan and selling costs)` : `keep it and use ${fmt(ownEquityUsed())} of equity (up to ${fmt(ownMaxEquity())} available at 80%)${state.ownRent ? `, rented at ${fmt(state.ownRent)} a week` : ""}`}`]),
         `Statement categories reviewed with client: ${g.reviewed ? "yes" : "not yet"}`]],
       ["Property scenario", [
         `Suburb: ${sub.name}${sub.council === "Other" ? "" : ` (City of ${sub.council})`}${s.pc.fromProperty && state.property.address ? `, ${state.property.address}` : ""}`,
@@ -2963,13 +3041,13 @@ body.wiz .entries-bar { display: none; }
         `Loan: ${fmt(s.loan)} at ${state.rate}% over ${state.term} years, ${Math.round(s.lvr * 100)}% of price`,
         `Stamp duty: ${fmt(s.duty)}${state.dutyOnLoan && s.duty ? " (added to loan)" : ""}${s.grant ? `; First Home Owner Grant ${fmt(s.grant)}` : ""}`,
         `Mortgage insurance: ${s.schemeUsed ? "none, 5% Deposit Scheme" : s.lmi ? `about ${fmt(s.lmi)}${state.lmiOnLoan ? " (added to loan)" : ""}` : "not expected"}`,
-        `Cash needed at settlement: ${fmt(s.cashNeeded)} against savings of ${fmt(state.savings)}`]],
+        `Cash needed at settlement: ${fmt(s.cashNeeded)} against ${fmt(funds())} available`]],
       ["Affordability and serviceability", [
         `Repayment: ${fmt(s.repay)} a month; ${fmt(s.repayStress)} at the ${(state.rate + state.buffer).toFixed(2)}% test rate`,
         `Left over now: ${fmt(s.now)} a month. After buying: ${fmt(s.after)} a month (${st.budget.toLowerCase()}${st.lenderOk ? "" : ", lender check likely fails"})`,
         `Lender-style check: ${s.lenderSurplus >= 0 ? "likely passes" : "likely fails"}, ${fmt(s.lenderSurplus)} surplus`]],
       ["Suburbs considered", listSubs().map(x => { const r = scenario(x); return `${x.name}: ${fmt(r.price)}, ${fmt(r.after)} left over (${status(r).label.toLowerCase()}), lender check ${r.lenderSurplus >= 0 ? "passes" : "fails"}`; })],
-      ["Risks and points discussed", [...buildFlags(s, sub, s.cashNeeded - state.savings).map(f => f[2]), ...take.text.slice(1)]],
+      ["Risks and points discussed", [...buildFlags(s, sub, s.cashNeeded - funds()).map(f => f[2]), ...take.text.slice(1)]],
       ["Broker notes", [g.notes || "None recorded."]]
     ];
     return { name, today, sections };
@@ -3525,6 +3603,10 @@ body.wiz .entries-bar { display: none; }
   $("moreMenu").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("moreMenu").open = false; }));
   document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
   $("lSend").onclick = sendLead;
+  document.querySelectorAll("#ownModes [data-own]").forEach(b => b.addEventListener("click", () => setOwn(b.dataset.own)));
+  bindNum("ownValue", "ownValue", { blankZero: true }); bindNum("ownLoan", "ownLoan", { blankZero: true }); bindNum("ownSellCost", "ownSellCost");
+  bindNum("ownRepay", "ownRepay", { nullable: true }); bindNum("ownRent", "ownRent", { blankZero: true }); bindNum("ownEqUse", "ownEqUse", { nullable: true });
+  bindings.push(() => setOwn(state.own || "none", true));
   $("toLead").onclick = () => { $("leadPanel").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => $("lName").focus({ preventScroll: true }), 400); };
   $("toggleEntries").onclick = () => {
     const on = !document.body.classList.contains("show-entries");
