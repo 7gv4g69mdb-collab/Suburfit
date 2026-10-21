@@ -919,6 +919,7 @@ body.wiz .entries-bar { display: none; }
 .type-modes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 #typeModes button[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
 body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !important; }
+.unit-warn { display: block; color: var(--warn); font-size: 0.84rem; white-space: normal; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1477,7 +1478,7 @@ body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !imp
       <span>House prices: SA Valuer-General <a href="https://data.sa.gov.au/data/dataset/metro-median-house-sales" target="_blank" rel="noopener">metropolitan median house sales</a>, Q3 2025 to Q2 2026, combined into a 12-month figure weighted by the number of sales; suburbs with under 15 sales are marked. Hindmarsh, Ashford, Southwark and Rosewater have no separate house sales in that data and are left out. Price by bedrooms: sales medians for the 12 months to October 2026 from <a href="https://www.property.com.au/sa/seaton-5023" target="_blank" rel="noopener">property.com.au</a> suburb pages, with small-sample gaps smoothed. Bathroom (±4% per bathroom against the typical number) and block-size adjustments, and typical block sizes, are estimates.</span>
       <span>Council rates: <a href="https://www.westtorrens.sa.gov.au/Council/Rates-and-charges/Rate-calculations" target="_blank" rel="noopener">City of West Torrens 2026/27</a> (rate 0.00171528, landscape levy 0.00005691, minimum $1,258). City of Charles Sturt is an estimate from 2026 listings.</span>
       <span>Water: <a href="https://sawater.com.au/__data/assets/pdf_file/0009/2178270/2026-27-SA-Water-Water-Sewerage-prices.pdf" target="_blank" rel="noopener">SA Water 2026-27 prices</a>. Emergency services levy: <a href="https://revenuesa.sa.gov.au/ESL/Rates-and-Factors" target="_blank" rel="noopener">RevenueSA 2026-27</a>. Electricity: <a href="https://www.aer.gov.au/industry/retail/default-market-offer" target="_blank" rel="noopener">AER Default Market Offer 2026-27</a>.</span>
-      <span>Units: 2-bedroom unit medians from <a href="https://www.domain.com.au/suburb-profile/seaton-sa-5023" target="_blank" rel="noopener">Domain suburb profiles</a> (12 months to October 2026) for Findon, Seaton, St Clair, West Lakes, Camden Park, Glenelg North, Kurralta Park, Plympton and Bowden; other suburbs estimated at half the house median, the typical ratio in those suburbs. Strata fees: a typical Adelaide range of $700 to $1,500 a quarter. Contents insurance: SA average $483 (Canstar, August 2026).</span>
+      <span>Units: 2-bedroom unit medians from <a href="https://www.domain.com.au/suburb-profile/seaton-sa-5023" target="_blank" rel="noopener">Domain suburb profiles</a> (12 months to October 2026) for 11 suburbs with 15 or more two-bedroom sales (Findon, Seaton, St Clair, West Lakes, Camden Park, Glenelg North, Kurralta Park, Plympton, Bowden, Brooklyn Park, West Beach), plus Semaphore Park, Woodville and Fulham with 10 to 12 sales; other suburbs are estimated at half the house median, the typical ratio in those suburbs. Strata fees: a typical Adelaide range of $700 to $1,500 a quarter. Contents insurance: SA average $483 (Canstar, August 2026).</span>
       <span>Stamp duty: <a href="https://revenuesa.sa.gov.au/stampduty/rate-of-stamp-duty" target="_blank" rel="noopener">RevenueSA rates</a> and <a href="https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief" target="_blank" rel="noopener">first home buyer relief</a>. Home and contents: Adelaide average quote of $2,559 for June 2026 from <a href="https://www.comparethemarket.com.au/news/home-insurance-quotes-surge-more-than-300-across-capital-cities/" target="_blank" rel="noopener">Compare the Market</a>; suburb and bedroom loadings are indicative only.</span>
       <span>Lender check: HECS/HELP from the <a href="https://www.ato.gov.au/rates/HELP,-TSL-and-SFSS-repayment-thresholds-and-rates/" target="_blank" rel="noopener">ATO 2026-27 rates</a>. The living-expense benchmark is a placeholder because lender HEM tables are licensed. Mortgage insurance uses rough premiums of 1%, 2% and 3.5% of the loan for 80-85%, 85-90% and 90-95% of the price.</span>
       <span>First home buyers: <a href="https://www.canstar.com.au/home-loans/5-percent-deposit-scheme/" target="_blank" rel="noopener">5% Deposit Scheme</a> cap of $900,000 for Adelaide from October 2025. <a href="https://www.huntergalloway.com.au/first-home-owners-grant-sa" target="_blank" rel="noopener">SA First Home Owner Grant</a> of $15,000 for new homes.</span>
@@ -1907,7 +1908,11 @@ body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !imp
   const BATH_STEP = 0.04, LAND_SHARE = 0.6, LAND_CURVE = 0.7;
   // Units: 2-bedroom unit medians from Domain suburb profiles (12 months to October 2026, 15+ sales).
   // Elsewhere a 2-bedroom unit is estimated at half the suburb's house median, the typical ratio across those suburbs.
-  const UNIT2 = { findon: [569000, 22], seaton: [536000, 25], stclair: [568500, 19], westlakes: [795000, 18], camdenpark: [561000, 21], glenelgnorth: [650000, 43], kurraltapark: [480000, 15], plympton: [581000, 26], bowden: [730000, 31] };
+  // [2-bedroom unit median, 2-bedroom unit sales]. 15+ sales is treated as reliable; 10 to 14 is shown with a caution.
+  const UNIT2 = { findon: [569000, 22], seaton: [536000, 25], stclair: [568500, 19], westlakes: [795000, 18], camdenpark: [561000, 21], glenelgnorth: [650000, 43], kurraltapark: [480000, 15], plympton: [581000, 26], bowden: [730000, 31], brooklynpark: [520000, 28], westbeach: [597500, 16],
+    semaphorepark: [721250, 12], woodville: [580000, 12], "fulham-west": [697500, 10] };
+  const unitData = sub => { const u = UNIT2[sub.id]; return u ? (u[1] >= 15 ? "solid" : "few") : "none"; };
+  const unitSoldUrl = sub => sub.postcode ? `https://www.domain.com.au/sold-listings/${sub.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-sa-${sub.postcode}/apartment/` : "";
   const UNIT_RATIO = 0.50, UNIT_BED = { 1: 0.8, 2: 1, 3: 1.3 }, TYP_UNIT_BATH = { 1: 1, 2: 1, 3: 2 };
   const isUnit = () => state.homeType === "unit";
   const unit2For = sub => UNIT2[sub.id] ? UNIT2[sub.id][0] : Math.round(sub.median * UNIT_RATIO / 1000) * 1000;
@@ -2383,7 +2388,7 @@ body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !imp
     const b = document.createElement("button");
     b.type = "button"; b.className = "pick"; b.id = "pick-" + s.id;
     b.setAttribute("aria-pressed", String(s.id === state.suburb));
-    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num">${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : s.sales && s.sales < 15 ? '<span class="tag-est">Few sales</span>' : ""}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)}</span>`;
+    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num">${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : isUnit() ? (unitData(s) === "solid" ? "" : unitData(s) === "few" ? '<span class="tag-est">Few unit sales</span>' : '<span class="tag-est">Estimated</span>') : s.sales && s.sales < 15 ? '<span class="tag-est">Few sales</span>' : ""}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)}</span>`;
     b.onclick = () => selectSuburb(s.id);
     const star = document.createElement("button");
     star.type = "button"; star.className = "star"; star.textContent = starred ? "★" : "☆";
@@ -2529,9 +2534,14 @@ body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !imp
     const pp = priceParts(sub), b = state.bedrooms, override = state.priceOverride[sub.id];
     const sign = v => (v >= 0 ? "+" : "−") + fmt(Math.abs(v)).replace("−", "");
     if (pp.unit) {
-      const real = UNIT2[sub.id];
+      const real = UNIT2[sub.id], q = unitData(sub), url = unitSoldUrl(sub);
+      const note = q === "solid" ? "" : q === "few"
+        ? `<tr class="sub"><td colspan="2"><span class="unit-warn">Only ${real[1]} two-bedroom units sold in ${escapeHtml(sub.name)} in the last 12 months, so this median is less reliable.</span></td></tr>`
+        : `<tr class="sub"><td colspan="2"><span class="unit-warn">Not enough unit sales in ${escapeHtml(sub.name)} for a reliable median: too few units sold there in the last 12 months for Domain to report one. The price is estimated at half the suburb's house median, the typical ratio in nearby suburbs with more unit sales. Check the recent sales below before relying on it.</span></td></tr>`;
       $("priceEst").innerHTML = `
-      <tr><td>${escapeHtml(sub.name)}, 2-bedroom unit <span class="muted small">(${real ? `median of ${real[1]} sales, 12 months to October 2026` : `estimated at half the suburb's ${fmt(sub.median)} house median`})</span>${real ? "" : '<span class="tag-est">Estimate</span>'}</td><td class="r num">${fmt(unit2For(sub))}</td></tr>
+      <tr><td>${escapeHtml(sub.name)}, 2-bedroom unit <span class="muted small">(${q === "none" ? `estimated from the ${fmt(sub.median)} house median` : `median of ${real[1]} sales, 12 months to October 2026`})</span>${q === "solid" ? "" : q === "few" ? '<span class="tag-est">Few sales</span>' : '<span class="tag-est">Estimate</span>'}</td><td class="r num">${fmt(unit2For(sub))}</td></tr>
+      ${note}
+      ${url && q !== "solid" ? `<tr class="sub"><td colspan="2"><a href="${url}" target="_blank" rel="noopener">See recent unit sales in and around ${escapeHtml(sub.name)} on Domain</a></td></tr>` : ""}
       <tr><td>${pp.b}-bedroom unit${state.bedrooms > 3 ? ' <span class="muted small">(units are priced up to 3 bedrooms)</span>' : ""}</td><td class="r num">${fmt(pp.base)}</td></tr>
       <tr class="sub"><td>${state.bathrooms} bathroom${state.bathrooms > 1 ? "s" : ""} (typical for ${pp.b} bedrooms: ${TYP_UNIT_BATH[pp.b]})</td><td class="r num">${pp.bathAdj ? sign(pp.bathAdj) : "$0"}</td></tr>
       <tr class="total"><td>Estimated price${override ? ' <span class="muted small">(price entered by hand is used instead)</span>' : ""}</td><td class="r num">${fmt(pp.est)}</td></tr>`;
