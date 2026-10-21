@@ -916,6 +916,9 @@ body.wiz .entries-bar { display: none; }
 .oe-out { margin-top: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
 .oe-out .big { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; }
 .own-notes { margin: 6px 0 0; padding-left: 18px; font-size: 0.84rem; color: var(--muted); display: grid; gap: 3px; }
+.type-modes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#typeModes button[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1259,13 +1262,19 @@ body.wiz .entries-bar { display: none; }
       <section class="panel broker-only" aria-labelledby="s5h">
         <div class="step-head"><span class="step-no">5</span><div><h2 id="s5h">Where would you like to live?</h2><p class="muted small">Describe the home you want. Every suburb's price is estimated for that home, so the comparison is like for like.</p></div></div>
         <div class="sub-card" style="margin-bottom:14px">
-          <h3 style="margin-bottom:10px">The home they want</h3>
+          <h3 style="margin-bottom:10px">The home you want</h3>
+          <div class="exp-modes type-modes" role="radiogroup" aria-label="Type of home" id="typeModes">
+            <button type="button" role="radio" data-type="house" aria-checked="true"><b>House</b><span>Freestanding home on its own block</span></button>
+            <button type="button" role="radio" data-type="unit" aria-checked="false"><b>Apartment or unit</b><span>Strata title, shared building or land</span></button>
+          </div>
           <div class="grid2">
             <div><label for="bedrooms">Bedrooms</label><select id="bedrooms"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 or more</option></select></div>
             <div><label for="bathrooms">Bathrooms</label><select id="bathrooms"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
-            <div><label for="landSize">Land size (m²)</label><input id="landSize" type="number" min="80" max="5000" step="10" inputmode="numeric" placeholder="Typical"><p class="hint" id="landHint">Blank uses the suburb's typical block.</p></div>
+            <div class="unit-only"><label for="strataYr">Strata fees (yearly)</label><div class="money"><input id="strataYr" type="number" min="0" step="100" inputmode="decimal"></div><p class="hint">Adelaide units often pay about $700 to $1,500 a quarter; older, smaller groups are usually lower. Use the figure from the strata records if you have it.</p></div>
+            <div class="unit-only"><label for="unitIns">Contents insurance (yearly)</label><div class="money"><input id="unitIns" type="number" min="0" step="10" inputmode="decimal"></div><p class="hint">The building is insured through the strata fees. $483 is the SA average for contents cover (Canstar, August 2026).</p></div>
+            <div class="house-only"><label for="landSize">Land size (m²)</label><input id="landSize" type="number" min="80" max="5000" step="10" inputmode="numeric" placeholder="Typical"><p class="hint" id="landHint">Blank uses the suburb's typical block.</p></div>
           </div>
-          <p class="hint" style="margin-top:8px">Bigger homes also cost more to power and insure; those bills update too.</p>
+          <p class="hint" style="margin-top:8px" id="typeHint">Bigger homes also cost more to power and insure; those bills update too.</p>
         </div>
         <div class="pick-tools" id="pickTools">
           <input id="subSearch" type="search" placeholder="Search 59 western suburbs" aria-label="Search suburbs">
@@ -1468,6 +1477,7 @@ body.wiz .entries-bar { display: none; }
       <span>House prices: SA Valuer-General <a href="https://data.sa.gov.au/data/dataset/metro-median-house-sales" target="_blank" rel="noopener">metropolitan median house sales</a>, Q3 2025 to Q2 2026, combined into a 12-month figure weighted by the number of sales; suburbs with under 15 sales are marked. Hindmarsh, Ashford, Southwark and Rosewater have no separate house sales in that data and are left out. Price by bedrooms: sales medians for the 12 months to October 2026 from <a href="https://www.property.com.au/sa/seaton-5023" target="_blank" rel="noopener">property.com.au</a> suburb pages, with small-sample gaps smoothed. Bathroom (±4% per bathroom against the typical number) and block-size adjustments, and typical block sizes, are estimates.</span>
       <span>Council rates: <a href="https://www.westtorrens.sa.gov.au/Council/Rates-and-charges/Rate-calculations" target="_blank" rel="noopener">City of West Torrens 2026/27</a> (rate 0.00171528, landscape levy 0.00005691, minimum $1,258). City of Charles Sturt is an estimate from 2026 listings.</span>
       <span>Water: <a href="https://sawater.com.au/__data/assets/pdf_file/0009/2178270/2026-27-SA-Water-Water-Sewerage-prices.pdf" target="_blank" rel="noopener">SA Water 2026-27 prices</a>. Emergency services levy: <a href="https://revenuesa.sa.gov.au/ESL/Rates-and-Factors" target="_blank" rel="noopener">RevenueSA 2026-27</a>. Electricity: <a href="https://www.aer.gov.au/industry/retail/default-market-offer" target="_blank" rel="noopener">AER Default Market Offer 2026-27</a>.</span>
+      <span>Units: 2-bedroom unit medians from <a href="https://www.domain.com.au/suburb-profile/seaton-sa-5023" target="_blank" rel="noopener">Domain suburb profiles</a> (12 months to October 2026) for Findon, Seaton, St Clair, West Lakes, Camden Park, Glenelg North, Kurralta Park, Plympton and Bowden; other suburbs estimated at half the house median, the typical ratio in those suburbs. Strata fees: a typical Adelaide range of $700 to $1,500 a quarter. Contents insurance: SA average $483 (Canstar, August 2026).</span>
       <span>Stamp duty: <a href="https://revenuesa.sa.gov.au/stampduty/rate-of-stamp-duty" target="_blank" rel="noopener">RevenueSA rates</a> and <a href="https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief" target="_blank" rel="noopener">first home buyer relief</a>. Home and contents: Adelaide average quote of $2,559 for June 2026 from <a href="https://www.comparethemarket.com.au/news/home-insurance-quotes-surge-more-than-300-across-capital-cities/" target="_blank" rel="noopener">Compare the Market</a>; suburb and bedroom loadings are indicative only.</span>
       <span>Lender check: HECS/HELP from the <a href="https://www.ato.gov.au/rates/HELP,-TSL-and-SFSS-repayment-thresholds-and-rates/" target="_blank" rel="noopener">ATO 2026-27 rates</a>. The living-expense benchmark is a placeholder because lender HEM tables are licensed. Mortgage insurance uses rough premiums of 1%, 2% and 3.5% of the loan for 80-85%, 85-90% and 90-95% of the price.</span>
       <span>First home buyers: <a href="https://www.canstar.com.au/home-loans/5-percent-deposit-scheme/" target="_blank" rel="noopener">5% Deposit Scheme</a> cap of $900,000 for Adelaide from October 2025. <a href="https://www.huntergalloway.com.au/first-home-owners-grant-sa" target="_blank" rel="noopener">SA First Home Owner Grant</a> of $15,000 for new homes.</span>
@@ -1825,6 +1835,7 @@ body.wiz .entries-bar { display: none; }
       insBase: 2559, insQuote: 0, petrol: {}, petrolAvg: 238.8, fuelPrice: 2.388, fuelUse: 8, ptFare: 4.55, ptPass: 119.10,
       property: { suburb: null, address: "", cv: 0, rates: 0, esl: 0, waterQ: 0 },
       rateShift: 0, extraRepay: 0, offsetBal: 0,
+      homeType: "house", strataYr: 3000, unitIns: 483,
       own: "none", ownValue: 0, ownLoan: 0, ownSellCost: 2.5, ownRepay: null, ownRent: 0, ownEqUse: null, ownHold: null, ownEst: { sub: "", beds: 3, baths: 2, land: 0 },
       expMode: "quick", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
       intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
@@ -1894,7 +1905,19 @@ body.wiz .entries-bar { display: none; }
   const DEF_BED_RATIO = { 1: 0.65, 2: 0.78, 3: 1, 4: 1.18, 5: 1.40 };
   const TYP_BATH = { 1: 1, 2: 1, 3: 2, 4: 2, 5: 3 };
   const BATH_STEP = 0.04, LAND_SHARE = 0.6, LAND_CURVE = 0.7;
+  // Units: 2-bedroom unit medians from Domain suburb profiles (12 months to October 2026, 15+ sales).
+  // Elsewhere a 2-bedroom unit is estimated at half the suburb's house median, the typical ratio across those suburbs.
+  const UNIT2 = { findon: [569000, 22], seaton: [536000, 25], stclair: [568500, 19], westlakes: [795000, 18], camdenpark: [561000, 21], glenelgnorth: [650000, 43], kurraltapark: [480000, 15], plympton: [581000, 26], bowden: [730000, 31] };
+  const UNIT_RATIO = 0.50, UNIT_BED = { 1: 0.8, 2: 1, 3: 1.3 }, TYP_UNIT_BATH = { 1: 1, 2: 1, 3: 2 };
+  const isUnit = () => state.homeType === "unit";
+  const unit2For = sub => UNIT2[sub.id] ? UNIT2[sub.id][0] : Math.round(sub.median * UNIT_RATIO / 1000) * 1000;
+  function unitParts(sub, h) {
+    const b = Math.min(3, h ? h.beds : state.bedrooms), baths = h ? h.baths : state.bathrooms;
+    const base = unit2For(sub) * UNIT_BED[b], bathF = 1 + BATH_STEP * (baths - TYP_UNIT_BATH[b]);
+    return { base, bathAdj: base * (bathF - 1), landAdj: 0, est: Math.round(base * bathF / 1000) * 1000, typLand: 0, unit: true, b };
+  }
   function priceParts(sub, h) {
+    if (!h && isUnit()) return unitParts(sub);
     const b = h ? h.beds : state.bedrooms, baths = h ? h.baths : state.bathrooms, land = h ? h.land : state.landSize;
     const bedRatio = sub.bed && sub.salesMedian ? sub.bed[b] / sub.salesMedian : DEF_BED_RATIO[b];
     const base = sub.median * bedRatio;
@@ -1922,9 +1945,11 @@ body.wiz .entries-bar { display: none; }
     const kl = waterKl(), tier1 = Math.min(kl, 0.3836 * 365);
     const usage = tier1 * 2.52 + Math.max(0, kl - tier1) * 3.597;
     const water = (useP && p.waterQ > 0 ? p.waterQ * 4 : 352 + Math.max(value / 1000 * 0.593, 415.40)) + usage;
-    const power = state.powerYr * (BED_FACTOR[state.bedrooms] || 1);
-    const insurance = state.insQuote > 0 ? state.insQuote : state.insBase * sub.insFactor * (INS_BED_FACTOR[state.bedrooms] || 1);
-    return { council, esl, water, power, insurance, total: council + esl + water + power + insurance, fromProperty: useP };
+    const unit = isUnit();
+    const power = state.powerYr * (BED_FACTOR[unit ? Math.min(3, state.bedrooms) : state.bedrooms] || 1) * (unit ? 0.85 : 1);
+    const insurance = state.insQuote > 0 ? state.insQuote : unit ? state.unitIns : state.insBase * sub.insFactor * (INS_BED_FACTOR[state.bedrooms] || 1);
+    const strata = unit ? state.strataYr || 0 : 0;
+    return { council, esl, water, power, insurance, strata, total: council + esl + water + power + insurance + strata, fromProperty: useP };
   }
 
   function commuteMonthly(km, c, price) {
@@ -2448,7 +2473,8 @@ body.wiz .entries-bar { display: none; }
       <tr class="sub"><td>Emergency services levy${pcp && state.property.esl > 0 ? fromListing : ""}</td><td class="r num">${m(s.pc.esl)}</td></tr>
       <tr class="sub"><td>Water and sewerage${pcp && state.property.waterQ > 0 ? fromListing : ""}</td><td class="r num">${m(s.pc.water)}</td></tr>
       <tr class="sub"><td>Electricity</td><td class="r num">${m(s.pc.power)}</td></tr>
-      <tr class="sub"><td>Home and contents insurance${state.insQuote > 0 ? '<span class="tag-ok">Quote</span>' : est}</td><td class="r num">${m(s.pc.insurance)}</td></tr>
+      <tr class="sub"><td>${isUnit() ? "Contents insurance (building covered by strata)" : "Home and contents insurance"}${state.insQuote > 0 ? '<span class="tag-ok">Quote</span>' : est}</td><td class="r num">${m(s.pc.insurance)}</td></tr>
+      ${isUnit() ? `<tr class="sub"><td>Strata fees${est}</td><td class="r num">${m(s.pc.strata)}</td></tr>` : ""}
       ${true ? `<tr class="sub"><td>Petrol and transport: included in living costs, same in every suburb</td><td></td></tr>` : `<tr><td>Commute to work <span class="muted small">(about ${fmt(weekly(s.commuteNew))} a week)</span></td><td class="r num">−${fmt(s.commuteNew)}</td></tr>
       ${s.commute.map((c, i) => state.commuters[i].on ? `<tr class="sub"><td>Borrower ${i + 1}: ${c.wp ? c.wp.name : ""}${c.km ? `, ${c.km.toFixed(0)} km each way` : ""}${state.commuters[i].mode === "pt" && c.km ? " by public transport" : ""}</td><td class="r num">${fmt(c.cost)}</td></tr>` : "").join("")}`}
       ${state.own === "keep" ? `<tr><td>Property you're keeping</td><td class="r num">${s.ownNet > 0 ? "−" : "+"}${fmt(Math.abs(s.ownNet)).replace("−", "")}</td></tr>
@@ -2502,6 +2528,18 @@ body.wiz .entries-bar { display: none; }
   function renderPriceEst(sub) {
     const pp = priceParts(sub), b = state.bedrooms, override = state.priceOverride[sub.id];
     const sign = v => (v >= 0 ? "+" : "−") + fmt(Math.abs(v)).replace("−", "");
+    if (pp.unit) {
+      const real = UNIT2[sub.id];
+      $("priceEst").innerHTML = `
+      <tr><td>${escapeHtml(sub.name)}, 2-bedroom unit <span class="muted small">(${real ? `median of ${real[1]} sales, 12 months to October 2026` : `estimated at half the suburb's ${fmt(sub.median)} house median`})</span>${real ? "" : '<span class="tag-est">Estimate</span>'}</td><td class="r num">${fmt(unit2For(sub))}</td></tr>
+      <tr><td>${pp.b}-bedroom unit${state.bedrooms > 3 ? ' <span class="muted small">(units are priced up to 3 bedrooms)</span>' : ""}</td><td class="r num">${fmt(pp.base)}</td></tr>
+      <tr class="sub"><td>${state.bathrooms} bathroom${state.bathrooms > 1 ? "s" : ""} (typical for ${pp.b} bedrooms: ${TYP_UNIT_BATH[pp.b]})</td><td class="r num">${pp.bathAdj ? sign(pp.bathAdj) : "$0"}</td></tr>
+      <tr class="total"><td>Estimated price${override ? ' <span class="muted small">(price entered by hand is used instead)</span>' : ""}</td><td class="r num">${fmt(pp.est)}</td></tr>`;
+      $("priceSrc").textContent = override ? "Entered by hand." : "Estimated for this unit.";
+      if (document.activeElement !== $("price")) $("price").value = Math.round(priceFor(sub));
+      $("priceSub").textContent = sub.name;
+      return;
+    }
     const land = state.landSize || pp.typLand;
     $("priceEst").innerHTML = `
       <tr><td>${escapeHtml(sub.name)} median, all houses <span class="muted small">(${sub.sales ? sub.sales + " sales, 12 months to June 2026" : "entered by broker"})</span>${sub.sales && sub.sales < 15 ? '<span class="tag-est">Few sales</span>' : ""}</td><td class="r num">${fmt(sub.median)}</td></tr>
@@ -2586,7 +2624,7 @@ body.wiz .entries-bar { display: none; }
     const lines = [
       ["Suburb", `${s.sub.name}${s.sub.council === "Other" ? "" : ` (City of ${s.sub.council})`}`],
       ...(s.pc.fromProperty && state.property.address ? [["Property", state.property.address]] : []),
-      ["Home", `${state.bedrooms === 5 ? "5+" : state.bedrooms} bed, ${state.bathrooms} bath, ${(state.landSize || priceParts(s.sub).typLand).toLocaleString("en-AU")} m² block`],
+      ["Home", isUnit() ? `${Math.min(3, state.bedrooms)} bed, ${state.bathrooms} bath apartment or unit` : `${state.bedrooms === 5 ? "5+" : state.bedrooms} bed, ${state.bathrooms} bath house, ${(state.landSize || priceParts(s.sub).typLand).toLocaleString("en-AU")} m² block`],
       ["Purchase price", `${fmt(s.price)}${state.priceOverride[s.sub.id] ? "" : " (estimated for this home)"}`],
       ["Loan", `${fmt(s.loan)} at ${state.rate}% over ${state.term} years (${Math.round(s.lvr * 100)}% of price)`],
       ["Monthly repayment", `${fmt(s.repay)} (${fmt(s.repayStress)} at the lender test rate)`],
@@ -2596,7 +2634,7 @@ body.wiz .entries-bar { display: none; }
       ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(funds())} available${s.propCash ? ` (savings ${fmt(state.savings)} plus ${fmt(s.propCash)} from current property)` : ""}`],
       ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
     ];
-    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], ["Home and contents insurance", fmt(s.pc.insurance / 12)]];
+    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], [isUnit() ? "Contents insurance" : "Home and contents insurance", fmt(s.pc.insurance / 12)], ...(isUnit() ? [["Strata fees", fmt(s.pc.strata / 12)]] : [])];
     const compare = listSubs().map(sub => { const x = scenario(sub); return { name: sub.name, price: x.price, after: x.after, status: status(x).label, sel: sub.id === state.suburb }; });
     const notes = flags.map(f => f[2]);
     lastReport = { take, name, today, lines, costs, compare, notes, s, st, lst, cash: [["Deposit", fmt(s.depositNeeded)], ["Stamp duty", fmt(state.dutyOnLoan ? 0 : s.duty)], ...(s.lmi && !state.lmiOnLoan ? [["Mortgage insurance", fmt(s.lmi)]] : []), ["Legal and registration", fmt(state.otherCosts)], ...(s.grant ? [["First Home Owner Grant", "-" + fmt(s.grant)]] : []), ["Cash needed", fmt(s.cashNeeded)]] };
@@ -2782,6 +2820,13 @@ body.wiz .entries-bar { display: none; }
   }
 
 
+  function setHomeType(t, quiet) {
+    state.homeType = t;
+    document.querySelectorAll("#typeModes [data-type]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.type === t)));
+    document.body.classList.toggle("unit-mode", t === "unit");
+    $("typeHint").textContent = t === "unit" ? "For units, council rates, ESL and water follow the price, electricity is a little lower than a house, and strata fees plus contents insurance replace building insurance." : "Bigger homes also cost more to power and insure; those bills update too.";
+    if (!quiet) { syncPrice(); changed(); }
+  }
   function setOwn(mode, quiet) {
     state.own = mode;
     document.querySelectorAll("#ownModes [data-own]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.own === mode)));
@@ -3643,6 +3688,9 @@ body.wiz .entries-bar { display: none; }
   document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
   $("lSend").onclick = sendLead;
   document.querySelectorAll("#ownModes [data-own]").forEach(b => b.addEventListener("click", () => setOwn(b.dataset.own)));
+  document.querySelectorAll("#typeModes [data-type]").forEach(b => b.addEventListener("click", () => setHomeType(b.dataset.type)));
+  bindNum("strataYr", "strataYr"); bindNum("unitIns", "unitIns");
+  bindings.push(() => setHomeType(state.homeType || "house", true));
   bindNum("ownValue", "ownValue", { blankZero: true }); bindNum("ownLoan", "ownLoan", { blankZero: true }); bindNum("ownSellCost", "ownSellCost");
   bindNum("ownRepay", "ownRepay", { nullable: true }); bindNum("ownRent", "ownRent", { blankZero: true }); bindNum("ownEqUse", "ownEqUse", { nullable: true });
   bindNum("ownHold", "ownHold", { nullable: true });
