@@ -522,7 +522,7 @@ body.wiz .layout { grid-template-columns: minmax(0, 1fr); max-width: 760px; marg
 body.wiz .inputs > section.panel:not(.wiz-cur) { display: none !important; }
 body.wiz .inputs > section.panel.wiz-cur { padding: 28px; }
 body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.45rem; }
-body.wiz .results, body.wiz .lower, body.wiz #leadPanel, body.wiz .extras, body.wiz #docsPanel, body.wiz .entries-bar, body.wiz footer.fine, body.wiz #resHero, body.wiz #exampleNote { display: none !important; }
+body.wiz .results, body.wiz .lower, body.wiz #leadPanel, body.wiz #leadPanelTop, body.wiz .extras, body.wiz #docsPanel, body.wiz .entries-bar, body.wiz footer.fine, body.wiz #resHero, body.wiz #exampleNote { display: none !important; }
 body.wiz:not(.wiz-first) .trust-wrap, body.wiz:not(.wiz-first) header.top .lede { display: none; }
 body:not(.wiz) .wiz-only { display: none !important; }
 .wiz-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; position: sticky; bottom: 0; z-index: 5; padding: 12px 0; background: linear-gradient(to top, var(--bg) 70%, transparent); }
@@ -995,6 +995,7 @@ body:not(.landing) #landing { display: none; }
 .facts-table tr.sel td { background: var(--accent-soft); font-weight: 600; }
 .sort-btn { border: 0; background: none; padding: 0; min-height: 0; font: inherit; font-weight: 600; color: var(--muted); cursor: pointer; }
 .sort-btn:hover { background: none; color: var(--accent); }
+.lead-top { margin: 0 0 22px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1185,6 +1186,27 @@ body:not(.landing) #landing { display: none; }
       <div class="slider"><div class="sl-top"><label for="slDep" id="slDepL">Deposit</label><span class="num" id="slDepV"></span></div><input type="range" id="slDep"><div class="sl-foot"><span id="slDepMin"></span><span id="slDepMax"></span></div></div>
       <div class="slider"><div class="sl-top"><label for="slRate">Interest rate</label><span class="num" id="slRateV"></span></div><input type="range" id="slRate" min="3" max="10" step="0.05"><div class="sl-foot"><span>3%</span><span>10%</span></div></div>
     </div>
+  </section>
+
+  <section class="lead-panel lead-top broker-only" id="leadPanelTop" aria-labelledby="leadHTop">
+    <div class="lead-intro">
+      <h2 id="leadHTop">Speak to a broker</h2>
+      <p id="leadWhoTop">A local mortgage broker can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.</p>
+      <ul class="lead-points">
+        <li>Your results and the details you entered are sent with your request, so you won't have to repeat yourself.</li>
+        <li>Nothing is sent until you press the button below.</li>
+      </ul>
+    </div>
+    <div class="lead-form" id="leadFormTop">
+      <div><label for="tName">Your name</label><input id="tName" type="text" autocomplete="name"></div>
+      <div><label for="tEmail">Email</label><input id="tEmail" type="email" autocomplete="email" inputmode="email"></div>
+      <div><label for="tPhone">Contact number</label><input id="tPhone" type="tel" autocomplete="tel" inputmode="tel"></div>
+      <div><label for="tTime">Best time to call</label><select id="tTime"><option>Any time</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekend</option></select></div>
+      <label class="check lead-consent"><input type="checkbox" id="tConsent"> <span id="tConsentTxt">I agree to my details and results being sent to a broker so they can contact me about a home loan.</span></label>
+      <button type="button" class="primary lead-send" id="tSend">Send my details to a broker</button>
+      <p class="status-msg" id="tMsg" aria-live="polite"></p>
+    </div>
+    <div class="lead-done" id="leadDoneTop" hidden></div>
   </section>
 
   <div class="extras broker-only">
@@ -2873,22 +2895,27 @@ body:not(.landing) #landing { display: none; }
 
 
   // ---------- Speak to a broker: send the client's details and results ----------
+  const LEAD_FORMS = [{ p: "l", who: "leadWho", form: "leadForm", done: "leadDone" }, { p: "t", who: "leadWhoTop", form: "leadFormTop", done: "leadDoneTop" }];
   function renderLeadIntro() {
     const who = brand.broker || brand.business;
-    $("leadWho").textContent = who ? `${brand.broker || "A broker"}${brand.business && brand.broker ? ` from ${brand.business}` : ""} can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.` : "A local mortgage broker can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.";
-    $("lConsentTxt").textContent = `I agree to my details and results being sent to ${who || "a broker"} so they can contact me about a home loan.`;
-    $("lSend").textContent = who ? `Send my details to ${brand.broker || brand.business}` : "Send my details to a broker";
+    LEAD_FORMS.forEach(f => {
+      if (!$(f.who)) return;
+      $(f.who).textContent = who ? `${brand.broker || "A broker"}${brand.business && brand.broker ? ` from ${brand.business}` : ""} can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.` : "A local mortgage broker can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.";
+      $(f.p + "ConsentTxt").textContent = `I agree to my details and results being sent to ${who || "a broker"} so they can contact me about a home loan.`;
+      $(f.p + "Send").textContent = who ? `Send my details to ${brand.broker || brand.business}` : "Send my details to a broker";
+    });
   }
   function leadText(c) {
     return [`New enquiry from Suburb Fit`, "", `Name: ${c.name}`, `Email: ${c.email}`, `Phone: ${c.phone}`, `Best time to call: ${c.time}`, "", $("summaryText").value.replace(/^Suburb affordability summary for .*$/m, `Suburb affordability summary for ${c.name}`)].join("\n");
   }
-  async function sendLead() {
-    const msg = $("lMsg"), c = { name: $("lName").value.trim(), email: $("lEmail").value.trim(), phone: $("lPhone").value.trim(), time: $("lTime").value };
+  async function sendLead(f) {
+    f = f || LEAD_FORMS[0]; const P = f.p;
+    const msg = $(P + "Msg"), c = { name: $(P + "Name").value.trim(), email: $(P + "Email").value.trim(), phone: $(P + "Phone").value.trim(), time: $(P + "Time").value };
     const bad = (t, el) => { msg.className = "status-msg err"; msg.textContent = t; el && el.focus(); };
-    if (!c.name) return bad("Add your name.", $("lName"));
-    if (!/^\S+@\S+\.\S+$/.test(c.email)) return bad("Add a valid email address.", $("lEmail"));
-    if (c.phone.replace(/\D/g, "").length < 8) return bad("Add a contact number.", $("lPhone"));
-    if (!$("lConsent").checked) return bad("Tick the box to agree to your details being sent.", $("lConsent"));
+    if (!c.name) return bad("Add your name.", $(P + "Name"));
+    if (!/^\S+@\S+\.\S+$/.test(c.email)) return bad("Add a valid email address.", $(P + "Email"));
+    if (c.phone.replace(/\D/g, "").length < 8) return bad("Add a contact number.", $(P + "Phone"));
+    if (!$(P + "Consent").checked) return bad("Tick the box to agree to your details being sent.", $(P + "Consent"));
     const text = leadText(c), who = brand.broker || brand.business || "the broker";
     const subject = `Home loan enquiry from ${c.name}`;
     msg.className = "status-msg"; msg.textContent = "Sending...";
@@ -2896,22 +2923,26 @@ body:not(.landing) #landing { display: none; }
     if (brand.leadUrl && /^https:\/\//i.test(brand.leadUrl)) {
       try {
         const r = await fetch(brand.leadUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ name: c.name, email: c.email, phone: c.phone, best_time: c.time, _subject: subject, message: text }) });
-        if (r.ok) return leadDone(`Thanks ${c.name.split(" ")[0]}, your details have been sent to ${who}. They'll be in touch soon.`, text, false);
+        if (r.ok) return leadDone(f, `Thanks ${c.name.split(" ")[0]}, your details have been sent to ${who}. They'll be in touch soon.`, text, false);
       } catch (e) { /* falls through to email */ }
     }
     // 2) Open the client's email app with everything filled in
     if (brand.email) {
       const href = `mailto:${encodeURIComponent(brand.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text.length > 1800 ? text.slice(0, 1800) + "\n..." : text)}`;
       try { window.location.href = href; } catch (e) { /* blocked in some views */ }
-      return leadDone(`Your email app should have opened with a message to ${who} (${brand.email}). Press send there to finish.`, text, true);
+      return leadDone(f, `Your email app should have opened with a message to ${who} (${brand.email}). Press send there to finish.`, text, true);
     }
     // 3) Nowhere set up yet (prototype)
-    leadDone("Preview only: no broker email has been set up yet, so nothing was sent. Add one in Branding. This is what the broker would receive.", text, true);
+    leadDone(f, "Preview only: no broker email has been set up yet, so nothing was sent. Add one in Branding. This is what the broker would receive.", text, true);
   }
-  function leadDone(headline, text, showText) {
-    $("leadForm").hidden = true; const d = $("leadDone"); d.hidden = false;
-    d.innerHTML = `<h3>${escapeHtml(headline)}</h3>${showText ? `<pre>${escapeHtml(text)}</pre>` : ""}<div class="btn-row"><button type="button" id="lAgain">Edit my details</button></div>`;
-    $("lAgain").onclick = () => { d.hidden = true; $("leadForm").hidden = false; $("lMsg").textContent = ""; };
+  function leadDone(f, headline, text, showText) {
+    // Show the result in both forms, so the client sees it wherever they look
+    LEAD_FORMS.forEach(g => {
+      if (!$(g.form)) return;
+      $(g.form).hidden = true; const d = $(g.done); d.hidden = false;
+      d.innerHTML = `<h3>${escapeHtml(headline)}</h3>${showText && g === f ? `<pre>${escapeHtml(text)}</pre>` : ""}<div class="btn-row"><button type="button" class="lead-again">Edit my details</button></div>`;
+      d.querySelector(".lead-again").onclick = () => LEAD_FORMS.forEach(h => { $(h.done).hidden = true; $(h.form).hidden = false; $(h.p + "Msg").textContent = ""; });
+    });
   }
 
 
@@ -3989,7 +4020,8 @@ body:not(.landing) #landing { display: none; }
   $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round(hemPlaceholder() / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
   $("moreMenu").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("moreMenu").open = false; }));
   document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
-  $("lSend").onclick = sendLead;
+  $("lSend").onclick = () => sendLead(LEAD_FORMS[0]);
+  $("tSend").onclick = () => sendLead(LEAD_FORMS[1]);
   $("landStart").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false; try { state.docs = JSON.parse(localStorage.getItem("sf-docs") || "{}"); } catch (e) {} syncInputs(); $("exampleNote").hidden = true; setStatus(""); showLanding(false); wizOn = true; wizIdx = 0; changed(); renderWiz(); };
   $("landExample").onclick = () => { showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
   $("landBroker").onclick = () => { showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
@@ -4012,7 +4044,7 @@ body:not(.landing) #landing { display: none; }
   $("oeBeds").addEventListener("change", e => { state.ownEst.beds = parseInt(e.target.value, 10); renderOwnEst(); });
   $("oeBaths").addEventListener("change", e => { state.ownEst.baths = parseInt(e.target.value, 10); renderOwnEst(); });
   $("oeLand").addEventListener("input", e => { state.ownEst.land = num(e.target.value); renderOwnEst(); });
-  $("toLead").onclick = () => { $("leadPanel").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => $("lName").focus({ preventScroll: true }), 400); };
+  $("toLead").onclick = () => { $("leadPanelTop").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => $("tName").focus({ preventScroll: true }), 400); };
   $("toggleEntries").onclick = () => {
     const on = !document.body.classList.contains("show-entries");
     document.body.classList.toggle("show-entries", on);
