@@ -522,7 +522,7 @@ body.wiz .layout { grid-template-columns: minmax(0, 1fr); max-width: 760px; marg
 body.wiz .inputs > section.panel:not(.wiz-cur) { display: none !important; }
 body.wiz .inputs > section.panel.wiz-cur { padding: 28px; }
 body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.45rem; }
-body.wiz .results, body.wiz .lower, body.wiz #leadPanel, body.wiz footer.fine, body.wiz #resHero, body.wiz #exampleNote { display: none !important; }
+body.wiz .results, body.wiz .lower, body.wiz #leadPanel, body.wiz .extras, body.wiz #docsPanel, body.wiz .entries-bar, body.wiz footer.fine, body.wiz #resHero, body.wiz #exampleNote { display: none !important; }
 body.wiz:not(.wiz-first) .trust-wrap, body.wiz:not(.wiz-first) header.top .lede { display: none; }
 body:not(.wiz) .wiz-only { display: none !important; }
 .wiz-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; position: sticky; bottom: 0; z-index: 5; padding: 12px 0; background: linear-gradient(to top, var(--bg) 70%, transparent); }
@@ -919,6 +919,11 @@ body.wiz .entries-bar { display: none; }
 .type-modes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 #typeModes button[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
 body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !important; }
+#expModes { display: none !important; }
+#expUpload, #expDetail { display: block !important; }
+#expDetail { margin-top: 16px; }
+.quick-fold { margin-top: 16px; }
+.quick-fold > summary { font-weight: 600; }
 .unit-warn { display: block; color: var(--warn); font-size: 0.84rem; white-space: normal; }
 .data-date { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 0.8rem; color: var(--muted); padding: 10px 14px; margin: -8px 0 14px; border: 1px dashed color-mix(in srgb, var(--line) 60%, var(--muted)); border-radius: 10px; }
 .data-date b { color: var(--ink); font-weight: 600; margin-right: 4px; }
@@ -953,7 +958,7 @@ body:not(.landing) #landing { display: none; }
 @media (max-width: 640px) { .land-get ul { columns: 1; } }
 .land-broker { text-align: center; }
 /* Schemes and snapshot */
-.extras { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 22px; margin-bottom: 22px; }
+.extras { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; margin-bottom: 22px; }
 @media (max-width: 900px) { .extras { grid-template-columns: minmax(0, 1fr); } }
 .schemes { display: grid; gap: 10px; margin-top: 14px; }
 .scheme { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
@@ -980,6 +985,16 @@ body:not(.landing) #landing { display: none; }
 .docs li.done label { background: var(--good-soft); border-color: transparent; }
 .snap a { color: var(--accent); font-weight: 600; }
 .lp-cap { font-size: 0.76rem; color: var(--muted); }
+.sub-facts { margin: 4px 0 14px; }
+.sub-facts > summary { font-weight: 600; }
+.facts-sel { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 8px; margin-bottom: 12px; }
+.facts-sel div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 0.8rem; color: var(--muted); }
+.facts-sel b { display: block; color: var(--ink); font-size: 1rem; font-family: var(--font-display); font-weight: 600; }
+.facts-sel a { color: var(--accent); font-weight: 600; }
+.facts-table td, .facts-table th { white-space: nowrap; }
+.facts-table tr.sel td { background: var(--accent-soft); font-weight: 600; }
+.sort-btn { border: 0; background: none; padding: 0; min-height: 0; font: inherit; font-weight: 600; color: var(--muted); cursor: pointer; }
+.sort-btn:hover { background: none; color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -1178,10 +1193,6 @@ body:not(.landing) #landing { display: none; }
       <p class="muted small" style="margin-top:2px">Based on what you entered. Each scheme has more rules than shown, so check the official site or ask a broker.</p>
       <div class="schemes" id="schemes"></div>
     </section>
-    <section class="panel" aria-labelledby="snapH">
-      <h2 id="snapH">About <span id="snapName"></span></h2>
-      <div class="snap" id="snap"></div>
-    </section>
   </div>
 
   <div class="entries-bar broker-only" id="entriesBar">
@@ -1217,28 +1228,11 @@ body:not(.landing) #landing { display: none; }
 
       <!-- STEP 2 -->
       <section class="panel" aria-labelledby="s2h">
-        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">What do you spend now?</h2><p class="muted small">Choose how much detail to give. You can switch at any time.</p></div></div>
+        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">What do you spend now?</h2><p class="muted small">Upload bank statements and the table fills in for you, type in each item yourself, or just enter a rough total.</p></div></div>
         <div class="exp-modes" role="tablist" aria-label="How to enter spending" id="expModes">
           <button type="button" role="tab" data-mode="quick" aria-selected="false"><b>Quick estimate</b><span>One weekly or monthly figure</span></button>
           <button type="button" role="tab" data-mode="detail" aria-selected="false"><b>Detailed</b><span>Category by category</span></button>
           <button type="button" role="tab" data-mode="upload" aria-selected="false"><b>Bank statements</b><span>6 to 12 months, filled in for you</span></button>
-        </div>
-
-        <div id="expQuick" class="exp-pane">
-          <div class="grid2">
-            <div><label for="qRent">Rent, board or mortgage repayments you pay now</label><div class="pay-row"><div class="money"><input id="qRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qRentF" aria-label="Rent frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option></select></div><p class="hint">Whatever you pay for the home you live in now. It stops once you buy (if you keep a property you own, its loan is counted separately in step 4).</p></div>
-            <div><label for="qDebt">Loan, credit card and Afterpay repayments</label><div class="pay-row"><div class="money"><input id="qDebt" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qDebtF" aria-label="Repayment frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly" selected>Monthly</option></select></div><p class="hint">Car loans, personal loans, credit cards, buy now pay later.</p></div>
-          </div>
-          <div class="quick-main">
-            <label for="qSpend">Roughly how much do you spend on everything else?</label>
-            <div class="pay-row"><div class="money"><input id="qSpend" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qSpendF" aria-label="Spending frequency"><option value="weekly">A week</option><option value="fortnightly">A fortnight</option><option value="monthly">A month</option></select></div>
-            <div class="examples"><span class="muted small">Include things like:</span>
-              <span>Groceries</span><span>Fuel and transport</span><span>Power, gas and water bills</span><span>Phone and internet</span><span>Car, health and contents insurance</span><span>Eating out and takeaway</span><span>Subscriptions and entertainment</span><span>Kids and school</span><span>Clothes and shopping</span><span>Medical</span>
-            </div>
-            <div class="btn-row" style="margin-top:8px"><button type="button" id="qTypical">Not sure? Use a typical figure</button></div>
-          </div>
-          <div class="total-box" style="margin-top:12px"><span class="tb-num num" id="qTotal">$0</span><span class="muted small" id="qTotalSub">a month in total</span></div>
-          <p class="hint" id="qNote"></p>
         </div>
 
         <div id="expUpload" class="exp-pane">
@@ -1276,6 +1270,25 @@ body:not(.landing) #landing { display: none; }
           </div>
           <p class="hint broker-only">Rows marked <b>Replaced</b> drop out after the purchase. The suburb's repayment, rates, water, electricity and home insurance take their place. Car, health and life insurance carry over.</p>
         </div>
+        <details class="fold quick-fold" id="quickFold">
+          <summary>Not sure of each item? Enter a rough total instead</summary>
+          <div class="inner" id="expQuick">
+          <div class="grid2">
+            <div><label for="qRent">Rent, board or mortgage repayments you pay now</label><div class="pay-row"><div class="money"><input id="qRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qRentF" aria-label="Rent frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option></select></div><p class="hint">Whatever you pay for the home you live in now. It stops once you buy (if you keep a property you own, its loan is counted separately in step 4).</p></div>
+            <div><label for="qDebt">Loan, credit card and Afterpay repayments</label><div class="pay-row"><div class="money"><input id="qDebt" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qDebtF" aria-label="Repayment frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly" selected>Monthly</option></select></div><p class="hint">Car loans, personal loans, credit cards, buy now pay later.</p></div>
+          </div>
+          <div class="quick-main">
+            <label for="qSpend">Roughly how much do you spend on everything else?</label>
+            <div class="pay-row"><div class="money"><input id="qSpend" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qSpendF" aria-label="Spending frequency"><option value="weekly">A week</option><option value="fortnightly">A fortnight</option><option value="monthly">A month</option></select></div>
+            <div class="examples"><span class="muted small">Include things like:</span>
+              <span>Groceries</span><span>Fuel and transport</span><span>Power, gas and water bills</span><span>Phone and internet</span><span>Car, health and contents insurance</span><span>Eating out and takeaway</span><span>Subscriptions and entertainment</span><span>Kids and school</span><span>Clothes and shopping</span><span>Medical</span>
+            </div>
+            <div class="btn-row" style="margin-top:8px"><button type="button" id="qTypical">Not sure? Use a typical figure</button></div>
+          </div>
+          <div class="total-box" style="margin-top:12px"><span class="tb-num num" id="qTotal">$0</span><span class="muted small" id="qTotalSub">a month in total</span></div>
+          <p class="hint" id="qNote"></p>
+        </div>
+          </details>
       </section>
 
       <!-- INTAKE: send to broker -->
@@ -1403,6 +1416,15 @@ body:not(.landing) #landing { display: none; }
         </div>
         <p class="hint" id="pickHint" style="margin:-4px 0 10px">Star a suburb to add it to the shortlist that's compared in the results, the petrol table and the PDF.</p>
         <div id="subPick"></div>
+        <div class="label-like" style="margin-top:14px">Key facts: <span id="factsName"></span></div>
+        <div class="facts-sel" id="factsSel"></div>
+        <details class="fold sub-facts" id="subFacts">
+          <summary>Compare all suburbs: distance to the city and beach, prices and more</summary>
+          <div class="inner">
+            <div class="table-scroll"><table class="mini-table facts-table" id="factsTable"></table></div>
+            <p class="hint">Distances are approximate road distances from the middle of each suburb. House medians are SA Valuer-General sales to September 2026; unit prices are Domain medians or estimates. Tap a column heading to sort.</p>
+          </div>
+        </details>
         <div class="grid2">
           <div>
             <label for="price">Purchase price for <span id="priceSub"></span></label>
@@ -1961,7 +1983,7 @@ body:not(.landing) #landing { display: none; }
       docs: {},
       homeType: "house", strataYr: 3000, unitIns: 483,
       own: "none", ownValue: 0, ownLoan: 0, ownSellCost: 2.5, ownRepay: null, ownRent: 0, ownEqUse: null, ownHold: null, ownEst: { sub: "", beds: 3, baths: 2, land: 0 },
-      expMode: "quick", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
+      expMode: "detail", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
       intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
       goals: { purpose: "First home to live in", time: "3 to 6 months", rateType: "Variable", features: [], priorities: "", notes: "", reviewed: false },
       shortlist: ["fulham", "lockleys", "westbeach", "seaton", "royalpark", "flinderspark", "findon", "henleybeach", "hendon", "woodvillewest"]
@@ -2434,7 +2456,7 @@ body:not(.landing) #landing { display: none; }
         <td class="freq"><select id="freq-${c.id}" aria-label="${c.label} frequency">${Object.keys(FREQ).map(f => `<option value="${f}"${f === e.freq ? " selected" : ""}>${FREQ_LABEL[f]}</option>`).join("")}</select></td>
         <td class="mo num" id="mo-${c.id}">${fmt(monthly(e))}</td>`;
       tb.appendChild(tr);
-      tr.querySelector("input").addEventListener("input", ev => { e.amount = num(ev.target.value); markEdited(); updateExpenseTotals(); changed(); });
+      tr.querySelector("input").addEventListener("input", ev => { e.amount = num(ev.target.value); if (state.expMode === "quick" && !state.months) state.expMode = "detail"; markEdited(); updateExpenseTotals(); changed(); });
       tr.querySelector("select").addEventListener("change", ev => { e.freq = ev.target.value; markEdited(); updateExpenseTotals(); changed(); });
     });
     updateExpenseTotals();
@@ -2442,7 +2464,7 @@ body:not(.landing) #landing { display: none; }
   function updateExpenseTotals() {
     let t = 0; CATS.forEach(c => { const m = monthly(state.expenses[c.id]); t += m; const el = $("mo-" + c.id); if (el) el.textContent = fmt(m); });
     $("expTotal").textContent = fmt(t) + " / month";
-    if ($("detailLead") && state.expMode === "upload") $("detailLead").textContent = state.months ? "Filled in from the statements. Adjust any amount." : "Upload statements above and this table fills in automatically.";
+    if ($("detailLead")) $("detailLead").textContent = state.months ? "Filled in from your statements. Change any amount." : state.expMode === "quick" ? "Filled in from your rough total. Change any amount to make it more accurate." : "Enter what you spend on each item, using whichever frequency is easiest.";
   }
   function markEdited() { if (state.isExample) { state.isExample = false; $("exampleNote").hidden = true; } }
   function renderMerchants() {
@@ -2580,7 +2602,7 @@ body:not(.landing) #landing { display: none; }
     $("rSub").textContent = sub.name;
     $("rCouncil").textContent = sub.council === "Other" ? "Council rate entered by broker" : "City of " + sub.council;
     const pill = $("rPill"); pill.className = "pill " + st.cls; pill.lastElementChild.textContent = st.label;
-    renderHero(s, st, sub); renderLeadIntro(); renderOwn(s); renderSchemes(s); renderSnapshot(sub, s); renderDocs();
+    renderHero(s, st, sub); renderLeadIntro(); renderOwn(s); renderSchemes(s); renderFacts(sub); renderDocs();
     $("rNow").textContent = fmt(s.now); $("rNow").classList.toggle("neg", s.now < 0);
     $("rAfter").textContent = fmt(s.after); $("rAfter").classList.toggle("neg", s.after < 0);
     $("rAfterPct").textContent = `per month · ${state.income ? Math.round(s.after / state.income * 100) : 0}% of take-home pay`;
@@ -2950,6 +2972,26 @@ body:not(.landing) #landing { display: none; }
       <div class="wide">Look around: <a href="https://www.google.com/maps/search/schools+near+${q}" target="_blank" rel="noopener">schools</a> · <a href="https://www.google.com/maps/search/train+station+near+${q}" target="_blank" rel="noopener">train and tram</a> · <a href="https://www.google.com/maps/search/shops+near+${q}" target="_blank" rel="noopener">shops</a> on Google Maps</div>`;
   }
 
+
+  // ---------- Suburb facts (step 5 drop-down) ----------
+  let factsSort = "name", factsDir = 1;
+  function subFacts(sub) {
+    return { sub, city: roadKm(sub, CBD), beach: Math.min(...COAST.map(([lat, lng]) => roadKm(sub, { lat, lng }))), house: sub.median, unit: unit2For(sub), unitReal: !!UNIT2[sub.id], sales: sub.sales || 0 };
+  }
+  function renderFacts(selSub) {
+    if (!$("factsTable")) return;
+    const f = subFacts(selSub); $("factsName").textContent = selSub.name;
+    $("factsSel").innerHTML = `<div><b>${f.city.toFixed(0)} km</b>to the city</div><div><b>${f.beach < 2 ? "Beachside" : f.beach.toFixed(0) + " km"}</b>${f.beach < 2 ? "near the beach" : "to the beach"}</div><div><b>${fmt(f.house)}</b>median house</div><div><b>${fmt(f.unit)}</b>${f.unitReal ? "median 2-bed unit" : "est. 2-bed unit"}</div><div><b>${selSub.insFactor > 1 ? "Higher" : "Standard"}</b>insurance: ${escapeHtml(selSub.insNote)}</div><div><b>City of ${escapeHtml(selSub.council)}</b><a href="https://www.google.com/maps/search/schools+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">Schools</a> · <a href="https://www.google.com/maps/search/train+station+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">transport</a> nearby</div>`;
+    if (!$("subFacts").open) return;
+    const rows = subs().map(subFacts);
+    const key = { name: r => r.sub.name, city: r => r.city, beach: r => r.beach, house: r => r.house, unit: r => r.unit, sales: r => r.sales }[factsSort];
+    rows.sort((a, b) => { const x = key(a), y = key(b); return (typeof x === "string" ? x.localeCompare(y) : x - y) * factsDir; });
+    const th = (k, t) => `<th class="${k === "name" ? "" : "r"}"><button type="button" class="sort-btn" data-sort="${k}">${t}${factsSort === k ? (factsDir > 0 ? " ▲" : " ▼") : ""}</button></th>`;
+    $("factsTable").innerHTML = `<thead><tr>${th("name", "Suburb")}${th("city", "To city")}${th("beach", "To beach")}${th("house", "House median")}${th("unit", "2-bed unit")}${th("sales", "House sales")}</tr></thead><tbody>` +
+      rows.map(r => `<tr class="${r.sub.id === selSub.id ? "sel" : ""}"><td>${escapeHtml(r.sub.name)}</td><td class="r num">${r.city.toFixed(0)} km</td><td class="r num">${r.beach < 2 ? "Beachside" : r.beach.toFixed(0) + " km"}</td><td class="r num">${fmt(r.house)}</td><td class="r num">${fmt(r.unit)}${r.unitReal ? "" : "*"}</td><td class="r num">${r.sales}</td></tr>`).join("") + "</tbody>";
+    $("factsTable").querySelectorAll("[data-sort]").forEach(b => b.onclick = () => { const k = b.dataset.sort; if (factsSort === k) factsDir = -factsDir; else { factsSort = k; factsDir = 1; } renderFacts(subById(state.suburb)); });
+  }
+
   // ---------- Share results by link (no account) ----------
   const SHARE_SKIP = ["merchants", "incomeSources", "incomeDetected", "petrol", "checkins", "goals", "intakeNotes", "isExample"];
   function shareToken() {
@@ -3206,9 +3248,10 @@ body:not(.landing) #landing { display: none; }
     if (mode === "quick" && state.expMode !== "quick") { quickFromDetail(); syncQuickInputs(); applyQuick(); }
     state.expMode = mode;
     document.querySelectorAll("#expModes [data-mode]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
-    $("expQuick").hidden = mode !== "quick"; $("expUpload").hidden = mode !== "upload"; $("expDetail").hidden = mode === "quick";
+    $("expQuick").hidden = false; $("expUpload").hidden = false; $("expDetail").hidden = false;
     renumberSteps();
-    $("detailLead").textContent = mode === "upload" ? (state.months ? "Filled in from the statements. Adjust any amount." : "Upload statements above and this table fills in automatically.") : "Enter what you spend in each category. Use whichever frequency is easiest.";
+    $("detailLead").textContent = state.months ? "Filled in from your statements. Change any amount." : mode === "quick" ? "Filled in from your rough total. Change any amount to make it more accurate." : "Enter what you spend on each item, using whichever frequency is easiest.";
+    if (mode === "quick" && !$("quickFold").open && monthly(state.quick.spend)) $("quickFold").open = true;
     if (!quiet) changed();
   }
   // Number the visible steps 1, 2, 3... (steps hide in quick mode and on the client page)
@@ -3940,7 +3983,7 @@ body:not(.landing) #landing { display: none; }
   });
   document.querySelectorAll("#expModes [data-mode]").forEach(b => b.addEventListener("click", () => setExpMode(b.dataset.mode)));
   [["qRent", "rent"], ["qSpend", "spend"], ["qDebt", "debt"]].forEach(([id, k]) => {
-    $(id).addEventListener("input", e => { state.quick[k].amount = num(e.target.value); markEdited(); applyQuick(); changed(); });
+    $(id).addEventListener("input", e => { state.quick[k].amount = num(e.target.value); state.expMode = "quick"; markEdited(); applyQuick(); changed(); });
     $(id + "F").addEventListener("change", e => { state.quick[k].freq = e.target.value; applyQuick(); changed(); });
   });
   $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round(hemPlaceholder() / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
@@ -3953,6 +3996,7 @@ body:not(.landing) #landing { display: none; }
   $("brandName").closest(".brand").style.cursor = "pointer";
   $("brandName").closest(".brand").onclick = () => { if (!isIntake() && !isOpen()) showLanding(true); };
   $("shareBtn").onclick = makeShare;
+  $("subFacts").addEventListener("toggle", () => renderFacts(subById(state.suburb)));
   $("shareCopy").onclick = () => { const t = $("shareLink"); try { navigator.clipboard.writeText(t.value).then(() => { $("shareCopy").textContent = "Copied"; setTimeout(() => $("shareCopy").textContent = "Copy", 1500); }, () => { t.select(); }); } catch (e) { t.select(); } };
   document.addEventListener("click", e => { const t = e.target.closest(".term"); if (t) { e.preventDefault(); e.stopPropagation(); showTerm(t); return; } if (!e.target.closest("#termPop")) $("termPop").hidden = true; });
   $("toSources").onclick = () => { const f = document.querySelector("footer.fine"); if (!f) return; if (document.body.classList.contains("wiz")) { wizOn = false; renderWiz(); render(); } setTimeout(() => f.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
