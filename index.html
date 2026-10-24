@@ -2082,6 +2082,10 @@ body:not(.landing) #landing { display: none; }
   const unitSoldUrl = sub => sub.postcode ? `https://www.domain.com.au/sold-listings/${sub.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-sa-${sub.postcode}/apartment/` : "";
   const UNIT_RATIO = 0.50, UNIT_BED = { 1: 0.8, 2: 1, 3: 1.3 }, TYP_UNIT_BATH = { 1: 1, 2: 1, 3: 2 };
   const isUnit = () => state.homeType === "unit";
+  // House medians from 15 or fewer sales in 12 months can swing a lot, so they are flagged
+  const FEW_SALES = 15;
+  const fewSales = sub => !!sub.sales && sub.sales <= FEW_SALES;
+  const fewTag = sub => fewSales(sub) ? `<span class="tag-est" title="Only ${sub.sales} house sales in the last 12 months, so this median is less reliable">Few sales</span>` : "";
   const unit2For = sub => UNIT2[sub.id] ? UNIT2[sub.id][0] : Math.round(sub.median * UNIT_RATIO / 1000) * 1000;
   function unitParts(sub, h) {
     const b = Math.min(3, h ? h.beds : state.bedrooms), baths = h ? h.baths : state.bathrooms;
@@ -2555,7 +2559,7 @@ body:not(.landing) #landing { display: none; }
     const b = document.createElement("button");
     b.type = "button"; b.className = "pick"; b.id = "pick-" + s.id;
     b.setAttribute("aria-pressed", String(s.id === state.suburb));
-    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num">${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : isUnit() ? (unitData(s) === "solid" ? "" : unitData(s) === "few" ? '<span class="tag-est">Few unit sales</span>' : '<span class="tag-est">Estimated</span>') : s.sales && s.sales < 15 ? '<span class="tag-est">Few sales</span>' : ""}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)}</span>${(() => { const u = upTo(s); return u === null ? "" : `<span class="upto">${u ? "You could spend up to " + shortMoney(u) : "Not affordable yet"}</span>`; })()}`;
+    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num">${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : isUnit() ? (unitData(s) === "solid" ? "" : unitData(s) === "few" ? '<span class="tag-est">Few unit sales</span>' : '<span class="tag-est">Estimated</span>') : fewTag(s)}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)}</span>${(() => { const u = upTo(s); return u === null ? "" : `<span class="upto">${u ? "You could spend up to " + shortMoney(u) : "Not affordable yet"}</span>`; })()}`;
     b.onclick = () => selectSuburb(s.id);
     const star = document.createElement("button");
     star.type = "button"; star.className = "star"; star.textContent = starred ? "★" : "☆";
@@ -2719,7 +2723,7 @@ body:not(.landing) #landing { display: none; }
     }
     const land = state.landSize || pp.typLand;
     $("priceEst").innerHTML = `
-      <tr><td>${escapeHtml(sub.name)} median, all houses <span class="muted small">(${sub.sales ? sub.sales + " sales, 12 months to September 2026" : "entered by broker"})</span>${sub.sales && sub.sales < 15 ? '<span class="tag-est">Few sales</span>' : ""}</td><td class="r num">${fmt(sub.median)}</td></tr>
+      <tr><td>${escapeHtml(sub.name)} median, all houses <span class="muted small">(${sub.sales ? sub.sales + " sales, 12 months to September 2026" : "entered by broker"})</span>${fewTag(sub)}${fewSales(sub) ? `<span class="unit-warn">Only ${sub.sales} houses sold in ${escapeHtml(sub.name)} in the last 12 months, so this median is less reliable. Check recent sales nearby.</span>` : ""}</td><td class="r num">${fmt(sub.median)}</td></tr>
       <tr><td>${b === 5 ? "5+" : b}-bedroom house <span class="muted small">(${sub.bed ? "from the suburb's sales by bedrooms" : "typical western suburbs bedroom pattern"})</span></td><td class="r num">${fmt(pp.base)}</td></tr>
       <tr class="sub"><td>${state.bathrooms} bathroom${state.bathrooms > 1 ? "s" : ""} (typical for ${b === 5 ? "5+" : b} bedrooms: ${TYP_BATH[b]})</td><td class="r num">${pp.bathAdj ? sign(pp.bathAdj) : "$0"}</td></tr>
       <tr class="sub"><td>${land.toLocaleString("en-AU")} m² block (typical ${pp.typLand} m²)</td><td class="r num">${pp.landAdj ? sign(pp.landAdj) : "$0"}</td></tr>
@@ -2996,7 +3000,7 @@ body:not(.landing) #landing { display: none; }
     $("snap").innerHTML = `
       <div><b>${toCbd.toFixed(0)} km</b>to the city by road (approx.)</div>
       <div><b>${toBeach < 2 ? "Beachside" : toBeach.toFixed(0) + " km"}</b>${toBeach < 2 ? "near the beach" : "to the nearest beach"}</div>
-      <div><b>${fmt(sub.median)}</b>median house price${sub.sales ? `, ${sub.sales} sales in 12 months` : ""}</div>
+      <div><b>${fmt(sub.median)}</b>median house price${sub.sales ? `, ${sub.sales} sales in 12 months` : ""}${fewTag(sub)}</div>
       <div><b>${fmt(unit2For(sub))}</b>${u ? "median 2-bed unit" : "estimated 2-bed unit"}</div>
       <div><b>City of ${escapeHtml(sub.council)}</b>council</div>
       <div><b>${sub.insFactor > 1 ? "Higher" : "Standard"}</b>insurance: ${escapeHtml(sub.insNote)}</div>
@@ -3012,14 +3016,14 @@ body:not(.landing) #landing { display: none; }
   function renderFacts(selSub) {
     if (!$("factsTable")) return;
     const f = subFacts(selSub); $("factsName").textContent = selSub.name;
-    $("factsSel").innerHTML = `<div><b>${f.city.toFixed(0)} km</b>to the city</div><div><b>${f.beach < 2 ? "Beachside" : f.beach.toFixed(0) + " km"}</b>${f.beach < 2 ? "near the beach" : "to the beach"}</div><div><b>${fmt(f.house)}</b>median house</div><div><b>${fmt(f.unit)}</b>${f.unitReal ? "median 2-bed unit" : "est. 2-bed unit"}</div><div><b>${selSub.insFactor > 1 ? "Higher" : "Standard"}</b>insurance: ${escapeHtml(selSub.insNote)}</div><div><b>City of ${escapeHtml(selSub.council)}</b><a href="https://www.google.com/maps/search/schools+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">Schools</a> · <a href="https://www.google.com/maps/search/train+station+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">transport</a> nearby</div>`;
+    $("factsSel").innerHTML = `<div><b>${f.city.toFixed(0)} km</b>to the city</div><div><b>${f.beach < 2 ? "Beachside" : f.beach.toFixed(0) + " km"}</b>${f.beach < 2 ? "near the beach" : "to the beach"}</div><div><b>${fmt(f.house)}</b>median house${fewTag(selSub)}</div><div><b>${fmt(f.unit)}</b>${f.unitReal ? "median 2-bed unit" : "est. 2-bed unit"}</div><div><b>${selSub.insFactor > 1 ? "Higher" : "Standard"}</b>insurance: ${escapeHtml(selSub.insNote)}</div><div><b>City of ${escapeHtml(selSub.council)}</b><a href="https://www.google.com/maps/search/schools+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">Schools</a> · <a href="https://www.google.com/maps/search/train+station+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">transport</a> nearby</div>`;
     if (!$("subFacts").open) return;
     const rows = subs().map(subFacts);
     const key = { name: r => r.sub.name, city: r => r.city, beach: r => r.beach, house: r => r.house, unit: r => r.unit, sales: r => r.sales }[factsSort];
     rows.sort((a, b) => { const x = key(a), y = key(b); return (typeof x === "string" ? x.localeCompare(y) : x - y) * factsDir; });
     const th = (k, t) => `<th class="${k === "name" ? "" : "r"}"><button type="button" class="sort-btn" data-sort="${k}">${t}${factsSort === k ? (factsDir > 0 ? " ▲" : " ▼") : ""}</button></th>`;
     $("factsTable").innerHTML = `<thead><tr>${th("name", "Suburb")}${th("city", "To city")}${th("beach", "To beach")}${th("house", "House median")}${th("unit", "2-bed unit")}${th("sales", "House sales")}</tr></thead><tbody>` +
-      rows.map(r => `<tr class="${r.sub.id === selSub.id ? "sel" : ""}"><td>${escapeHtml(r.sub.name)}</td><td class="r num">${r.city.toFixed(0)} km</td><td class="r num">${r.beach < 2 ? "Beachside" : r.beach.toFixed(0) + " km"}</td><td class="r num">${fmt(r.house)}</td><td class="r num">${fmt(r.unit)}${r.unitReal ? "" : "*"}</td><td class="r num">${r.sales}</td></tr>`).join("") + "</tbody>";
+      rows.map(r => `<tr class="${r.sub.id === selSub.id ? "sel" : ""}"><td>${escapeHtml(r.sub.name)}</td><td class="r num">${r.city.toFixed(0)} km</td><td class="r num">${r.beach < 2 ? "Beachside" : r.beach.toFixed(0) + " km"}</td><td class="r num">${fmt(r.house)}${fewSales(r.sub) ? " †" : ""}</td><td class="r num">${fmt(r.unit)}${r.unitReal ? "" : "*"}</td><td class="r num">${r.sales}</td></tr>`).join("") + "</tbody>" + `<tfoot><tr><td colspan="6" class="muted small">† ${FEW_SALES} or fewer house sales in 12 months, so the median is less reliable.</td></tr></tfoot>`;
     $("factsTable").querySelectorAll("[data-sort]").forEach(b => b.onclick = () => { const k = b.dataset.sort; if (factsSort === k) factsDir = -factsDir; else { factsSort = k; factsDir = 1; } renderFacts(subById(state.suburb)); });
   }
 
