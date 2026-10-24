@@ -1,0 +1,22 @@
+{
+  "groceries": 1156.51,
+  "phone": 89.92,
+  "fuel": 554.98,
+  "rent": 2533.51,
+  "entertainment": 103.85,
+  "other": 132.61,
+  "dining": 235.26,
+  "healthins": 271.18,
+  "carins": 105.63,
+  "homeins": 31.52,
+  "debt": 540.22,
+  "gas": 66.38,
+  "power": 192.57,
+  "health": 53.88,
+  "car": 210.61,
+  "shopping": 312.05,
+  "water": 43.31,
+  "_income_per_month": 11828.95,
+  "_months": 7.92,
+  "_total_spend_per_month": 6634.02
+}
