@@ -2292,8 +2292,11 @@ body:not(.landing) #landing { display: none; }
     const duty = fhbNew ? 0 : stampDuty(price);
     const grant = fhbNew ? FHOG : 0;
     let loan, depositNeeded;
-    if (state.loanMode === "deposit") { depositNeeded = Math.min(state.deposit, price); loan = Math.max(0, price - depositNeeded); }
-    else { loan = Math.min(state.loan, price); depositNeeded = price - loan; }
+    // Deposit mode: the deposit can't be more than savings can cover once stamp duty and fees are paid. Loan mode: keep at least a 5% deposit.
+    const availDep = Math.max(0, funds() - (state.dutyOnLoan ? 0 : duty) - state.otherCosts + grant);
+    let depCapped = false;
+    if (state.loanMode === "deposit") { depositNeeded = Math.min(state.deposit, price); if (depositNeeded > availDep) { depositNeeded = availDep; depCapped = true; } loan = Math.max(0, price - depositNeeded); }
+    else { loan = Math.min(state.loan, price * 0.95); depositNeeded = price - loan; }
     if (state.dutyOnLoan) loan += duty;
     const lvr = price ? loan / price : 0;
     const schemeEligible = state.fhb && price <= SCHEME_CAP;
@@ -2331,7 +2334,7 @@ body:not(.landing) #landing { display: none; }
     const ownNet = eqRepay + ownRepay + ownHold - rentNet;
     const after2 = after - ownNet, afterStress2 = afterStress - (eqStress + ownStress + ownHold - rentNet);
     const lenderSurplus = state.income - helpDeduct - lenderLiving - debtNow - cardCommit - repayStress - pc.total / 12 - (eqStress + ownStress + ownHold - rentNet);
-    return { eqUsed, eqRepay, ownRepay, rentNet, ownHold, ownNet, funds: funds(), propCash: propCash(), sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after: after2, afterStress: afterStress2, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
+    return { depCapped, eqUsed, eqRepay, ownRepay, rentNet, ownHold, ownNet, funds: funds(), propCash: propCash(), sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after: after2, afterStress: afterStress2, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
   }
 
   // Loan payoff with extra repayments and an offset account
@@ -2365,8 +2368,12 @@ body:not(.landing) #landing { display: none; }
     else if (pct < 0.05) { cls = "bad"; budget = "Stretched"; }
     else if (pct < 0.15) { cls = "warn"; budget = "Tight"; }
     else { cls = "good"; budget = "Comfortable"; }
-    if (!lenderOk && cls !== "bad") return { cls: "warn", label: "Bank may say no", budget, lenderOk };
-    return { cls, label: budget, budget, lenderOk };
+    // Can they actually buy at this price? Savings must cover the money needed, the deposit must be at least 5%, and a bank must likely say yes
+    const cashOk = s.cashNeeded <= s.funds, depOk = s.lvr <= 0.95, savingsOk = cashOk && depOk, canBuy = savingsOk && lenderOk;
+    const base = { budget, lenderOk, cashOk, depOk, savingsOk, canBuy };
+    if (canBuy) return { cls, label: budget, ...base };
+    const label = !savingsOk && !lenderOk ? "Not yet: savings and bank" : !savingsOk ? "Need more savings" : "Bank may say no";
+    return { cls: cls === "bad" || !savingsOk ? "bad" : "warn", label, ...base };
   }
   // Plain-English reasons a lender's test fails, and what would fix it
   function lenderWhy(s) {
@@ -2885,6 +2892,7 @@ body:not(.landing) #landing { display: none; }
     else if (s.schemeUsed) flags.push(["good", "✓", `Your deposit is ${depPct}% of the price. The 5% Deposit Scheme means you won't pay lenders mortgage insurance (LMI).`]);
     else if (depPct < 20) flags.push(["warn", "!", `Your deposit is ${depPct}% of the price, under 20%, so lenders mortgage insurance (LMI) of roughly ${fmt(s.lmi)} applies${state.fhb && !s.schemeEligible ? ". The price is over the $900,000 cap for the 5% Deposit Scheme" : ""}.`]);
     else flags.push(["good", "✓", `Your deposit is ${depPct}% of the price, so you won't need lenders mortgage insurance (LMI).`]);
+    if (s.depCapped) flags.push(["warn", "i", `Your deposit is set to ${fmt(s.depositNeeded)}, not the ${fmt(state.deposit)} entered, so your savings also cover stamp duty and fees.`]);
     flags.push(short > 0 ? ["bad", "!", `You need ${fmt(s.cashNeeded)} to buy, ${fmt(short)} more than you have now.`] : ["good", "✓", `You have the ${fmt(s.cashNeeded)} needed to buy, including stamp duty.`]);
     flags.push(s.afterStress < 0 ? ["bad", "!", `If rates rose to ${testRate}%, the repayment would be ${fmt(s.repayStress)} and your budget would go ${fmt(s.afterStress)} a month. Banks check this before approving a loan.`] : ["good", "✓", `If rates rose to ${testRate}%, the repayment would be ${fmt(s.repayStress)} and you'd still have ${fmt(s.afterStress)} left each month.`]);
     const chg = s.after - s.now;
@@ -3096,15 +3104,32 @@ body:not(.landing) #landing { display: none; }
 
 
   // ---------- "You could spend up to" (most a suburb's price could be while the budget, a bank and savings all still work) ----------
-  function upTo(sub) {
-    const ok = p => { const x = withState({ priceOverride: { ...state.priceOverride, [sub.id]: p } }, () => scenario(sub)); return x.after >= state.income * 0.05 && x.lenderSurplus >= 0 && x.cashNeeded <= funds(); };
-    if (!state.income) return null;
-    let lo = 100000, hi = 4000000;
-    if (!ok(lo)) return 0;
-    if (ok(hi)) return hi;
-    for (let i = 0; i < 26; i++) { const m = (lo + hi) / 2; if (ok(m)) lo = m; else hi = m; }
-    return Math.floor(lo / 5000) * 5000;
+  // Assumes the buyer puts all their available money towards it: whatever is left after stamp duty, fees and any mortgage insurance becomes the deposit.
+  function bestAt(sub, p) {
+    const f = funds(), fhbNew = state.fhb && state.newBuild;
+    let dep = Math.max(0, Math.min(p, f - (fhbNew ? 0 : (state.dutyOnLoan ? 0 : stampDuty(p))) - state.otherCosts + (fhbNew ? FHOG : 0)));
+    let x;
+    for (let i = 0; i < 4; i++) {
+      x = withState({ loanMode: "deposit", deposit: dep, priceOverride: { ...state.priceOverride, [sub.id]: p } }, () => scenario(sub));
+      const over = x.cashNeeded - f; if (over <= 0.5) break; dep = Math.max(0, dep - over);
+    }
+    return x;
   }
+  function upToInfo(sub) {
+    if (!state.income) return null;
+    const why = p => { const x = bestAt(sub, p);
+      if (x.cashNeeded > funds() + 0.5 || x.lvr > 0.95) return "savings";
+      if (x.lenderSurplus < 0) return "bank";
+      if (x.after < state.income * 0.05) return "budget";
+      return ""; };
+    let lo = 100000, hi = 4000000;
+    if (why(lo)) return { max: 0, why: why(lo) };
+    if (!why(hi)) return { max: hi, why: "" };
+    for (let i = 0; i < 20; i++) { const m = (lo + hi) / 2; if (!why(m)) lo = m; else hi = m; }
+    return { max: Math.floor(lo / 5000) * 5000, why: why(hi) };
+  }
+  function upTo(sub) { const u = upToInfo(sub); return u ? u.max : null; }
+  const LIMIT_TEXT = { savings: "your savings (deposit, stamp duty and fees)", bank: "what a bank would likely lend", budget: "keeping at least 5% of your pay left over each month" };
   const shortMoney = v => v >= 1e6 ? "$" + (v / 1e6).toFixed(2) + "m" : "$" + Math.round(v / 1000) + "k";
 
   // ---------- Schemes checker ----------
@@ -3353,15 +3378,28 @@ body:not(.landing) #landing { display: none; }
     pop.style.width = w + "px"; pop.style.left = Math.max(12, Math.min(window.innerWidth - w - 12, r.left + window.scrollX - w / 2)) + "px"; pop.style.top = (r.bottom + window.scrollY + 8) + "px";
   }
 
+  // Plain answer to "Can I buy here?", with what stands in the way
+  function canBuyHtml(s, st, sub) {
+    const short = s.cashNeeded - funds(), u = upToInfo(sub);
+    if (st.canBuy) return `<div class="take-head good"><b>Yes, you could buy here at this price.</b> You have the ${fmt(s.cashNeeded)} needed and a bank would likely approve the ${fmt(s.loan)} loan.${s.depCapped ? ` That uses a ${fmt(s.depositNeeded)} deposit, as the rest of your savings goes on stamp duty and fees.` : ""}</div>`;
+    const items = [];
+    if (short > 0) items.push(`<li><b>${fmt(short)} more savings.</b> Buying at ${fmt(s.price)} needs ${fmt(s.cashNeeded)} (deposit, stamp duty and fees) and you have ${fmt(funds())}.</li>`);
+    if (!st.depOk) items.push(`<li><b>A deposit of at least 5%</b> (${fmt(Math.ceil(s.price * 0.05 / 1000) * 1000)}). Most lenders won't go lower.</li>`);
+    if (!st.lenderOk) items.push(`<li><b>A smaller loan.</b> A bank would likely say no to ${fmt(s.loan)} on your income and spending.</li>`);
+    const tip = u && u.max ? `With your savings and income, the most you could likely pay is about <b>${fmt(u.max)}</b>, limited by ${LIMIT_TEXT[u.why] || "your figures"}.${u.max < s.price ? " Try a cheaper suburb, a smaller home, or the “Under $900k” list." : ""}` : "With the savings entered, buying isn't possible yet. The “How to get there” tab shows how long it could take.";
+    return `<div class="take-head bad"><b>Not yet at ${fmt(s.price)}.</b> To buy here you'd need:<ul style="margin:6px 0;padding-left:18px">${items.join("")}</ul>${tip}</div>`;
+  }
+
   // ---------- Results hero: headline, doughnut and sliders ----------
   function renderHero(s, st, sub) {
     const short = s.cashNeeded - funds();
     $("hHead").innerHTML = `<div class="eyebrow">If you buy in ${escapeHtml(sub.name)} for ${fmt(s.price)}</div>
       <div class="hero-num${s.after < 0 ? " neg" : ""}">${fmt(s.after)}</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>left over each month</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.lenderOk ? st.label : `${st.budget} budget, but a bank may say no`}</span></span></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>${st.canBuy ? "left over each month" : "left over each month, if you could buy at this price"}</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.label}</span></span></div>
+      ${canBuyHtml(s, st, sub)}
       <div class="hero-facts">
-        <div><span class="muted small">You could spend up to</span><b>${(() => { const u = upTo(sub); return u ? fmt(u) : "Not yet"; })()}</b><span class="small muted">in ${escapeHtml(sub.name)}, for this home</span></div>
-        <div><span class="muted small">Loan repayment</span><b>${fmt(s.repay)}<span class="muted small" style="font-weight:400"> /month</span></b></div>
+        <div><span class="muted small">You could spend up to</span><b>${(() => { const u = upToInfo(sub); return u && u.max ? fmt(u.max) : "Not yet"; })()}</b><span class="small muted">using all your savings as the deposit</span></div>
+        <div><span class="muted small">Loan needed</span><b>${fmt(s.loan)}</b><span class="small muted">${fmt(s.repay)} a month</span></div>
         <div><span class="muted small">Money needed to buy</span><b>${fmt(s.cashNeeded)}</b><span class="small" style="color:var(--${short > 0 ? "bad" : "good"})">${short > 0 ? fmt(short) + " short" : "Covered by savings"}</span></div>
         <div><span class="muted small">Would a bank say yes? ${term("bank")}</span><b style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${s.lenderSurplus >= 0 ? "Likely yes" : "Likely fails"}</b></div>
       </div>${st.lenderOk ? "" : `<div class="lender-note">${lenderNoteHtml(s, st)}</div>`}`;
