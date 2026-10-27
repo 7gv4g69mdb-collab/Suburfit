@@ -1,0 +1,32 @@
+# Downloads the SA Valuer-General "Metropolitan Median House Sales" files from data.sa.gov.au
+# and saves each quarter as a CSV in src/data/raw/, so prices can be refreshed without downloading by hand.
+name: Fetch Valuer-General house prices
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 22 * * 1"   # every Tuesday 8:47 am Adelaide time; only commits when a new quarter appears
+  push:
+    paths:
+      - ".github/workflows/fetch-prices.yml"
+      - "src/data/fetch_vg.py"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install openpyxl xlrd
+      - run: python src/data/fetch_vg.py
+      - name: Commit new files
+        run: |
+          git config user.name "suburb-fit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/data/raw
+          if git diff --cached --quiet; then echo "No new quarters"; else git commit -m "Update Valuer-General house price files" && git push; fi
