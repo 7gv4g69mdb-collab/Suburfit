@@ -1,11 +1,12 @@
-# Downloads the SA Valuer-General "Metropolitan Median House Sales" files from data.sa.gov.au
-# and saves each quarter as a CSV in src/data/raw/, so prices can be refreshed without downloading by hand.
+# Downloads the SA Valuer-General "Metropolitan Median House Sales" files from data.sa.gov.au.
+# When a new quarter appears it regenerates suburb prices, rebuilds the public site (index.html) and commits.
+# The Claude-hosted version of the app is updated separately from src/artifact.html.
 name: Fetch Valuer-General house prices
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 22 * * 1"   # every Tuesday 8:47 am Adelaide time; only commits when a new quarter appears
+    - cron: "17 22 * * 1"   # every Tuesday 8:47 am Adelaide time; only commits when something changes
   push:
     paths:
       - ".github/workflows/fetch-prices.yml"
@@ -24,9 +25,17 @@ jobs:
           python-version: "3.12"
       - run: pip install openpyxl xlrd
       - run: python src/data/fetch_vg.py
-      - name: Commit new files
+      - name: Rebuild app and public site if prices changed
+        run: |
+          if git diff --quiet -- src/data/raw && [ -z "$(git ls-files --others --exclude-standard src/data/raw)" ]; then echo "No new quarter"; exit 0; fi
+          python src/data/refresh.py
+          mkdir -p /tmp/libs/jspdf-src/dist /tmp/libs/qrlib
+          curl -sSfL https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js -o /tmp/libs/jspdf-src/dist/jspdf.umd.min.js
+          curl -sSfL https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js -o /tmp/libs/qrlib/qrcode.min.js
+          python src/standalone/build.py /tmp/libs src/artifact.html index.html
+      - name: Commit
         run: |
           git config user.name "suburb-fit-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add src/data/raw
-          if git diff --cached --quiet; then echo "No new quarters"; else git commit -m "Update Valuer-General house price files" && git push; fi
+          git add src/data index.html src/artifact.html
+          if git diff --cached --quiet; then echo "Nothing to commit"; else git commit -m "Update house prices from the Valuer-General" && git push; fi

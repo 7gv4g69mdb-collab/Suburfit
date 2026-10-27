@@ -1,6 +1,10 @@
+# Usage: python3 build.py LIBS_DIR [SOURCE_HTML] [OUTPUT_HTML]
+# LIBS_DIR holds jspdf-src/dist/jspdf.umd.min.js and qrlib/qrcode.min.js (jsPDF 2.5.1 and qrcodejs 1.0.0 from cdnjs).
 import sys
 SP=sys.argv[1]
-src=open('/home/claude/suburb-fit/index.html').read()
+SRC=sys.argv[2] if len(sys.argv)>2 else '/home/claude/suburb-fit/index.html'
+OUT=sys.argv[3] if len(sys.argv)>3 else 'index.html'
+src=open(SRC).read()
 jspdf=open(SP+'/jspdf-src/dist/jspdf.umd.min.js').read()
 qr=open(SP+'/qrlib/qrcode.min.js').read()
 src=src.replace('<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>','<script>'+jspdf.replace('</script','<\\/script')+'</script>')
@@ -43,4 +47,4 @@ assert src
 src=src.replace('$("oaPage").value = $("oaPage").value || brand.pageUrl || "";','$("oaPage").value = $("oaPage").value || brand.pageUrl || (window.__standalone && /^https?:/.test(location.href) ? location.href.replace(/#.*$/, "") : "");')
 src=src.replace("Saved clients are kept in this page's storage on claude.ai and only you and your editors can see them. Open the page in claude.ai as its owner to use them.","Saved clients are kept in this browser only.")
 out='<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>\n</head>\n<body>\n'+src+'\n</body>\n</html>\n'
-open('index.html','w').write(out); print(len(out))
+open(OUT,'w').write(out); print(len(out))
