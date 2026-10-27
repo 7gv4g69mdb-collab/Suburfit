@@ -717,7 +717,7 @@ body:not(.landing) #landing { display: none; }
     </div>
     <ol class="land-steps">
       <li><b>Tell us about you</b><span>Take-home pay, savings and a rough idea of spending. Upload bank statements if you want more accuracy.</span></li>
-      <li><b>Pick the home you want</b><span>A house or unit, bedrooms and bathrooms. Every suburb is priced for that home.</span></li>
+      <li><b>Pick the home you want</b><span>Bedrooms, bathrooms and block size. Every suburb is priced for that home.</span></li>
       <li><b>See where you fit</b><span>What's left each month, what you could spend, schemes that help, and how to get there if you're not ready yet.</span></li>
     </ol>
     <div class="land-get">
@@ -736,7 +736,6 @@ body:not(.landing) #landing { display: none; }
 
   <div class="data-date" id="dataDate" role="note">
     <span><b>House prices</b> sales to September 2026, SA Valuer-General</span>
-    <span><b>Unit prices</b> sales to October 2026, Domain</span>
     <span><b>Costs</b> 2026-27 council, water, levy and energy rates</span>
     <span><b>Last checked</b> October 2026</span>
     <button type="button" class="link-btn" id="toSources">See all sources</button>
@@ -1008,7 +1007,7 @@ body:not(.landing) #landing { display: none; }
         <div class="step-head"><span class="step-no">5</span><div><h2 id="s5h">Where would you like to live?</h2><p class="muted small">Describe the home you want. Every suburb's price is estimated for that home, so the comparison is like for like.</p></div></div>
         <div class="sub-card" style="margin-bottom:14px">
           <h3 style="margin-bottom:10px">The home you want</h3>
-          <div class="exp-modes type-modes" role="radiogroup" aria-label="Type of home" id="typeModes">
+          <div class="exp-modes type-modes" role="radiogroup" aria-label="Type of home" id="typeModes" hidden>
             <button type="button" role="radio" data-type="house" aria-checked="true"><b>House</b><span>Freestanding home on its own block</span></button>
             <button type="button" role="radio" data-type="unit" aria-checked="false"><b>Apartment or unit</b><span>Strata title, shared building or land</span></button>
           </div>
@@ -1038,7 +1037,7 @@ body:not(.landing) #landing { display: none; }
           <summary>Compare all suburbs: distance to the city and beach, prices and more</summary>
           <div class="inner">
             <div class="table-scroll"><table class="mini-table facts-table" id="factsTable"></table></div>
-            <p class="hint">Distances are approximate road distances from the middle of each suburb. House medians are SA Valuer-General sales to September 2026; unit prices are Domain medians or estimates. Tap a column heading to sort.</p>
+            <p class="hint">Distances are approximate road distances from the middle of each suburb. House medians are SA Valuer-General sales to September 2026. Tap a column heading to sort.</p>
           </div>
         </details>
         <div class="grid2">
@@ -1079,7 +1078,7 @@ body:not(.landing) #landing { display: none; }
             <div><label for="powerYr">Electricity per year</label><div class="money"><input id="powerYr" type="number" min="0" step="10"></div><p class="hint">2026-27 SA default offer, 4,000 kWh, 3 bedrooms.</p></div>
             <div><label for="waterPerPerson">Water use per person (kL/yr)</label><input id="waterPerPerson" type="number" min="0" step="5"><p class="hint">Plus 50 kL for the household.</p></div>
             <div><label for="insBase">Home and contents, Adelaide average</label><div class="money"><input id="insBase" type="number" min="0" step="10"></div><p class="hint">Average quote, June 2026, for a 3-bedroom house.</p></div>
-            <div><label for="csRate">Charles Sturt rate in the dollar</label><input id="csRate" type="number" min="0" step="0.00001"><p class="hint">Estimate from 2026 listings.</p></div>
+            
             <div><label for="buffer">Lender test buffer (%)</label><input id="buffer" type="number" min="0" step="0.5"><p class="hint">Lenders assess at the rate plus 3%.</p></div>
             <div><label for="cardRate">Credit card commitment (% of limit)</label><input id="cardRate" type="number" min="0" step="0.1"><p class="hint">Most lenders use 3% to 3.8%.</p></div>
             <div><label for="hemOverride">Lender living-expense benchmark (HEM)</label><div class="money"><input id="hemOverride" type="number" min="0" step="10"></div><p class="hint" id="hemHint">Leave blank for a rough placeholder.</p></div>
@@ -1235,9 +1234,8 @@ body:not(.landing) #landing { display: none; }
     <p>Prototype for discussion only. It is an estimate, not credit or financial advice, and not a lender serviceability assessment. Council rates, sewerage and the emergency services levy are worked out from the purchase price unless a property's own figures are entered; in practice they use the Valuer-General's capital value, which is usually lower.</p>
     <div class="sources">
       <span>House prices: SA Valuer-General <a href="https://data.sa.gov.au/data/dataset/metro-median-house-sales" target="_blank" rel="noopener">metropolitan median house sales</a>, Q4 2025 to Q3 2026 (latest release, October 2026), combined into a 12-month figure weighted by the number of sales; suburbs with under 15 sales are marked. Hindmarsh, Ashford, Southwark and Rosewater have no separate house sales in that data and are left out. Price by bedrooms: sales medians for the 12 months to October 2026 from <a href="https://www.property.com.au/sa/seaton-5023" target="_blank" rel="noopener">property.com.au</a> suburb pages, with small-sample gaps smoothed. Bathroom (±4% per bathroom against the typical number) and block-size adjustments, and typical block sizes, are estimates.</span>
-      <span>Council rates: <a href="https://www.westtorrens.sa.gov.au/Council/Rates-and-charges/Rate-calculations" target="_blank" rel="noopener">City of West Torrens 2026/27</a> (rate 0.00171528, landscape levy 0.00005691, minimum $1,258). City of Charles Sturt is an estimate from 2026 listings.</span>
+      <span>Council rates: <a href="https://www.westtorrens.sa.gov.au/Council/Rates-and-charges/Rate-calculations" target="_blank" rel="noopener">City of West Torrens 2026/27</a> (rate 0.00171528, landscape levy 0.00005691, minimum $1,258). <a href="https://hdp-au-prod-app-ccs-yoursay-files.s3.ap-southeast-2.amazonaws.com/3117/8279/8811/Annual_Business_Plan_and_Budget_2026_27.pdf" target="_blank" rel="noopener">City of Charles Sturt 2026/27</a> (rate 0.00170947733, minimum $1,410, plus the Green Adelaide landscape levy of about 0.0000588).</span>
       <span>Water: <a href="https://sawater.com.au/__data/assets/pdf_file/0009/2178270/2026-27-SA-Water-Water-Sewerage-prices.pdf" target="_blank" rel="noopener">SA Water 2026-27 prices</a>. Emergency services levy: <a href="https://revenuesa.sa.gov.au/ESL/Rates-and-Factors" target="_blank" rel="noopener">RevenueSA 2026-27</a> ($50 fixed charge plus capital value × 0.000324 × residential factor 0.4 × Greater Adelaide area factor 1.0). Electricity: <a href="https://www.aer.gov.au/industry/retail/default-market-offer" target="_blank" rel="noopener">AER Default Market Offer 2026-27</a>.</span>
-      <span>Units: 2-bedroom unit medians from <a href="https://www.domain.com.au/suburb-profile/seaton-sa-5023" target="_blank" rel="noopener">Domain suburb profiles</a> (12 months to October 2026) for 11 suburbs with 15 or more two-bedroom sales (Findon, Seaton, St Clair, West Lakes, Camden Park, Glenelg North, Kurralta Park, Plympton, Bowden, Brooklyn Park, West Beach), plus Semaphore Park, Woodville and Fulham with 10 to 12 sales; other suburbs are estimated at half the house median, the typical ratio in those suburbs. Strata fees: a typical Adelaide range of $700 to $1,500 a quarter. Contents insurance: SA average $483 (Canstar, August 2026).</span>
       <span>Stamp duty: <a href="https://revenuesa.sa.gov.au/stampduty/rate-of-stamp-duty" target="_blank" rel="noopener">RevenueSA rates</a> and <a href="https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief" target="_blank" rel="noopener">first home buyer relief</a>. Home and contents: Adelaide average quote of $2,559 for June 2026 from <a href="https://www.comparethemarket.com.au/news/home-insurance-quotes-surge-more-than-300-across-capital-cities/" target="_blank" rel="noopener">Compare the Market</a>; suburb and bedroom loadings are indicative only.</span>
       <span>Lender check: repayments tested at the interest rate plus APRA's minimum 3 percentage point <a href="https://www.apra.gov.au/node/42931" target="_blank" rel="noopener">serviceability buffer</a>. Credit cards are counted at 3.8% of the limit a month, a common lender assumption. The living-expense benchmark is a placeholder because lender HEM tables are licensed. Mortgage insurance uses rough premiums of 1%, 2% and 3.5% of the loan for 80-85%, 85-90% and 90-95% of the price. Before-tax income is estimated from take-home pay using the <a href="https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents" target="_blank" rel="noopener">2026-27 resident tax rates</a> plus the 2% Medicare levy.</span>
       <span>First home buyers: <a href="https://www.canstar.com.au/home-loans/5-percent-deposit-scheme/" target="_blank" rel="noopener">5% Deposit Scheme</a> cap of $900,000 for Adelaide from October 2025. <a href="https://revenuesa.sa.gov.au/FHOG/grant-details" target="_blank" rel="noopener">SA First Home Owner Grant</a> of up to $15,000 for new homes.</span>
@@ -1636,15 +1634,14 @@ body:not(.landing) #landing { display: none; }
   const DEF_BED_RATIO = { 1: 0.65, 2: 0.78, 3: 1, 4: 1.18, 5: 1.40 };
   const TYP_BATH = { 1: 1, 2: 1, 3: 2, 4: 2, 5: 3 };
   const BATH_STEP = 0.04, LAND_SHARE = 0.6, LAND_CURVE = 0.7;
-  // Units: 2-bedroom unit medians from Domain suburb profiles (12 months to October 2026, 15+ sales).
+  // Units are switched off at launch. Unit code is kept so licensed unit medians can be added to UNIT2 later.
   // Elsewhere a 2-bedroom unit is estimated at half the suburb's house median, the typical ratio across those suburbs.
   // [2-bedroom unit median, 2-bedroom unit sales]. 15+ sales is treated as reliable; 10 to 14 is shown with a caution.
-  const UNIT2 = { findon: [569000, 22], seaton: [536000, 25], stclair: [568500, 19], westlakes: [795000, 18], camdenpark: [561000, 21], glenelgnorth: [650000, 43], kurraltapark: [480000, 15], plympton: [581000, 26], bowden: [730000, 31], brooklynpark: [520000, 28], westbeach: [597500, 16],
-    semaphorepark: [721250, 12], woodville: [580000, 12], "fulham-west": [697500, 10] };
+  const UNIT2 = {}; // unit medians removed: no licensed source yet
   const unitData = sub => { const u = UNIT2[sub.id]; return u ? (u[1] >= 15 ? "solid" : "few") : "none"; };
   const unitSoldUrl = sub => sub.postcode ? `https://www.domain.com.au/sold-listings/${sub.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-sa-${sub.postcode}/apartment/` : "";
   const UNIT_RATIO = 0.50, UNIT_BED = { 1: 0.8, 2: 1, 3: 1.3 }, TYP_UNIT_BATH = { 1: 1, 2: 1, 3: 2 };
-  const isUnit = () => state.homeType === "unit";
+  const isUnit = () => false; // houses only at launch (no licensed unit price data yet)
   // House medians from 15 or fewer sales in 12 months can swing a lot, so they are flagged
   const FEW_SALES = 15;
   const fewSales = sub => !!sub.sales && sub.sales <= FEW_SALES;
@@ -1672,14 +1669,18 @@ body:not(.landing) #landing { display: none; }
   const weekly = m => m * 12 / 48;
   const propActive = sub => state.property.suburb === sub.id && (state.property.cv > 0 || state.property.rates > 0 || state.property.esl > 0 || state.property.waterQ > 0);
 
+  // 2026-27 residential council rates: rate in the dollar on capital value, minimum rate or fixed charge, plus the regional landscape levy the council collects
+  const COUNCILS = {
+    "West Torrens": { rate: 0.00171528, min: 1258, levy: 0.00005691 },
+    "Charles Sturt": { rate: 0.00170947733, min: 1410, levy: 0.0000588 }
+  };
   function propertyCosts(sub, price) {
     const p = state.property, useP = propActive(sub);
     const value = useP && p.cv > 0 ? p.cv : price;
     let council;
     if (useP && p.rates > 0) council = p.rates;
-    else if (sub.council === "West Torrens") council = Math.max(value * 0.00171528, 1258) + value * 0.00005691;
-    else if (sub.council === "Other") council = value * (sub.rateInDollar || 0.002);
-    else council = value * state.csRate;
+    else if (COUNCILS[sub.council]) { const c = COUNCILS[sub.council]; council = Math.max(value * c.rate, c.min || 0) + (c.fixed || 0) + value * (c.levy || 0); }
+    else council = value * (sub.rateInDollar || 0.002);
     const esl = useP && p.esl > 0 ? p.esl : 50 + value * 1.0 * 0.4 * 0.000324; // fixed $50 + value x area factor 1.0 (Greater Adelaide, R4) x residential land use 0.4 x 2026-27 rate
     const kl = waterKl(), tier1 = Math.min(kl, 0.3836 * 365);
     const usage = tier1 * 2.52 + Math.max(0, kl - tier1) * 3.597;
@@ -2208,7 +2209,7 @@ body:not(.landing) #landing { display: none; }
       <tr><td>Living costs kept <span class="muted small">(incl. car, health and life insurance)</span></td><td class="r num">−${fmt(s.kept)}</td></tr>
       <tr><td>Loan repayment <span class="muted small">(${fmt(s.loan)}, ${state.rate}%, ${state.term} yrs)</span></td><td class="r num">−${fmt(s.repay)}</td></tr>
       <tr><td>Rates, bills and insurance${pcp ? `<span class="tag-ok">${escapeHtml(state.property.address || "Property")}</span>` : ""}</td><td class="r num">−${fmt(s.pc.total / 12)}</td></tr>
-      <tr class="sub"><td>Council rates${pcp && state.property.rates > 0 ? fromListing : sub.council !== "West Torrens" ? est : ""}</td><td class="r num">${m(s.pc.council)}</td></tr>
+      <tr class="sub"><td>Council rates${pcp && state.property.rates > 0 ? fromListing : !COUNCILS[sub.council] || COUNCILS[sub.council].estimate ? est : ""}</td><td class="r num">${m(s.pc.council)}</td></tr>
       <tr class="sub"><td>Emergency services levy${term("esl")}${pcp && state.property.esl > 0 ? fromListing : ""}</td><td class="r num">${m(s.pc.esl)}</td></tr>
       <tr class="sub"><td>Water and sewerage${pcp && state.property.waterQ > 0 ? fromListing : ""}</td><td class="r num">${m(s.pc.water)}</td></tr>
       <tr class="sub"><td>Electricity</td><td class="r num">${m(s.pc.power)}</td></tr>
@@ -2564,7 +2565,6 @@ body:not(.landing) #landing { display: none; }
       <div><b>${toCbd.toFixed(0)} km</b>to the city by road (approx.)</div>
       <div><b>${toBeach < 2 ? "Beachside" : toBeach.toFixed(0) + " km"}</b>${toBeach < 2 ? "near the beach" : "to the nearest beach"}</div>
       <div><b>${fmt(sub.median)}</b>median house price${sub.sales ? `, ${sub.sales} sales in 12 months` : ""}${fewTag(sub)}</div>
-      <div><b>${fmt(unit2For(sub))}</b>${u ? "median 2-bed unit" : "estimated 2-bed unit"}</div>
       <div><b>City of ${escapeHtml(sub.council)}</b>council</div>
       <div><b>${sub.insFactor > 1 ? "Higher" : "Standard"}</b>insurance: ${escapeHtml(sub.insNote)}</div>
       <div class="wide">Look around: <a href="https://www.google.com/maps/search/schools+near+${q}" target="_blank" rel="noopener">schools</a> · <a href="https://www.google.com/maps/search/train+station+near+${q}" target="_blank" rel="noopener">train and tram</a> · <a href="https://www.google.com/maps/search/shops+near+${q}" target="_blank" rel="noopener">shops</a> on Google Maps</div>`;
@@ -2579,14 +2579,14 @@ body:not(.landing) #landing { display: none; }
   function renderFacts(selSub) {
     if (!$("factsTable")) return;
     const f = subFacts(selSub); $("factsName").textContent = selSub.name;
-    $("factsSel").innerHTML = `<div><b>${f.city.toFixed(0)} km</b>to the city</div><div><b>${f.beach < 2 ? "Beachside" : f.beach.toFixed(0) + " km"}</b>${f.beach < 2 ? "near the beach" : "to the beach"}</div><div><b>${fmt(f.house)}</b>median house${fewTag(selSub)}</div><div><b>${fmt(f.unit)}</b>${f.unitReal ? "median 2-bed unit" : "est. 2-bed unit"}</div><div><b>${selSub.insFactor > 1 ? "Higher" : "Standard"}</b>insurance: ${escapeHtml(selSub.insNote)}</div><div><b>City of ${escapeHtml(selSub.council)}</b><a href="https://www.google.com/maps/search/schools+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">Schools</a> · <a href="https://www.google.com/maps/search/train+station+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">transport</a> nearby</div>`;
+    $("factsSel").innerHTML = `<div><b>${f.city.toFixed(0)} km</b>to the city</div><div><b>${f.beach < 2 ? "Beachside" : f.beach.toFixed(0) + " km"}</b>${f.beach < 2 ? "near the beach" : "to the beach"}</div><div><b>${fmt(f.house)}</b>median house${fewTag(selSub)}</div><div><b>${selSub.insFactor > 1 ? "Higher" : "Standard"}</b>insurance: ${escapeHtml(selSub.insNote)}</div><div><b>City of ${escapeHtml(selSub.council)}</b><a href="https://www.google.com/maps/search/schools+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">Schools</a> · <a href="https://www.google.com/maps/search/train+station+near+${encodeURIComponent(selSub.name + " SA")}" target="_blank" rel="noopener">transport</a> nearby</div>`;
     if (!$("subFacts").open) return;
     const rows = subs().map(subFacts);
     const key = { name: r => r.sub.name, city: r => r.city, beach: r => r.beach, house: r => r.house, unit: r => r.unit, sales: r => r.sales }[factsSort];
     rows.sort((a, b) => { const x = key(a), y = key(b); return (typeof x === "string" ? x.localeCompare(y) : x - y) * factsDir; });
     const th = (k, t) => `<th class="${k === "name" ? "" : "r"}"><button type="button" class="sort-btn" data-sort="${k}">${t}${factsSort === k ? (factsDir > 0 ? " ▲" : " ▼") : ""}</button></th>`;
-    $("factsTable").innerHTML = `<thead><tr>${th("name", "Suburb")}${th("city", "To city")}${th("beach", "To beach")}${th("house", "House median")}${th("unit", "2-bed unit")}${th("sales", "House sales")}</tr></thead><tbody>` +
-      rows.map(r => `<tr class="${r.sub.id === selSub.id ? "sel" : ""}"><td>${escapeHtml(r.sub.name)}</td><td class="r num">${r.city.toFixed(0)} km</td><td class="r num">${r.beach < 2 ? "Beachside" : r.beach.toFixed(0) + " km"}</td><td class="r num">${fmt(r.house)}${fewSales(r.sub) ? " †" : ""}</td><td class="r num">${fmt(r.unit)}${r.unitReal ? "" : "*"}</td><td class="r num">${r.sales}</td></tr>`).join("") + "</tbody>" + `<tfoot><tr><td colspan="6" class="muted small">† ${FEW_SALES} or fewer house sales in 12 months, so the median is less reliable.</td></tr></tfoot>`;
+    $("factsTable").innerHTML = `<thead><tr>${th("name", "Suburb")}${th("city", "To city")}${th("beach", "To beach")}${th("house", "House median")}${th("sales", "House sales")}</tr></thead><tbody>` +
+      rows.map(r => `<tr class="${r.sub.id === selSub.id ? "sel" : ""}"><td>${escapeHtml(r.sub.name)}</td><td class="r num">${r.city.toFixed(0)} km</td><td class="r num">${r.beach < 2 ? "Beachside" : r.beach.toFixed(0) + " km"}</td><td class="r num">${fmt(r.house)}${fewSales(r.sub) ? " †" : ""}</td><td class="r num">${r.sales}</td></tr>`).join("") + "</tbody>" + `<tfoot><tr><td colspan="5" class="muted small">† ${FEW_SALES} or fewer house sales in 12 months, so the median is less reliable.</td></tr></tfoot>`;
     $("factsTable").querySelectorAll("[data-sort]").forEach(b => b.onclick = () => { const k = b.dataset.sort; if (factsSort === k) factsDir = -factsDir; else { factsSort = k; factsDir = 1; } renderFacts(subById(state.suburb)); });
   }
 
@@ -2698,6 +2698,7 @@ body:not(.landing) #landing { display: none; }
 
 
   function setHomeType(t, quiet) {
+    t = "house"; // houses only at launch: no licensed unit price data yet
     state.homeType = t;
     document.querySelectorAll("#typeModes [data-type]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.type === t)));
     document.body.classList.toggle("unit-mode", t === "unit");
@@ -3488,7 +3489,7 @@ body:not(.landing) #landing { display: none; }
   ["dutyOnLoan", "lmiOnLoan", "newBuild", "useScheme"].forEach(id => bindCheck(id, id));
   bindCheck("fhb", "fhb", () => { $("fhbOpts").hidden = !state.fhb; });
   bindNum("petrolAvg", "petrolAvg");
-  bindNum("powerYr", "powerYr"); bindNum("waterPerPerson", "waterPerPerson"); bindNum("insBase", "insBase"); bindNum("csRate", "csRate");
+  bindNum("powerYr", "powerYr"); bindNum("waterPerPerson", "waterPerPerson"); bindNum("insBase", "insBase"); 
   bindNum("buffer", "buffer"); bindNum("cardRate", "cardRate"); bindNum("fuelPrice", "fuelPrice"); bindNum("fuelUse", "fuelUse"); bindNum("ptFare", "ptFare");
   bindNum("hemOverride", "hemOverride", { nullable: true });
   bindNum("insQuote", "insQuote", { blankZero: true });
