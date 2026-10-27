@@ -10,7 +10,9 @@ for url in open(os.path.join(HERE, "doc_urls.txt")):
         data = urllib.request.urlopen(req, timeout=90).read()
     except Exception as e:
         print("FAIL", url, e); continue
-    if data[:4] == b"%PDF":
+    if url.lower().endswith((".csv", ".json")):
+        open(os.path.join(OUT, name), "wb").write(data)
+    elif data[:4] == b"%PDF":
         p = os.path.join(OUT, "tmp.pdf"); open(p, "wb").write(data)
         subprocess.run(["pdftotext", "-layout", p, os.path.join(OUT, name + ".txt")], check=False); os.remove(p)
     else:
