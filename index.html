@@ -2372,7 +2372,9 @@ body:not(.landing) #landing { display: none; }
     const cashOk = s.cashNeeded <= s.funds, depOk = s.lvr <= 0.95, savingsOk = cashOk && depOk, canBuy = savingsOk && lenderOk;
     const base = { budget, lenderOk, cashOk, depOk, savingsOk, canBuy };
     if (canBuy) return { cls, label: budget, ...base };
-    const label = !savingsOk && !lenderOk ? "Not yet: savings and bank" : !savingsOk ? "Need more savings" : "Bank may say no";
+    // Their own figures not working (over budget) is the clearest message, so it comes first. Bank wording stays hedged: it's an estimate, not a lender's assessment.
+    const bankLabel = s.lenderSurplus > -300 ? "Bank may say no" : "Bank likely to say no";
+    const label = s.after < 0 ? "Over budget" : !savingsOk && !lenderOk ? "Not yet: savings and bank" : !savingsOk ? "Need more savings" : bankLabel;
     return { cls: cls === "bad" || !savingsOk ? "bad" : "warn", label, ...base };
   }
   // Plain-English reasons a lender's test fails, and what would fix it
