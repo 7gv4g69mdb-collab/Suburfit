@@ -9,6 +9,7 @@ from parse_vg import load, year
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MIN_SALES = 5
+VARY = 1.5  # flag a suburb when its highest quarterly median is 1.5x its lowest
 COUNCILS = ["CHARLES STURT", "WEST TORRENS", "PORT ADELAIDE ENFIELD", "SALISBURY", "PLAYFORD", "ONKAPARINGA"]
 
 # Suburbs the Valuer-General lists under more than one council: keep each once, under this council
@@ -58,28 +59,35 @@ def title(n):
     return re.sub(r"O'(\w)", lambda m: "O'" + m.group(1).upper(), t)
 
 def main():
-    coords = json.load(open(os.path.join(HERE, "coords.json")))
-    pc_file = os.path.join(HERE, "docs", "raw.githubusercontent.com_matthewproctor_australianpostcodes_master_australian_postcodes.csv")
-    loc = {}
-    for r in csv.DictReader(open(pc_file)):
-        if r["state"] == "SA" and r["Lat_precise"] not in ("", "0"):
-            loc.setdefault(r["locality"].upper(), dict(pc=r["postcode"], lat=float(r["Lat_precise"]), lng=float(r["Long_precise"])))
+    # Suburb centre points: ABS ASGS 2021 Suburbs and Localities (CC BY 4.0), fetched by the "Fetch ABS suburb centres" job
+    abs_pts = json.load(open(os.path.join(HERE, "abs_sal_sa.json")))
+    # Suburbs created after the ABS 2021 boundaries: approximate centre points
+    abs_pts.setdefault("RIVERLEA PARK", {"lat": -34.6458, "lng": 138.5103})
+    abs_pts.setdefault("ONKAPARINGA HEIGHTS", {"lat": -35.1623, "lng": 138.5222})
+    postcodes = json.load(open(os.path.join(HERE, "postcodes.json")))
     quarters, data = load()
     out, seen = [], set()
     for council in COUNCILS:
         for (c, n), q in sorted(data.items()):
             if c != council or n in SKIP or n in seen or HOME_COUNCIL.get(n, council) != council: continue
             sales, med = year(q)
+            meds = [m for s, m in q if s]
+            varies = len(meds) >= 3 and max(meds) / min(meds) >= VARY
+            if varies and len(meds) >= 4:
+                # Prices swing a lot between quarters (a few very large or very small sales): leave out the highest and lowest quarter
+                keep = sorted((m, s) for s, m in q if s)[1:-1]
+                med = round(sum(m * s for m, s in keep) / sum(s for _, s in keep) / 1000) * 1000
             if sales < MIN_SALES: continue
             seen.add(n)
             o = ORIG.get(n, {})
-            pos = coords.get(n) or loc[n]  # note: Woodville and Woodville South share one point in both sources
+            pos = {**abs_pts[n], "pc": postcodes[n]}
             ins, note = next(((f, t) for f, t, s in LOAD if n in s), (1.00, "no major flood, fire or coastal loading"))
             land = LAND.get(n, COASTAL_LAND if ins == 1.15 else 600)
             cname = title(council)
             d = dict(id=o.get("id") or re.sub(r"[^a-z0-9]+", "", n.lower()), name=title(n), council=cname, median=med, sales=sales,
                      lat=round(pos["lat"], 6), lng=round(pos["lng"], 6), postcode=pos["pc"], insFactor=ins, insNote=note,
                      petrol=o.get("petrol", 2.388), station=o.get("station", "Adelaide average price"), typLand=land)
+            if varies: d["varies"] = [min(meds), max(meds)]
             if o: d["salesMedian"] = o["salesMedian"]; d["bed"] = {str(i + 1): v for i, v in enumerate(o["bed"])}
             if n == "FULHAM": d["id"] = "fulham-west"  # "fulham" is Fulham Gardens, kept for saved clients
             if any(x["id"] == d["id"] for x in out): d["id"] += "-" + cname.split()[0].lower()
