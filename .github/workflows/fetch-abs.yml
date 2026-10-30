@@ -1,0 +1,20 @@
+# Downloads ABS suburb (SAL) boundaries for SA and saves each suburb's centre point to src/data/abs_sal_sa.json
+name: Fetch ABS suburb centres
+on:
+  workflow_dispatch:
+  push:
+    paths: ["src/data/fetch_abs.py", ".github/workflows/fetch-abs.yml"]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 src/data/fetch_abs.py
+      - run: |
+          git config user.name "suburb-fit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git pull -q --rebase origin main || true
+          git add src/data/abs_sal_sa.json 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Update ABS suburb centres" && git push)
