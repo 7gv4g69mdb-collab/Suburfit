@@ -518,6 +518,7 @@ body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !imp
 #expDetail { margin-top: 16px; }
 .quick-fold { margin-top: 16px; }
 .quick-fold > summary { font-weight: 600; }
+input.is-est { color: var(--muted); font-style: italic; }
 .unit-warn { display: block; color: var(--warn); font-size: 0.84rem; white-space: normal; }
 .data-date { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 0.8rem; color: var(--muted); padding: 10px 14px; margin: -8px 0 14px; border: 1px dashed color-mix(in srgb, var(--line) 60%, var(--muted)); border-radius: 10px; }
 .data-date b { color: var(--ink); font-weight: 600; margin-right: 4px; }
@@ -1061,8 +1062,8 @@ body:not(.landing) #landing { display: none; }
             <table class="breakdown"><tbody id="priceEst"></tbody></table>
           </div>
           <div>
-            <label for="insQuote">Home and contents quote (yearly)</label>
-            <div class="money"><input id="insQuote" type="number" min="0" step="10" inputmode="decimal" placeholder="Optional"></div>
+            <label for="insQuote">Home and contents insurance (yearly)</label>
+            <div class="money"><input id="insQuote" type="number" min="0" step="10" inputmode="decimal" placeholder="Estimate"></div>
             <p class="hint" id="insHint">Leave blank to use the estimate.</p>
           </div>
         </div>
@@ -1906,7 +1907,8 @@ body:not(.landing) #landing { display: none; }
     const ownNet = eqRepay + ownRepay + ownHold - rentNet;
     const after2 = after - ownNet, afterStress2 = afterStress - (eqStress + ownStress + ownHold - rentNet);
     const lenderSurplus = state.income - helpDeduct - lenderLiving - debtNow - cardCommit - repayStress - pc.total / 12 - (eqStress + ownStress + ownHold - rentNet);
-    return { depCapped, eqUsed, eqRepay, ownRepay, rentNet, ownHold, ownNet, funds: funds(), propCash: propCash(), sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after: after2, afterStress: afterStress2, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
+    const totalCosts = kept + repay + pc.total / 12 + commuteNew + ownNet;
+    return { totalCosts, depCapped, eqUsed, eqRepay, ownRepay, rentNet, ownHold, ownNet, funds: funds(), propCash: propCash(), sub, price, duty, grant, lmi, schemeEligible, schemeUsed, loan, depositNeeded, cashNeeded, lvr, pc, repay, repayStress, commute, commuteNew, commuteNow: commuteRemoved, currentTotal, kept, homeMonthly, now, after: after2, afterStress: afterStress2, declaredLiving, lenderLiving, cardCommit, debtNow, helpMonthly, helpDeduct, lenderSurplus };
   }
 
   // Loan payoff with extra repayments and an offset account
@@ -2384,6 +2386,7 @@ body:not(.landing) #landing { display: none; }
       ${s.eqRepay ? `<tr class="sub"><td>Repayment on ${fmt(s.eqUsed)} of equity used</td><td class="r num">−${fmt(s.eqRepay)}</td></tr>` : ""}
       <tr class="sub"><td>Its rates, water and insurance</td><td class="r num">−${fmt(s.ownHold)}</td></tr>
       ${s.rentNet ? `<tr class="sub"><td>Rent (75% of ${fmt(state.ownRent)} a week)</td><td class="r num">+${fmt(s.rentNet)}</td></tr>` : ""}` : ""}
+      <tr class="total"><td>Total costs each month after buying</td><td class="r num">−${fmt(s.totalCosts)}</td></tr>
       <tr class="total"><td>Left over each month</td><td class="r num">${fmt(s.after)}</td></tr>`;
 
     $("rCash").innerHTML = `
@@ -2399,7 +2402,9 @@ body:not(.landing) #landing { display: none; }
 
     const flags = buildFlags(s, sub, short);
     $("rFlags").innerHTML = flags.map(([c, ic, t]) => `<div class="flag ${c}"><span class="ic" aria-hidden="true">${ic}</span><span>${t}</span></div>`).join("");
-    $("insHint").textContent = state.insQuote > 0 ? "Using this quote for every suburb. Clear it to go back to the estimate." : `Estimate: ${fmt(s.pc.insurance)} a year for ${sub.name}, ${state.bedrooms} bedrooms.`;
+    $("insHint").textContent = state.insQuote > 0 ? "Using your quote for every suburb. Clear it to go back to the estimate." : `Estimated for ${sub.name}, ${state.bedrooms} bedrooms${sub.insFactor > 1 ? ` (${Math.round((sub.insFactor - 1) * 100)}% higher as it's ${sub.insNote})` : ""}. It changes with each suburb. Type your own quote to replace it.`;
+    const iq = $("insQuote");
+    if (document.activeElement !== iq) { iq.value = state.insQuote > 0 ? state.insQuote : Math.round(s.pc.insurance); iq.classList.toggle("is-est", !(state.insQuote > 0)); }
 
     const lst = s.lenderSurplus >= 0 ? { cls: "good", label: "Likely yes" } : { cls: "bad", label: "Likely no" };
     const lp = $("lPill"); lp.className = "pill " + lst.cls; lp.lastElementChild.textContent = lst.label;
@@ -2546,12 +2551,13 @@ body:not(.landing) #landing { display: none; }
       ["Loan", `${fmt(s.loan)} at ${state.rate}% over ${state.term} years (${Math.round(s.lvr * 100)}% of price)`],
       ["Monthly repayment", `${fmt(s.repay)} (${fmt(s.repayStress)} if rates rose ${state.buffer}%)`],
       ["Left over now", `${fmt(s.now)} a month`],
+      ["Total costs after buying", `${fmt(s.totalCosts)} a month (living costs, loan repayment, rates, bills and insurance)`],
       ["Left over after buying", `${fmt(s.after)} a month (${st.budget.toLowerCase()}${st.lenderOk ? "" : ", but a lender may say no"})`],
       ["Would a bank say yes?", `${lst.label} (${fmt(s.lenderSurplus)} left over on the bank's test)`],
       ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(funds())} available${s.propCash ? ` (savings ${fmt(state.savings)} plus ${fmt(s.propCash)} from current property)` : ""}`],
       ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
     ];
-    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], [isUnit() ? "Contents insurance" : "Home and contents insurance", fmt(s.pc.insurance / 12)], ...(isUnit() ? [["Strata fees", fmt(s.pc.strata / 12)]] : [])];
+    const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], [isUnit() ? "Contents insurance" : "Home and contents insurance", fmt(s.pc.insurance / 12)], ...(isUnit() ? [["Strata fees", fmt(s.pc.strata / 12)]] : []), ["Living costs kept", fmt(s.kept)], ["Total costs each month", fmt(s.totalCosts)]];
     const compare = listSubs().map(sub => { const x = scenario(sub); return { name: sub.name, price: x.price, after: x.after, status: status(x).label, sel: sub.id === state.suburb }; });
     const notes = flags.map(f => f[2]);
     lastReport = { take, name, today, lines, costs, compare, notes, s, st, lst, cash: [["Deposit", fmt(s.depositNeeded)], ["Stamp duty", fmt(state.dutyOnLoan ? 0 : s.duty)], ...(s.lmi && !state.lmiOnLoan ? [["Mortgage insurance", fmt(s.lmi)]] : []), ["Legal and registration", fmt(state.otherCosts)], ...(s.grant ? [["First Home Owner Grant", "-" + fmt(s.grant)]] : []), ["Cash needed", fmt(s.cashNeeded)]] };
@@ -3718,6 +3724,9 @@ body:not(.landing) #landing { display: none; }
   bindNum("buffer", "buffer"); bindNum("cardRate", "cardRate"); bindNum("fuelPrice", "fuelPrice"); bindNum("fuelUse", "fuelUse"); bindNum("ptFare", "ptFare");
   bindNum("hemOverride", "hemOverride", { nullable: true });
   bindNum("insQuote", "insQuote", { blankZero: true });
+  // The box shows the estimate until the buyer types their own quote; leaving it blank goes back to the estimate
+  $("insQuote").addEventListener("focus", e => { if (!(state.insQuote > 0)) e.target.select(); });
+  $("insQuote").addEventListener("blur", () => render());
   bindSelect("bedrooms", "bedrooms"); bindSelect("bathrooms", "bathrooms"); bindNum("landSize", "landSize", { blankZero: true });
   bindNum("rateShift", "rateShift"); bindNum("extraRepay", "extraRepay", { blankZero: true }); bindNum("offsetBal", "offsetBal", { blankZero: true });
   // Specific property: figures attach to the suburb selected when they're entered
