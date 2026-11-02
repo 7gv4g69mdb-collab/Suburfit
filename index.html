@@ -920,7 +920,7 @@ body.wiz .entries-bar { display: none; }
 #typeModes button[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
 body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !important; }
 #expModes { display: none !important; }
-#expUpload, #expDetail { display: block !important; }
+#expUpload, #expDetail { display: block; }
 #expDetail { margin-top: 16px; }
 .quick-fold { margin-top: 16px; }
 .quick-fold > summary { font-weight: 600; }
@@ -1255,13 +1255,34 @@ body:not(.landing) #landing { display: none; }
 
       <!-- STEP 2 -->
       <section class="panel" aria-labelledby="s2h">
-        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">What do you spend now?</h2><p class="muted small">Upload bank statements and the table fills in for you, type in each item yourself, or just enter a rough total.</p></div></div>
+        <div class="step-head"><span class="step-no">2</span><div><h2 id="s2h">Roughly how much do you spend?</h2><p class="muted small">A rough total is fine. You can work it out item by item later if you'd like.</p></div></div>
         <div class="exp-modes" role="tablist" aria-label="How to enter spending" id="expModes">
           <button type="button" role="tab" data-mode="quick" aria-selected="false"><b>Quick estimate</b><span>One weekly or monthly figure</span></button>
           <button type="button" role="tab" data-mode="detail" aria-selected="false"><b>Detailed</b><span>Category by category</span></button>
           <button type="button" role="tab" data-mode="upload" aria-selected="false"><b>Bank statements</b><span>6 to 12 months, filled in for you</span></button>
         </div>
 
+        <div id="expQuick">
+          <div class="quick-main" style="margin-top:0">
+            <label for="qSpend">Roughly how much do you spend in total?</label>
+            <div class="pay-row"><div class="money"><input id="qSpend" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qSpendF" aria-label="Spending frequency"><option value="weekly">A week</option><option value="fortnightly">A fortnight</option><option value="monthly">A month</option></select></div>
+            <div class="examples"><span class="muted small">Include everything, such as:</span>
+              <span>Rent, board or mortgage repayments</span><span>Credit card, loan and Afterpay repayments</span><span>Groceries</span><span>Fuel and transport</span><span>Power, gas and water bills</span><span>Phone and internet</span><span>Car, health and contents insurance</span><span>Eating out and takeaway</span><span>Subscriptions and entertainment</span><span>Kids and school</span><span>Clothes, gifts and personal care</span>
+            </div>
+            <div class="btn-row" style="margin-top:8px"><button type="button" id="qTypical">Not sure? Use a typical figure</button></div>
+          </div>
+          <div style="margin-top:14px;max-width:420px">
+            <label for="qRent">Of that, how much is rent, board or mortgage?</label>
+            <div class="pay-row"><div class="money"><input id="qRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qRentF" aria-label="Rent frequency"><option value="weekly">A week</option><option value="fortnightly">A fortnight</option><option value="monthly">A month</option></select></div>
+            <p class="hint">This stops when you buy, so it's swapped for your new loan repayment.</p>
+          </div>
+          <input id="qDebt" type="hidden"><select id="qDebtF" hidden aria-hidden="true"><option value="monthly">monthly</option></select>
+          <div class="total-box" style="margin-top:12px"><span class="tb-num num" id="qTotal">$0</span><span class="muted small" id="qTotalSub">a month in total</span></div>
+          <p class="hint" id="qNote"></p>
+          <div class="btn-row" style="margin-top:12px"><button type="button" id="toDetail">Work it out item by item, or upload bank statements</button></div>
+        </div>
+        <div id="expMore" hidden>
+          <div class="btn-row" style="margin-bottom:12px"><button type="button" id="toQuick" class="link-btn">← Use one rough total instead</button></div>
         <div id="expUpload" class="exp-pane">
           <label class="drop" id="drop" for="file" tabindex="0">
             <input id="file" type="file" accept=".csv,text/csv" multiple>
@@ -1297,25 +1318,7 @@ body:not(.landing) #landing { display: none; }
           </div>
           <p class="hint broker-only">Rows marked <b>Replaced</b> drop out after the purchase. The suburb's repayment, rates, water, electricity and home insurance take their place. Car, health and life insurance carry over.</p>
         </div>
-        <details class="fold quick-fold" id="quickFold">
-          <summary>Not sure of each item? Enter a rough total instead</summary>
-          <div class="inner" id="expQuick">
-          <div class="grid2">
-            <div><label for="qRent">Rent, board or mortgage repayments you pay now</label><div class="pay-row"><div class="money"><input id="qRent" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qRentF" aria-label="Rent frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option></select></div><p class="hint">Whatever you pay for the home you live in now. It stops once you buy (if you keep a property you own, its loan is counted separately in step 4).</p></div>
-            <div><label for="qDebt">Loan, credit card and Afterpay repayments</label><div class="pay-row"><div class="money"><input id="qDebt" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qDebtF" aria-label="Repayment frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly" selected>Monthly</option></select></div><p class="hint">Car loans, personal loans, credit cards, buy now pay later.</p></div>
-          </div>
-          <div class="quick-main">
-            <label for="qSpend">Roughly how much do you spend on everything else?</label>
-            <div class="pay-row"><div class="money"><input id="qSpend" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="qSpendF" aria-label="Spending frequency"><option value="weekly">A week</option><option value="fortnightly">A fortnight</option><option value="monthly">A month</option></select></div>
-            <div class="examples"><span class="muted small">Include things like:</span>
-              <span>Groceries</span><span>Fuel and transport</span><span>Power, gas and water bills</span><span>Phone and internet</span><span>Car, health and contents insurance</span><span>Eating out and takeaway</span><span>Subscriptions and entertainment</span><span>Kids and school</span><span>Clothes and shopping</span><span>Medical</span>
-            </div>
-            <div class="btn-row" style="margin-top:8px"><button type="button" id="qTypical">Not sure? Use a typical figure</button></div>
-          </div>
-          <div class="total-box" style="margin-top:12px"><span class="tb-num num" id="qTotal">$0</span><span class="muted small" id="qTotalSub">a month in total</span></div>
-          <p class="hint" id="qNote"></p>
         </div>
-          </details>
       </section>
 
       <!-- INTAKE: send to broker -->
@@ -2141,7 +2144,7 @@ body:not(.landing) #landing { display: none; }
       docs: {},
       homeType: "house", strataYr: 3000, unitIns: 483,
       own: "none", ownValue: 0, ownLoan: 0, ownSellCost: 2.5, ownRepay: null, ownRent: 0, ownEqUse: null, ownHold: null, ownEst: { sub: "", beds: 3, baths: 2, land: 0 },
-      expMode: "detail", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
+      expMode: "quick", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
       intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
       goals: { purpose: "First home to live in", time: "3 to 6 months", rateType: "Variable", features: [], priorities: "", notes: "", reviewed: false },
       shortlist: ["fulham", "lockleys", "westbeach", "seaton", "royalpark", "flinderspark", "findon", "henleybeach", "hendon", "woodvillewest"]
@@ -3489,31 +3492,31 @@ body:not(.landing) #landing { display: none; }
     CAT_IDS.forEach(id => state.expenses[id] = { amount: 0, freq: "monthly" });
     state.expenses.rent = { amount: q.rent.amount, freq: q.rent.freq };
     state.expenses.debt = { amount: q.debt.amount, freq: q.debt.freq };
-    let left = spend;
+    let left = Math.max(0, spend - monthly(q.rent) - monthly(q.debt));
     ["power", "water", "homeins"].forEach(k => { const v = Math.min(bills[k], left); state.expenses[k] = { amount: Math.round(v), freq: "monthly" }; left -= v; });
     state.expenses.other = { amount: Math.round(left), freq: "monthly" };
     state.months = 0; state.merchants = [];
     renderQuickTotals(); renderExpenses();
   }
   function renderQuickTotals() {
-    const q = state.quick, total = monthly(q.rent) + monthly(q.spend) + monthly(q.debt), b = quickBills();
+    const q = state.quick, total = monthly(q.spend), rent = monthly(q.rent), b = quickBills();
     $("qTotal").textContent = fmt(total);
     $("qTotalSub").textContent = total ? `a month in total · about ${fmt(total * 12 / 52)} a week` : "a month in total";
-    const billsIn = Math.min(monthly(q.spend), b.power + b.water + b.homeins);
-    $("qNote").textContent = monthly(q.spend) ? `About ${fmt(billsIn)} a month of that is treated as power, water and contents insurance, and swapped for the new home's own costs after buying. Petrol and transport are assumed to stay the same wherever you buy.` : "";
+    const rest = Math.max(0, total - rent - monthly(q.debt)), billsIn = Math.min(rest, b.power + b.water + b.homeins);
+    $("qNote").textContent = !total ? "" : rent > total ? "Rent, board or mortgage is more than the total. Check both figures."
+      : `After buying, ${rent ? `the ${fmt(rent)} a month rent stops and the new loan repayment takes its place, and ` : ""}about ${fmt(billsIn)} a month of bills (power, water and contents insurance) is swapped for the new home's own costs. The other ${fmt(rest - billsIn)} a month carries on.`;
   }
   function quickFromDetail() {
     const total = CATS.reduce((a, c) => a + monthly(state.expenses[c.id]), 0), rent = monthly(state.expenses.rent), debt = monthly(state.expenses.debt);
-    state.quick = { rent: { amount: Math.round(rent), freq: "monthly" }, spend: { amount: Math.round(total - rent - debt), freq: "monthly" }, debt: { amount: Math.round(debt), freq: "monthly" } };
+    state.quick = { rent: { amount: Math.round(rent), freq: "monthly" }, spend: { amount: Math.round(total), freq: "monthly" }, debt: { amount: Math.round(debt), freq: "monthly" } };
   }
   function setExpMode(mode, quiet) {
     if (mode === "quick" && state.expMode !== "quick") { quickFromDetail(); syncQuickInputs(); applyQuick(); }
     state.expMode = mode;
     document.querySelectorAll("#expModes [data-mode]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
-    $("expQuick").hidden = false; $("expUpload").hidden = false; $("expDetail").hidden = false;
+    $("expQuick").hidden = mode !== "quick"; $("expMore").hidden = mode === "quick"; $("expUpload").hidden = false; $("expDetail").hidden = false;
     renumberSteps();
     $("detailLead").textContent = state.months ? "Filled in from your statements. Change any amount." : mode === "quick" ? "Filled in from your rough total. Change any amount to make it more accurate." : "Enter what you spend on each item, using whichever frequency is easiest.";
-    if (mode === "quick" && !$("quickFold").open && monthly(state.quick.spend)) $("quickFold").open = true;
     if (!quiet) changed();
   }
   // Number the visible steps 1, 2, 3... (steps hide in quick mode and on the client page)
@@ -3795,7 +3798,7 @@ body:not(.landing) #landing { display: none; }
     CAT_IDS.forEach(id => { if (!state.expenses[id]) state.expenses[id] = { amount: 0, freq: "monthly" }; });
     if (!subs().some(s => s.id === state.suburb)) state.suburb = "seaton";
     state.goals = Object.assign(defaultState().goals, (saved && saved.goals) || {});
-    if (!(saved && saved.expMode)) state.expMode = state.months ? "upload" : "detail";
+    if (!(saved && saved.expMode)) state.expMode = state.months ? "upload" : "quick";
     if (!state.ownEst) state.ownEst = defaultState().ownEst;
     $("exampleNote").hidden = true; setStatus(state.months ? `<span class="ok">Loaded saved figures</span> (${state.months.toFixed(1)} months of statements).` : "");
     syncInputs(); changed();
@@ -3846,7 +3849,7 @@ body:not(.landing) #landing { display: none; }
     const fresh = defaultState();
     ["clientName", "adults", "children", "income", "takeHome", "earners", "cardLimits", "savings", "expenses", "months", "intakeSuburbs", "intakeNotes"].forEach(k => { if (obj[k] !== undefined) fresh[k] = obj[k]; });
     fresh.isExample = false; fresh.merchants = [];
-    fresh.expMode = obj.expMode || (obj.months ? "upload" : "detail"); if (obj.quick) fresh.quick = obj.quick;
+    fresh.expMode = obj.expMode || (obj.months ? "upload" : "quick"); if (obj.quick) fresh.quick = obj.quick;
     if (!obj.takeHome && obj.income) fresh.takeHome = [{ amount: obj.income, freq: "monthly" }, { amount: 0, freq: "fortnightly" }];
     if (fresh.intakeSuburbs && fresh.intakeSuburbs[0] && subs().some(s => s.id === fresh.intakeSuburbs[0])) fresh.suburb = fresh.intakeSuburbs[0];
     (fresh.intakeSuburbs || []).forEach(id => { if (subs().some(s => s.id === id) && !fresh.shortlist.includes(id)) fresh.shortlist.push(id); });
@@ -4256,7 +4259,9 @@ body:not(.landing) #landing { display: none; }
     $(id).addEventListener("input", e => { state.quick[k].amount = num(e.target.value); state.expMode = "quick"; markEdited(); applyQuick(); changed(); });
     $(id + "F").addEventListener("change", e => { state.quick[k].freq = e.target.value; applyQuick(); changed(); });
   });
-  $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round(hemPlaceholder() / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
+  $("toDetail").onclick = () => { setExpMode("detail"); $("expMore").scrollIntoView({ block: "start", behavior: "smooth" }); };
+  $("toQuick").onclick = () => setExpMode("quick");
+  $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round((hemPlaceholder() + monthly(state.quick.rent)) / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
   $("moreMenu").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("moreMenu").open = false; }));
   document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
   $("lSend").onclick = () => sendLead(LEAD_FORMS[0]);
