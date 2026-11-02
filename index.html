@@ -925,6 +925,15 @@ body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !imp
 .quick-fold { margin-top: 16px; }
 .quick-fold > summary { font-weight: 600; }
 input.is-est { color: var(--muted); font-style: italic; }
+.more-ways { margin-top: 18px; border: 1.5px solid color-mix(in srgb, var(--accent) 40%, var(--line)); border-radius: 14px; padding: 16px; background: var(--accent-soft); display: grid; gap: 12px; }
+.mw-head { display: grid; gap: 2px; } .mw-head b { font-size: 1.05rem; } .mw-head span { font-size: 0.88rem; color: var(--muted); }
+.mw-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .mw-opts { grid-template-columns: minmax(0, 1fr); } }
+.mw-opt { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px; align-items: start; text-align: left; padding: 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); min-height: 76px; }
+.mw-opt:hover { border-color: var(--accent); background: var(--surface); }
+.mw-opt b { display: block; font-size: 1rem; color: var(--accent); }
+.mw-opt span span { display: block; font-size: 0.84rem; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.mw-ic { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-size: 1.1rem; font-weight: 700; }
 .unit-warn { display: block; color: var(--warn); font-size: 0.84rem; white-space: normal; }
 .data-date { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 0.8rem; color: var(--muted); padding: 10px 14px; margin: -8px 0 14px; border: 1px dashed color-mix(in srgb, var(--line) 60%, var(--muted)); border-radius: 10px; }
 .data-date b { color: var(--ink); font-weight: 600; margin-right: 4px; }
@@ -1279,10 +1288,16 @@ body:not(.landing) #landing { display: none; }
           <input id="qDebt" type="hidden"><select id="qDebtF" hidden aria-hidden="true"><option value="monthly">monthly</option></select>
           <div class="total-box" style="margin-top:12px"><span class="tb-num num" id="qTotal">$0</span><span class="muted small" id="qTotalSub">a month in total</span></div>
           <p class="hint" id="qNote"></p>
-          <div class="btn-row" style="margin-top:12px"><button type="button" id="toDetail">Work it out item by item, or upload bank statements</button></div>
+          <div class="more-ways">
+            <div class="mw-head"><b>Want a more accurate figure?</b><span>Choose one of these instead of a rough total. Both are optional.</span></div>
+            <div class="mw-opts">
+              <button type="button" id="toUpload" class="mw-opt"><span class="mw-ic" aria-hidden="true">⇪</span><span><b>Upload your bank statements</b><span>We sort your spending for you. Files stay on your device and are never uploaded.</span></span></button>
+              <button type="button" id="toDetail" class="mw-opt"><span class="mw-ic" aria-hidden="true">☰</span><span><b>Enter each item yourself</b><span>Rent, groceries, bills, car and more, one line at a time.</span></span></button>
+            </div>
+          </div>
         </div>
         <div id="expMore" hidden>
-          <div class="btn-row" style="margin-bottom:12px"><button type="button" id="toQuick" class="link-btn">← Use one rough total instead</button></div>
+          <div class="btn-row" style="margin-bottom:12px"><button type="button" id="toQuick">← Go back to one rough total</button></div>
         <div id="expUpload" class="exp-pane">
           <label class="drop" id="drop" for="file" tabindex="0">
             <input id="file" type="file" accept=".csv,text/csv" multiple>
@@ -4259,7 +4274,9 @@ body:not(.landing) #landing { display: none; }
     $(id).addEventListener("input", e => { state.quick[k].amount = num(e.target.value); state.expMode = "quick"; markEdited(); applyQuick(); changed(); });
     $(id + "F").addEventListener("change", e => { state.quick[k].freq = e.target.value; applyQuick(); changed(); });
   });
-  $("toDetail").onclick = () => { setExpMode("detail"); $("expMore").scrollIntoView({ block: "start", behavior: "smooth" }); };
+  $("toDetail").onclick = () => { setExpMode("detail"); $("expDetail").scrollIntoView({ block: "start", behavior: "smooth" }); };
+  // Open the file picker first, while the tap still counts as the user's own action, then show the upload area
+  $("toUpload").onclick = () => { $("file").click(); setExpMode("upload"); $("drop").scrollIntoView({ block: "center" }); };
   $("toQuick").onclick = () => setExpMode("quick");
   $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round((hemPlaceholder() + monthly(state.quick.rent)) / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
   $("moreMenu").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("moreMenu").open = false; }));
