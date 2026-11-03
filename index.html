@@ -967,6 +967,14 @@ body:not(.landing) #landing { display: none; }
 .land-get ul { margin: 12px 0 0; padding-left: 20px; display: grid; gap: 8px; columns: 2; column-gap: 32px; }
 @media (max-width: 640px) { .land-get ul { columns: 1; } }
 .land-broker { text-align: center; }
+.land-about { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; gap: 18px; }
+.la-intro { display: grid; gap: 10px; max-width: 70ch; } .la-intro h2 { font-size: 1.5rem; } .la-intro p { color: var(--muted); font-size: 1.02rem; }
+.la-journey { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 820px) { .la-journey { grid-template-columns: minmax(0, 1fr); } }
+.la-stage { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: start; background: var(--accent-soft); border-radius: 12px; padding: 14px; }
+.la-stage b { display: block; margin-bottom: 4px; } .la-stage span:not(.la-n) { font-size: 0.92rem; color: var(--muted); }
+.la-n { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--accent); font-weight: 700; border: 1.5px solid var(--accent); }
+.la-note { margin: 0; }
 /* Schemes and snapshot */
 .extras { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; margin-bottom: 22px; }
 @media (max-width: 900px) { .extras { grid-template-columns: minmax(0, 1fr); } }
@@ -1130,6 +1138,20 @@ body:not(.landing) #landing { display: none; }
       </div>
       <div class="land-preview" aria-label="Example of the results" id="landPreview">
       </div>
+    </div>
+    <div class="land-about">
+      <div class="la-intro">
+        <h2>What is Suburb Fit?</h2>
+        <p>Buying your first home is one of the biggest decisions you'll make, and it's hard to know where to start. Suburb Fit is a free tool that shows what owning a home would really mean for your money, before you talk to a bank or fall in love with a listing.</p>
+        <p>It takes the pay, savings and spending you already have, and shows you what life would look like after buying in each Adelaide suburb: the loan repayment, council rates, water, power, insurance and stamp duty, all from official 2026-27 figures.</p>
+      </div>
+      <div class="la-journey">
+        <div class="la-stage"><span class="la-n">1</span><div><b>Just thinking about it</b><span>Find out whether buying is realistic, which suburbs suit your budget, and what you'd have left each month once the bills are paid.</span></div></div>
+        <div class="la-stage"><span class="la-n">2</span><div><b>Saving a deposit</b><span>See how much you need, including stamp duty and fees, and a date you could be ready by. Check which government schemes could get you there sooner.</span></div></div>
+        <div class="la-stage"><span class="la-n">3</span><div><b>Ready to look</b><span>Know the most you could spend in each suburb and whether a bank is likely to say yes, so you can house hunt with confidence. Talk to a local broker if you'd like help with the loan.</span></div></div>
+      </div>
+      <p class="la-note small muted">Suburb Fit gives estimates to help you plan. It isn't a bank and doesn't give financial advice, and a broker only sees your details if you choose to send them.</p>
+      <div class="btn-row"><button type="button" class="primary" id="landStart2">Start, it takes about 3 minutes</button></div>
     </div>
     <ol class="land-steps">
       <li><b>Tell us about you</b><span>Take-home pay, savings and a rough idea of spending. Upload bank statements if you want more accuracy.</span></li>
@@ -4283,6 +4305,7 @@ body:not(.landing) #landing { display: none; }
   document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
   $("lSend").onclick = () => sendLead(LEAD_FORMS[0]);
   $("tSend").onclick = () => sendLead(LEAD_FORMS[1]);
+  $("landStart2").onclick = () => $("landStart").click();
   $("landStart").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false; try { state.docs = JSON.parse(localStorage.getItem("sf-docs") || "{}"); } catch (e) {} syncInputs(); $("exampleNote").hidden = true; setStatus(""); showLanding(false); wizOn = true; wizIdx = 0; changed(); renderWiz(); };
   $("landExample").onclick = () => { showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
   $("landBroker").onclick = () => { showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
