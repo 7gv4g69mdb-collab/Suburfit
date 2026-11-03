@@ -1276,11 +1276,6 @@ body:not(.landing) #landing { display: none; }
             </div>
             <p class="hint" id="incomeHint">After tax, as it lands in the bank. Leave Borrower 2 blank for a single borrower.</p>
           </div>
-          <div>
-            <label for="cardLimits">Total credit card limits</label>
-            <div class="money"><input id="cardLimits" type="number" min="0" step="500" inputmode="decimal"></div>
-            <p class="hint">Lenders count the limit, not the balance.</p>
-          </div>
         </div>
       </section>
 
@@ -1386,6 +1381,11 @@ body:not(.landing) #landing { display: none; }
           <div id="depositWrap"><label for="deposit">Deposit you can put in</label><div class="money"><input id="deposit" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Loan = price minus this deposit.</p></div>
           <div id="loanWrap" hidden><label for="loan">Loan amount wanted</label><div class="money"><input id="loan" type="number" min="0" step="5000" inputmode="decimal"></div><p class="hint">Deposit needed = price minus this loan.</p></div>
           <div><label for="savings">Total savings available</label><div class="money"><input id="savings" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Checked against deposit, stamp duty and fees.</p></div>
+          <div>
+            <label for="cardLimits">Credit card limits (optional)</label>
+            <div class="money"><input id="cardLimits" type="number" min="0" step="500" inputmode="decimal" placeholder="0"></div>
+            <p class="hint">Add up the limits on all your credit cards. Banks count your full limit, even if you pay it off each month, so this changes how much you can borrow.</p>
+          </div>
           <div><label for="rate">Interest rate (% p.a.)</label><input id="rate" type="number" min="0" max="20" step="0.05" inputmode="decimal"></div>
           <div><label for="term">Loan term (years)</label><input id="term" type="number" min="5" max="40" step="1" inputmode="numeric"></div>
           <div><label for="otherCosts">Legal, conveyancing and registration</label><div class="money"><input id="otherCosts" type="number" min="0" step="500" inputmode="decimal"></div><p class="hint">Rough allowance; check with the conveyancer.</p></div>
@@ -2956,6 +2956,7 @@ body:not(.landing) #landing { display: none; }
     const gross = estGross(), dti = gross > 0 ? (s.loan + (state.own === "keep" ? (state.ownLoan || 0) + (s.eqUsed || 0) : 0)) / gross : 0;
     if (dti >= 6) flags.push(["warn", "!", `Your total home loans would be about ${dti.toFixed(1)} times your income before tax. Since February 2026 banks can only make a limited share of loans at 6 times income or more, so approval may be harder.`]);
     if (state.fhb && state.own !== "none") flags.push(["warn", "i", "First home buyer schemes, the grant and stamp duty relief aren't counted, because you own a property now."]);
+    if (!state.cardLimits) flags.push(["warn", "i", "If you have credit cards, add their limits in the Deposit & loan step. Banks count them, even if they're paid off."]);
     if (s.depCapped) flags.push(["warn", "i", `Your deposit is set to ${fmt(s.depositNeeded)}, not the ${fmt(state.deposit)} entered, so your savings also cover stamp duty and fees.`]);
     flags.push(short > 0 ? ["bad", "!", `You need ${fmt(s.cashNeeded)} to buy, ${fmt(short)} more than you have now.`] : ["good", "✓", `You have the ${fmt(s.cashNeeded)} needed to buy, including stamp duty.`]);
     flags.push(s.afterStress < 0 ? ["bad", "!", `If rates rose to ${testRate}%, the repayment would be ${fmt(s.repayStress)} and your budget would go ${fmt(s.afterStress)} a month. Banks check this before approving a loan.`] : ["good", "✓", `If rates rose to ${testRate}%, the repayment would be ${fmt(s.repayStress)} and you'd still have ${fmt(s.afterStress)} left each month.`]);
@@ -4182,7 +4183,7 @@ body:not(.landing) #landing { display: none; }
     $("payf" + i).addEventListener("change", e => { state.takeHome[i].freq = e.target.value; recalcIncome(); changed(); });
   });
   bindNum("children", "children"); bindSelect("adults", "adults");
-  bindNum("cardLimits", "cardLimits"); 
+  bindNum("cardLimits", "cardLimits", { blankZero: true }); 
   bindText("clientName", "clientName", () => { $("clientNameIntake").value = state.clientName; });
   $("clientNameIntake").addEventListener("input", e => { state.clientName = e.target.value; $("clientName").value = state.clientName; });
   bindNum("deposit", "deposit"); bindNum("loan", "loan"); bindNum("savings", "savings", { after: () => { $("savingsIntake").value = state.savings || ""; } });
@@ -4306,7 +4307,9 @@ body:not(.landing) #landing { display: none; }
   $("lSend").onclick = () => sendLead(LEAD_FORMS[0]);
   $("tSend").onclick = () => sendLead(LEAD_FORMS[1]);
   $("landStart2").onclick = () => $("landStart").click();
-  $("landStart").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false; try { state.docs = JSON.parse(localStorage.getItem("sf-docs") || "{}"); } catch (e) {} syncInputs(); $("exampleNote").hidden = true; setStatus(""); showLanding(false); wizOn = true; wizIdx = 0; changed(); renderWiz(); };
+  $("landStart").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false;
+    // A new buyer starts with none of the example household's money figures
+    Object.assign(state, { cardLimits: 0, savings: 0, deposit: 0 }); try { state.docs = JSON.parse(localStorage.getItem("sf-docs") || "{}"); } catch (e) {} syncInputs(); $("exampleNote").hidden = true; setStatus(""); showLanding(false); wizOn = true; wizIdx = 0; changed(); renderWiz(); };
   $("landExample").onclick = () => { showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
   $("landBroker").onclick = () => { showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
   $("brandName").closest(".brand").style.cursor = "pointer";
