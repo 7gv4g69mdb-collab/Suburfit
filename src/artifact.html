@@ -519,6 +519,12 @@ body:not(.unit-mode) .unit-only, body.unit-mode .house-only { display: none !imp
 .quick-fold { margin-top: 16px; }
 .quick-fold > summary { font-weight: 600; }
 input.is-est { color: var(--muted); font-style: italic; }
+.wiz-mid { display: grid; justify-items: center; gap: 2px; }
+.save-btn { min-height: 36px; padding: 6px 12px; font-size: 0.9rem; border-color: var(--accent); color: var(--accent); background: var(--surface); }
+.wiz-nav button.save-btn { min-width: 0; }
+.save-btn { white-space: nowrap; }
+@media (max-width: 560px) { .wiz-nav { gap: 8px; } .wiz-nav button { min-width: 86px; padding: 12px 14px; } .wiz-nav button.save-btn { padding: 6px 10px; font-size: 0.86rem; } }
+.btn-like { display: inline-flex; align-items: center; min-height: 40px; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 600; background: var(--surface); }
 .more-ways { margin-top: 18px; border: 1.5px solid color-mix(in srgb, var(--accent) 40%, var(--line)); border-radius: 14px; padding: 16px; background: var(--accent-soft); display: grid; gap: 12px; }
 .mw-head { display: grid; gap: 2px; } .mw-head b { font-size: 1.05rem; } .mw-head span { font-size: 0.88rem; color: var(--muted); }
 .mw-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -1142,7 +1148,7 @@ body:not(.landing) #landing { display: none; }
 
       <div class="wiz-nav wiz-only" id="wizNav">
         <button type="button" id="wizPrev">Back</button>
-        <span class="muted small" id="wizCount"></span>
+        <span class="wiz-mid"><button type="button" id="wizSave" class="save-btn" hidden>Save for later</button><span class="muted small" id="wizCount"></span></span>
         <button type="button" class="primary" id="wizNext">Continue</button>
       </div>
       <p class="status-msg err wiz-only" id="wizMsg" aria-live="polite" style="text-align:right"></p>
@@ -1351,6 +1357,26 @@ body:not(.landing) #landing { display: none; }
   </div>
 </div>
 
+<!-- Save and finish later -->
+<div class="overlay" id="dlgSave" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="svH" style="width:min(520px,100%)">
+    <div class="dh"><h2 id="svH">Save and finish later</h2><button type="button" class="close">Close</button></div>
+    <div id="svForm" style="display:grid;gap:12px">
+      <p class="muted small">We'll email you a link. Click <b>Continue</b> in the email and you'll come back to this step with everything you've entered.</p>
+      <div><label for="svName">Your first name</label><input id="svName" type="text" autocomplete="given-name"></div>
+      <div><label for="svEmail">Email address</label><input id="svEmail" type="email" autocomplete="email" inputmode="email"></div>
+      <label class="check"><input type="checkbox" id="svBroker"> A local mortgage broker can also contact me (optional)</label>
+      <p class="hint">Your figures are kept inside the link itself, not stored by us, so keep the email private.</p>
+      <div class="btn-row"><button type="button" class="primary" id="svSend">Email me the link</button><span class="status-msg" id="svMsg" aria-live="polite"></span></div>
+    </div>
+    <div id="svDone" hidden style="display:grid;gap:12px">
+      <p id="svDoneText"></p>
+      <input id="svLink" type="text" readonly aria-label="Your link to continue later">
+      <div class="btn-row"><button type="button" id="svCopy">Copy link</button><a class="btn-like" id="svMail" href="#">Email it to myself</a><button type="button" class="primary" id="svBack">Keep going now</button></div>
+    </div>
+  </div>
+</div>
+
 <!-- Open home QR (agents) -->
 <div class="overlay" id="dlgAgent" hidden>
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="daH" style="width:min(760px,100%)">
@@ -1444,6 +1470,7 @@ body:not(.landing) #landing { display: none; }
       <div><label for="bPhone">Phone</label><input id="bPhone" type="tel"></div>
       <div><label for="bEmail">Email</label><input id="bEmail" type="email"></div>
       <div style="grid-column:1/-1"><label for="bLeadUrl">Where "Speak to a broker" requests go (optional)</label><input id="bLeadUrl" type="url" placeholder="e.g. https://formspree.io/f/your-form-id"><p class="hint">Paste a free form-service link (such as Formspree) and requests arrive in your inbox automatically. Leave blank and the client's email app opens a ready-to-send email to the address above.</p></div>
+      <div style="grid-column:1/-1"><label>"Save for later" emails (EmailJS, optional)</label><div class="grid2"><input id="bEjService" type="text" placeholder="Service ID" aria-label="EmailJS service ID"><input id="bEjTemplate" type="text" placeholder="Template ID" aria-label="EmailJS template ID"><input id="bEjKey" type="text" placeholder="Public key" aria-label="EmailJS public key"></div><p class="hint">Without these, people can still copy their link or email it to themselves.</p></div>
       <div style="grid-column:1/-1"><label for="bLicence">Credit licence or representative number</label><input id="bLicence" type="text" placeholder="e.g. Credit Representative 000000 of ACL 000000"></div>
     </div>
     <div><div class="eyebrow" style="margin-bottom:6px">Brand colour</div><div class="swatches" id="swatches"></div></div>
@@ -1754,7 +1781,9 @@ body:not(.landing) #landing { display: none; }
   }
   let state = defaultState();
   let customSuburbs = [];
-  let brand = { business: "", broker: "", phone: "", email: "", licence: "", colour: BRAND_COLOURS[0][0] };
+  // Site settings for the public website. Fill these in once the accounts exist; the broker settings screen can also set them.
+  const SITE = { leadUrl: "", emailjs: { service: "", template: "", key: "" }, siteUrl: "" };
+  let brand = { business: "", broker: "", phone: "", email: "", licence: "", colour: BRAND_COLOURS[0][0], leadUrl: SITE.leadUrl, emailjs: { ...SITE.emailjs } };
   let currentClientId = null;
   let db = null, userCap = null, downloads = null, canEdit = false;
 
@@ -2842,6 +2871,46 @@ body:not(.landing) #landing { display: none; }
     try { const o = JSON.parse(unb64url(location.hash.slice(3))); loadState(o); state.isExample = false; return true; } catch (e) { return false; }
   }
 
+  // ---------- Save and finish later ----------
+  // The link carries the figures and the step, like a share link, so nothing is stored on a server.
+  function resumeLink() {
+    const o = JSON.parse(JSON.stringify(state)); SHARE_SKIP.forEach(k => delete o[k]); delete o.docs;
+    const base = (brand.siteUrl || SITE.siteUrl || location.href).replace(/#.*$/, "");
+    return `${base}#r.${b64url(JSON.stringify({ st: o, w: wizIdx }))}`;
+  }
+  function readResume() {
+    if (!location.hash.startsWith("#r.")) return false;
+    try { const o = JSON.parse(unb64url(location.hash.slice(3))); loadState(o.st); state.isExample = false; wizOn = true; wizIdx = o.w || 0; history.replaceState(null, "", location.href.replace(/#.*$/, "")); return true; } catch (e) { return false; }
+  }
+  const stepName = () => { const p = document.querySelectorAll(".inputs > section.panel.wiz-cur h2")[0]; return p ? p.textContent : "your details"; };
+  async function sendSave() {
+    const name = $("svName").value.trim(), email = $("svEmail").value.trim(), msg = $("svMsg");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = "status-msg err"; msg.textContent = "Please enter a valid email address."; return; }
+    const link = resumeLink(), ej = brand.emailjs || {};
+    let sent = false;
+    $("svSend").disabled = true; msg.className = "status-msg"; msg.textContent = "Sending…";
+    if (ej.service && ej.template && ej.key) {
+      try {
+        const r = await fetch("https://api.emailjs.com/api/v1.0/email/send", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ service_id: ej.service, template_id: ej.template, user_id: ej.key, template_params: { to_name: name || "there", to_email: email, resume_link: link, step: stepName() } }) });
+        sent = r.ok;
+      } catch (e) { sent = false; }
+    }
+    // Only when they ticked the box: let the broker know someone wants to be contacted
+    if ($("svBroker").checked && brand.leadUrl && /^https:\/\//i.test(brand.leadUrl)) {
+      try { await fetch(brand.leadUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ name, email, source: "Saved progress", message: "Saved their details and is happy for a broker to contact them.", link }) }); } catch (e) {}
+    }
+    $("svSend").disabled = false; msg.textContent = "";
+    $("svForm").hidden = true; $("svDone").hidden = false; $("svLink").value = link;
+    $("svMail").href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent("Continue where you left off")}&body=${encodeURIComponent(`Hi ${name || "there"},\n\nClick this link to continue where you left off:\n${link}\n`)}`;
+    $("svDoneText").innerHTML = sent ? `<b>Sent!</b> Check your inbox at ${escapeHtml(email)} for an email called "Continue where you left off". It can take a minute, so check your junk folder too. You can also copy the link below.`
+      : `<b>Here's your link.</b> Copy it, or email it to yourself, and open it when you're ready to continue.`;
+  }
+  $("wizSave").onclick = () => { $("svForm").hidden = false; $("svDone").hidden = true; $("svMsg").textContent = ""; openDlg("dlgSave"); $("svName").focus(); };
+  $("svSend").onclick = sendSave;
+  $("svCopy").onclick = async () => { try { await navigator.clipboard.writeText($("svLink").value); $("svCopy").textContent = "Copied"; } catch (e) { $("svLink").select(); } setTimeout(() => $("svCopy").textContent = "Copy link", 2000); };
+  $("svBack").onclick = closeAll;
+
   // ---------- Pre-approval checklist ----------
   const DOCS = [
     ["id", "Photo ID", "Driver's licence or passport for each buyer."],
@@ -2904,6 +2973,7 @@ body:not(.landing) #landing { display: none; }
     $("wizSteps").querySelectorAll("[data-wi]").forEach(b => b.onclick = () => { if (b.dataset.wi === "res") wizGo(pages.length); else { wizIdx = Number(b.dataset.wi); renderWiz(); wizScroll(); } });
     $("wizBar").style.width = ((wizIdx + 1) / total * 100).toFixed(1) + "%";
     $("wizCount").textContent = `Step ${wizIdx + 1} of ${total}`;
+    $("wizSave").hidden = wizIdx === 0 || document.body.classList.contains("intake");
     $("wizPrev").disabled = wizIdx === 0;
     const last = wizIdx === pages.length - 1;
     $("wizNext").hidden = intake && last;
@@ -3486,13 +3556,13 @@ body:not(.landing) #landing { display: none; }
     $("intakeFrom").textContent = brand.business ? `For ${brand.business}${brand.broker ? " · " + brand.broker : ""}` : "Prepared for your broker";
   }
   function openBrand() {
-    $("bBusiness").value = brand.business; $("bBroker").value = brand.broker; $("bPhone").value = brand.phone; $("bEmail").value = brand.email; $("bLicence").value = brand.licence; $("bLeadUrl").value = brand.leadUrl || "";
+    $("bBusiness").value = brand.business; $("bBroker").value = brand.broker; $("bPhone").value = brand.phone; $("bEmail").value = brand.email; $("bLicence").value = brand.licence; $("bEjService").value = (brand.emailjs || {}).service || ""; $("bEjTemplate").value = (brand.emailjs || {}).template || ""; $("bEjKey").value = (brand.emailjs || {}).key || ""; $("bLeadUrl").value = brand.leadUrl || "";
     const sw = $("swatches"); sw.innerHTML = "";
     BRAND_COLOURS.forEach(([hex, nm]) => { const b = document.createElement("button"); b.type = "button"; b.className = "swatch"; b.style.background = hex; b.setAttribute("aria-label", nm); b.setAttribute("aria-pressed", String(brand.colour === hex)); b.onclick = () => { brand.colour = hex; sw.querySelectorAll(".swatch").forEach(x => x.setAttribute("aria-pressed", String(x === b))); applyBrand(); }; sw.appendChild(b); });
     $("brandMsg").textContent = ""; openDlg("dlgBrand");
   }
   async function saveBrand() {
-    brand = { ...brand, business: $("bBusiness").value.trim(), broker: $("bBroker").value.trim(), phone: $("bPhone").value.trim(), email: $("bEmail").value.trim(), licence: $("bLicence").value.trim(), leadUrl: $("bLeadUrl").value.trim() };
+    brand = { ...brand, emailjs: { service: $("bEjService").value.trim(), template: $("bEjTemplate").value.trim(), key: $("bEjKey").value.trim() }, business: $("bBusiness").value.trim(), broker: $("bBroker").value.trim(), phone: $("bPhone").value.trim(), email: $("bEmail").value.trim(), licence: $("bLicence").value.trim(), leadUrl: $("bLeadUrl").value.trim() };
     applyBrand(); render();
     const msg = $("brandMsg");
     if (db && canEdit) { try { await db.doc("settings/brand").set(brand); msg.className = "status-msg ok"; msg.textContent = "Saved."; } catch (e) { msg.className = "status-msg err"; msg.textContent = "Applied for now, but it couldn't be saved."; } }
@@ -3933,6 +4003,7 @@ body:not(.landing) #landing { display: none; }
   syncInputs();
   if (isIntake() || isOpen()) applyMode();
   else if (location.hash.startsWith("#s.")) { loadSample(); if (readShare()) { wizOn = false; } $("exampleNote").hidden = true; }
+  else if (location.hash.startsWith("#r.")) { loadSample(); if (readResume()) { $("exampleNote").hidden = true; showLanding(false); } else showLanding(true); }
   else { loadSample(); showLanding(true); }
   dirty = false; updateSavedState(); applyBrand(); renumberSteps();
 
