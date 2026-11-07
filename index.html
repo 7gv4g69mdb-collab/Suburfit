@@ -9,7 +9,7 @@
 <title>Adelaide Suburb Fit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
 <script>/** @license
  *
  * jsPDF - PDF Document creation from JavaScript
@@ -1024,6 +1024,101 @@ body:not(.landing) #landing { display: none; }
 .sort-btn:hover { background: none; color: var(--accent); }
 .lead-top { margin: 0 0 22px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* ---------- Look and feel: gumleaf, sage paper, Colorbond streetscape ---------- */
+:root {
+  --bg: #f1f4f0; --surface: #ffffff; --surface-2: #f6f8f5; --ink: #2b2e2d; --muted: #5d6661; --line: #dde3dd;
+  --brand: #1e3f35; --brand-ink: #f2f6f3; --accent: #2e5e4e; --accent-soft: #e3ede7;
+  --good: #23704b; --good-soft: #dff0e5; --warn: #8a5a06; --warn-soft: #f8edd3; --bad: #ad3430; --bad-soft: #f9e2e0;
+  --jac: #6e4fa0; --wattle: #e2b23a; --sky: #e2ebe6;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius: 14px;
+  --st-wall: #fbfcfa; --st-brick: #c98a6b; --st-line: #3a3f3c; --st-glass: #cfdcd6; --st-lit: #f2c94c; --st-door: #8a948f; --st-home-door: #2e5e4e;
+  --st-jac: #9a7fd1; --st-gum: #7f9a83; --st-trunk: #6b5d50; --st-trunk-gum: #b8ada0; --st-fence: #c9cfc9; --st-verge: #cfdccd;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111614; --surface: #18201c; --surface-2: #1e2723; --ink: #e5ece8; --muted: #9aa8a1; --line: #2a3530;
+    --brand: #0d1f19; --accent: #8cc2aa; --accent-soft: #1c3329; --jac: #b79be0; --sky: #172521;
+    --st-wall: #2a332f; --st-brick: #7a4f3d; --st-line: #0b0f0d; --st-glass: #34443d; --st-door: #4b5550; --st-home-door: #8cc2aa;
+    --st-jac: #8a6fc2; --st-gum: #4f6a55; --st-trunk: #4a4038; --st-trunk-gum: #6f665c; --st-fence: #2f3a35; --st-verge: #22302a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111614; --surface: #18201c; --surface-2: #1e2723; --ink: #e5ece8; --muted: #9aa8a1; --line: #2a3530;
+  --brand: #0d1f19; --accent: #8cc2aa; --accent-soft: #1c3329; --jac: #b79be0; --sky: #172521;
+  --st-wall: #2a332f; --st-brick: #7a4f3d; --st-line: #0b0f0d; --st-glass: #34443d; --st-door: #4b5550; --st-home-door: #8cc2aa;
+  --st-jac: #8a6fc2; --st-gum: #4f6a55; --st-trunk: #4a4038; --st-trunk-gum: #6f665c; --st-fence: #2f3a35; --st-verge: #22302a;
+}
+body { font-size: 16px; line-height: 1.6; }
+h1, h2 { font-family: var(--font-display); letter-spacing: -0.02em; font-weight: 700; }
+h3 { font-family: var(--font-body); font-weight: 700; }
+.num, .hero-num, .kpi .big, .tb-num { font-variant-numeric: tabular-nums lining-nums; }
+.hero-num, .kpi .big, .hero-facts b, .tb-num, .own-result .big, .oe-out .big, .path-head .when { font-family: var(--font-display); font-weight: 700; }
+button.primary { background: var(--accent); border-color: var(--accent); }
+button, input, select, textarea { border-radius: 10px; }
+:focus-visible { outline: 3px solid var(--jac); outline-offset: 2px; }
+/* Top bar */
+.appbar { background: var(--brand); }
+.brand .bn { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; letter-spacing: -0.01em; }
+.brand .bs { opacity: 0.7; }
+.appbar-in { gap: 12px; }
+.site-menu { position: relative; margin-left: auto; }
+.site-menu > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 10px; color: var(--brand-ink); border: 1px solid rgba(255,255,255,0.28); font-weight: 700; min-height: 40px; }
+.site-menu > summary::-webkit-details-marker { display: none; }
+.site-menu > summary:hover { background: rgba(255,255,255,0.1); }
+.site-menu .burger { width: 16px; height: 2px; background: currentColor; box-shadow: 0 -5px 0 currentColor, 0 5px 0 currentColor; border-radius: 1px; }
+.site-pop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; width: min(300px, calc(100vw - 32px)); display: grid; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 14px 40px rgba(20, 40, 30, 0.18); }
+.site-pop button, .site-pop a { display: grid; gap: 1px; text-align: left; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px; background: none; color: var(--ink); text-decoration: none; min-height: 0; font-weight: 700; }
+.site-pop button span, .site-pop a span { font-weight: 400; font-size: 0.84rem; color: var(--muted); }
+.site-pop button:hover, .site-pop a:hover { background: var(--accent-soft); }
+.site-pop hr { border: 0; border-top: 1px solid var(--line); margin: 6px 4px; }
+body.intake .site-menu, body.openhome .site-menu { display: none; }
+/* Front page */
+.landing { gap: 40px; }
+.land-hero { padding: 28px 0 0; }
+.land-copy h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.02; letter-spacing: -0.035em; font-weight: 800; max-width: 17ch; }
+.land-lede { font-size: 1.15rem; line-height: 1.6; }
+.land-cta button { min-height: 54px; padding: 14px 26px; font-size: 1.08rem; border-radius: 12px; }
+.street-wrap { margin: -8px -20px 0; overflow: hidden; }
+.street { display: block; width: 100%; height: auto; min-width: 640px; }
+.street .lit { opacity: 0; animation: litup 1.2s ease-out 0.5s forwards; }
+@keyframes litup { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .street .lit { animation: none; opacity: 1; } }
+.street-cap { font-size: 0.86rem; color: var(--muted); margin: 6px 0 0; }
+.land-about { border-radius: 20px; padding: 32px; border: 0; background: var(--surface); }
+.la-intro h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); }
+.la-stage { background: var(--surface-2); border: 1px solid var(--line); }
+.la-n { border-color: var(--accent); color: var(--accent); }
+.land-steps li, .land-get { border-radius: 16px; }
+.land-get h2 { font-size: 1.5rem; }
+/* Steps and results */
+body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); letter-spacing: -0.025em; }
+.panel { border-radius: 18px; border-color: var(--line); }
+.step-no { border-color: var(--accent); color: var(--accent); font-family: var(--font-display); font-weight: 800; }
+.wiz-steps button[aria-current="step"] { background: var(--accent); }
+.wiz-bar span { background: var(--accent); }
+.res-hero { border-radius: 20px; }
+.hero-num { font-size: clamp(2.8rem, 9vw, 4rem); letter-spacing: -0.04em; }
+.more-ways { border-radius: 16px; }
+/* Help pages */
+.help-body { display: grid; gap: 14px; font-size: 0.95rem; }
+.help-body h3 { font-size: 1rem; margin-bottom: 2px; }
+.help-body p { color: var(--muted); }
+.help-body a { color: var(--accent); font-weight: 700; }
+.areas-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 8px; }
+.areas-list div { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.areas-list b { display: block; }
+@media (max-width: 560px) { .land-about { padding: 22px 18px; } .street-wrap { margin: -4px -16px 0; } }
+
+.hero-band { background: var(--sky); border-radius: 24px; overflow: hidden; padding: 8px 48px 0; display: grid; gap: 8px; }
+.hero-band .land-hero { padding: 40px 0 8px; }
+.hero-band .street-wrap { margin: 0 -48px; }
+.hero-band .street { min-width: 720px; position: relative; left: 50%; transform: translateX(-50%); }
+.la-stage { grid-template-columns: minmax(0, 1fr); border-left: 4px solid var(--accent); }
+.la-stage .la-n { display: none; }
+@media (max-width: 560px) { .hero-band { padding: 0 18px; border-radius: 18px; } .hero-band .street-wrap { margin: 0 -18px; } .hero-band .land-hero { padding-top: 24px; } }
 </style>
 
 <!-- Brand bar -->
@@ -1048,6 +1143,20 @@ body:not(.landing) #landing { display: none; }
       </details>
       <button type="button" class="solid" id="pdfBtn">PDF report</button>
     </div>
+    <details class="site-menu" id="siteMenu">
+      <summary aria-label="Menu"><span class="burger" aria-hidden="true"></span>Menu</summary>
+      <div class="site-pop" role="menu">
+        <button type="button" role="menuitem" data-go="home">Home<span>Start or pick up where you were</span></button>
+        <button type="button" role="menuitem" data-go="how">How it works<span>Three steps, about 3 minutes</span></button>
+        <button type="button" role="menuitem" data-go="schemes">First home buyer schemes<span>5% Deposit Scheme, Help to Buy, grants</span></button>
+        <button type="button" role="menuitem" data-go="areas">Suburbs we cover<span>Which areas are included so far</span></button>
+        <button type="button" role="menuitem" data-go="faq">Common questions<span>Is it free, is it accurate, is it advice?</span></button>
+        <button type="button" role="menuitem" data-go="about">About Suburb Fit<span>Who we are and how we're paid</span></button>
+        <button type="button" role="menuitem" data-go="privacy">Privacy<span>How your figures are handled</span></button>
+        <hr>
+        <button type="button" role="menuitem" data-go="brokers">For mortgage brokers<span>Open the broker tools</span></button>
+      </div>
+    </details>
     <div class="acts open-only"><span class="small" id="openBrandLine"></span><button type="button" id="openBack" hidden>Back to broker view</button></div>
     <div class="acts intake-only">
       <button type="button" id="backToBroker" hidden>Back to broker view</button>
@@ -1139,6 +1248,7 @@ body:not(.landing) #landing { display: none; }
   </div>
 
   <section class="landing" id="landing" aria-labelledby="landH">
+    <div class="hero-band">
     <div class="land-hero">
       <div class="land-copy">
         <h1 id="landH">Where could you afford to buy your first home?</h1>
@@ -1148,6 +1258,8 @@ body:not(.landing) #landing { display: none; }
       </div>
       <div class="land-preview" aria-label="Example of the results" id="landPreview" hidden>
       </div>
+    </div>
+    <div class="street-wrap"><svg class='street' viewBox='0 70 1200 150' role='img' aria-label='A row of suburban houses with jacaranda trees. One house has its lights on.'><path d='M40 196 C37 150 44 122.39999999999999 40 94.8' stroke='var(--st-trunk-gum)' stroke-width='5' fill='none' stroke-linecap='round'/><ellipse cx='21.6' cy='94.8' rx='25.3' ry='14.7' fill='var(--st-gum)'/><ellipse cx='60.7' cy='87.9' rx='23.0' ry='13.8' fill='var(--st-gum)'/><ellipse cx='40.0' cy='76.4' rx='23.0' ry='13.8' fill='var(--st-gum)'/><rect x='78' y='126' width='118' height='70' fill='var(--st-wall)' stroke='var(--st-line)' stroke-width='1.2'/><polygon points='70,126 111.04,96.6 162.95999999999998,96.6 204,126' fill='#323233'/><rect x='151.2' y='166.6' width='18.9' height='29.4' fill='var(--st-door)'/><rect x='94.5' y='147.0' width='30.7' height='18.2' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><rect x='222' y='134' width='96' height='62' fill='var(--st-wall)' stroke='var(--st-line)' stroke-width='1.2'/><polygon points='214,134 270.0,99.9 326,134' fill='#7C846A'/><rect x='281.5' y='170.0' width='15.4' height='26.0' fill='var(--st-door)'/><rect x='235.4' y='152.6' width='25.0' height='16.1' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><path d='M352 196 L352 157.0 M352 169.0 L341.5 155.5 M352 166 L364.0 154.0' stroke='var(--st-trunk)' stroke-width='4' stroke-linecap='round' fill='none'/><circle cx='335.5' cy='151.0' r='18.6' fill='var(--st-jac)'/><circle cx='367.0' cy='149.5' r='18.0' fill='var(--st-jac)'/><circle cx='352.0' cy='140.5' r='21.0' fill='var(--st-jac)'/><circle cx='349.0' cy='155.5' r='18.0' fill='var(--st-jac)'/><circle cx='377.5' cy='158.5' r='12.6' fill='var(--st-jac)'/><circle cx='325.0' cy='160.0' r='12.6' fill='var(--st-jac)'/><rect x='396' y='100' width='108' height='96' fill='var(--st-wall)' stroke='var(--st-line)' stroke-width='1.2'/><polygon points='388,100 450.0,71.2 512,100' fill='#4B4C46'/><rect x='463.0' y='155.7' width='17.3' height='40.3' fill='var(--st-door)'/><rect x='411.1' y='128.8' width='28.1' height='25.0' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><rect x='411.1' y='105.8' width='28.1' height='20.0' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><rect x='460.8' y='105.8' width='28.1' height='20.0' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><rect x='530' y='138' width='100' height='58' fill='var(--st-brick)' stroke='var(--st-line)' stroke-width='1.2'/><polygon points='522,138 558.0,113.64 602.0,113.64 638,138' fill='#6B2A22'/><rect x='592.0' y='171.6' width='16.0' height='24.4' fill='var(--st-door)'/><rect x='544.0' y='155.4' width='26.0' height='15.1' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><rect x='660' y='122' width='112' height='74' fill='var(--st-wall)' stroke='var(--st-line)' stroke-width='1.2'/><polygon points='652,122 716.0,81.3 780,122' fill='#6D6C6E'/><rect x='729.4' y='164.9' width='17.9' height='31.1' fill='var(--st-home-door)'/><rect class='lit' x='675.7' y='144.2' width='29.1' height='19.2' fill='var(--st-lit)' stroke='var(--st-line)' stroke-width='1'/><path d='M806 196 L806 149.2 M806 163.6 L793.4 147.4 M806 160 L820.4 145.6' stroke='var(--st-trunk)' stroke-width='4' stroke-linecap='round' fill='none'/><circle cx='786.2' cy='142.0' r='22.3' fill='var(--st-jac)'/><circle cx='824.0' cy='140.2' r='21.6' fill='var(--st-jac)'/><circle cx='806.0' cy='129.4' r='25.2' fill='var(--st-jac)'/><circle cx='802.4' cy='147.4' r='21.6' fill='var(--st-jac)'/><circle cx='836.6' cy='151.0' r='15.1' fill='var(--st-jac)'/><circle cx='773.6' cy='152.8' r='15.1' fill='var(--st-jac)'/><rect x='852' y='136' width='120' height='60' fill='var(--st-wall)' stroke='var(--st-line)' stroke-width='1.2'/><polygon points='844,136 844,116.8 980,131.2 980,136' fill='#6C6153'/><rect x='926.4' y='170.8' width='19.2' height='25.2' fill='var(--st-door)'/><rect x='868.8' y='154.0' width='31.2' height='15.6' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><rect x='1000' y='130' width='98' height='66' fill='var(--st-wall)' stroke='var(--st-line)' stroke-width='1.2'/><polygon points='992,130 1027.44,102.28 1070.56,102.28 1106,130' fill='#A9ABA4'/><rect x='1060.8' y='168.3' width='15.7' height='27.7' fill='var(--st-door)'/><rect x='1013.7' y='149.8' width='25.5' height='17.2' fill='var(--st-glass)' stroke='var(--st-line)' stroke-width='1'/><path d='M1140 196 C1137 156 1144 132.0 1140 108.0' stroke='var(--st-trunk-gum)' stroke-width='5' fill='none' stroke-linecap='round'/><ellipse cx='1124.0' cy='108.0' rx='22.0' ry='12.8' fill='var(--st-gum)'/><ellipse cx='1158.0' cy='102.0' rx='20.0' ry='12.0' fill='var(--st-gum)'/><ellipse cx='1140.0' cy='92.0' rx='20.0' ry='12.0' fill='var(--st-gum)'/><rect x='0' y='196' width='1200' height='4' fill='var(--st-line)'/><rect x='0' y='200' width='1200' height='20' fill='var(--st-verge)'/></svg></div>
     </div>
     <div class="land-about">
       <div class="la-intro">
@@ -1767,6 +1879,57 @@ body:not(.landing) #landing { display: none; }
   </div>
 </div>
 
+<!-- Menu pages -->
+<div class="overlay" id="dlgSchemes" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dsH" style="width:min(680px,100%)">
+    <div class="dh"><h2 id="dsH">First home buyer schemes</h2><button type="button" class="close">Close</button></div>
+    <div class="help-body">
+      <p>Government help can make a big difference to how soon you can buy. Suburb Fit checks these for you in your results. Rules are for 2026-27 and can change, so check the official pages before you rely on them.</p>
+      <div><h3>5% Deposit Scheme</h3><p>Buy with a 5% deposit and no lenders mortgage insurance. In Adelaide the home must cost $900,000 or less. There's no income limit. After buying you generally can't keep more than 6 months of living costs and repayments in savings. <a href="https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme" target="_blank" rel="noopener">Official details</a></p></div>
+      <div><h3>Help to Buy</h3><p>The government buys up to 40% of a new home or 30% of an existing one, so you borrow less, with as little as a 2% deposit. Income limits are $103,000 for one person and $165,000 for a couple, and the Adelaide price cap is $900,000. Places are limited. <a href="https://www.housingaustralia.gov.au/support-buy-home/help-to-buy" target="_blank" rel="noopener">Official details</a></p></div>
+      <div><h3>First Home Owner Grant (SA)</h3><p>$15,000 towards a new home, an off-the-plan home or building a home. It doesn't apply to existing homes. <a href="https://revenuesa.sa.gov.au/FHOG/grant-details" target="_blank" rel="noopener">RevenueSA</a></p></div>
+      <div><h3>Stamp duty relief (SA)</h3><p>First home buyers pay no stamp duty on new homes, off-the-plan homes or land to build on. On an existing home, full stamp duty applies. <a href="https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief" target="_blank" rel="noopener">RevenueSA</a></p></div>
+      <div><h3>HomeStart Finance</h3><p>The SA Government's own lender, with loans for smaller deposits. Its Starter and Advantage loans have a household income limit of $110,000 a year after tax. <a href="https://www.homestart.com.au" target="_blank" rel="noopener">homestart.com.au</a></p></div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="dlgAreas" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="daH" style="width:min(680px,100%)">
+    <div class="dh"><h2 id="daH">Suburbs we cover</h2><button type="button" class="close">Close</button></div>
+    <div class="help-body">
+      <p id="areasLead"></p>
+      <div class="areas-list" id="areasList"></div>
+      <p>More areas and cities are on the way. House prices come from SA Valuer-General sales and refresh every quarter.</p>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="dlgFaq" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dfH" style="width:min(680px,100%)">
+    <div class="dh"><h2 id="dfH">Common questions</h2><button type="button" class="close">Close</button></div>
+    <div class="help-body">
+      <div><h3>Is it free?</h3><p>Yes, always, for buyers. There's no sign-up.</p></div>
+      <div><h3>Is my information safe?</h3><p>Your figures are worked out in your own browser. Bank statements are never uploaded. Nothing is sent to anyone unless you choose to send it.</p></div>
+      <div><h3>How accurate are the numbers?</h3><p>Prices come from official sales records, and costs from 2026-27 council, water, levy and energy rates. They're estimates for a typical home in each suburb, so a real property can cost more or less. Where a figure is less certain, we label it.</p></div>
+      <div><h3>Is this financial advice?</h3><p>No. Suburb Fit helps you plan. It isn't a bank and doesn't decide whether you'll get a loan. A broker or lender can give you a proper assessment.</p></div>
+      <div><h3>What does "Would a bank say yes?" mean?</h3><p>Banks test whether you could still afford the loan if interest rates rose 3%, and they use minimum living costs. We run a similar check, so you can see early whether a loan is likely to be a stretch.</p></div>
+      <div><h3>Why do you ask about my rent?</h3><p>Rent stops when you buy, and your loan repayment takes its place. Knowing your rent stops us counting both.</p></div>
+      <div><h3>Can I save and come back later?</h3><p>Yes. Press "Save for later" on any step and we'll email you a link that opens where you left off.</p></div>
+      <div><h3>What happens if I talk to a broker?</h3><p>Only if you ask, a local mortgage broker contacts you to talk through your loan options. You don't have to go ahead.</p></div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="dlgAbout" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dabH" style="width:min(640px,100%)">
+    <div class="dh"><h2 id="dabH">About Suburb Fit</h2><button type="button" class="close">Close</button></div>
+    <div class="help-body">
+      <p>Suburb Fit started in Adelaide to answer one question first home buyers ask before anything else: where could I actually afford to live, and what would life cost once I'm there?</p>
+      <div><h3>Independent</h3><p>We're not a bank, a lender, a broker group, a real estate agency or a property portal, and we don't sell loans.</p></div>
+      <div><h3>Free for buyers, and honest about how we're paid</h3><p>Buyers never pay. Mortgage brokers may pay to receive enquiries from people who ask to be contacted. That never changes your numbers.</p></div>
+      <div><h3>Built on official figures</h3><p>Sales from the SA Valuer-General, rates from each council, SA Water, RevenueSA, the energy regulator and the federal home buyer schemes, updated each year.</p></div>
+    </div>
+  </div>
+</div>
+
 <!-- Save and finish later -->
 <div class="overlay" id="dlgSave" hidden>
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="svH" style="width:min(520px,100%)">
@@ -2191,7 +2354,7 @@ body:not(.landing) #landing { display: none; }
   const CARD_RECEIVED_RE = /(payment received|payment - thank|payment thank ?you|thank you for your payment|payment recd|bpay payment.*thank)/i;
   const REFUND_RE = /\b(refund|reversal|reversed|returned|credit adj(ustment)?)\b/i;
 
-  const BRAND_COLOURS = [["#0f2f38", "Harbour"], ["#12304c", "Navy"], ["#0f4f4f", "Teal"], ["#3b2a5a", "Plum"], ["#1f4a2c", "Forest"], ["#2b2f36", "Charcoal"], ["#6b2a1f", "Brick"]];
+  const BRAND_COLOURS = [["#1e3f35", "Gumleaf"], ["#0f2f38", "Harbour"], ["#12304c", "Navy"], ["#0f4f4f", "Teal"], ["#3b2a5a", "Plum"], ["#1f4a2c", "Forest"], ["#2b2f36", "Charcoal"], ["#6b2a1f", "Brick"]];
 
   // ---------- State ----------
   function defaultState() {
@@ -3347,6 +3510,28 @@ body:not(.landing) #landing { display: none; }
     $("svDoneText").innerHTML = sent ? `<b>Sent!</b> Check your inbox at ${escapeHtml(email)} for an email called "Continue where you left off". It can take a minute, so check your junk folder too. You can also copy the link below.`
       : `<b>Here's your link.</b> Copy it, or email it to yourself, and open it when you're ready to continue.`;
   }
+  // ---------- Site menu ----------
+  function renderAreas() {
+    const all = subs(), byCouncil = {};
+    all.forEach(x => { (byCouncil[x.council] = byCouncil[x.council] || []).push(x); });
+    $("areasLead").textContent = `${all.length} Adelaide suburbs across ${Object.keys(byCouncil).length} council areas, from the west to the north and south.`;
+    $("areasList").innerHTML = Object.entries(byCouncil).map(([c, xs]) => `<div><b>${escapeHtml(c === "Other" ? "Added suburbs" : "City of " + c)}</b><span class="small muted">${xs.length} suburbs</span></div>`).join("");
+  }
+  document.querySelectorAll("#siteMenu [data-go]").forEach(b => b.addEventListener("click", () => {
+    $("siteMenu").open = false;
+    const go = b.dataset.go;
+    if (go === "home") showLanding(true);
+    else if (go === "how") { showLanding(true); const st = document.querySelector(".land-steps"); if (st) st.scrollIntoView({ block: "start" }); }
+    else if (go === "schemes") openDlg("dlgSchemes");
+    else if (go === "areas") { renderAreas(); openDlg("dlgAreas"); }
+    else if (go === "faq") openDlg("dlgFaq");
+    else if (go === "about") openDlg("dlgAbout");
+    else if (go === "privacy") openDlg("dlgPrivacy");
+    else if (go === "brokers") $("landBroker").click();
+  }));
+  document.addEventListener("click", e => { if ($("siteMenu").open && !e.target.closest("#siteMenu")) $("siteMenu").open = false; });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && $("siteMenu").open) { $("siteMenu").open = false; $("siteMenu").querySelector("summary").focus(); } });
+
   $("wizSave").onclick = () => { $("svForm").hidden = false; $("svDone").hidden = true; $("svMsg").textContent = ""; openDlg("dlgSave"); $("svName").focus(); };
   $("svSend").onclick = sendSave;
   $("svCopy").onclick = async () => { try { await navigator.clipboard.writeText($("svLink").value); $("svCopy").textContent = "Copied"; } catch (e) { $("svLink").select(); } setTimeout(() => $("svCopy").textContent = "Copy link", 2000); };
