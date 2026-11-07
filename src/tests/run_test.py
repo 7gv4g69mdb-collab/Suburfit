@@ -12,7 +12,7 @@ with sync_playwright() as pw:
     p.on("pageerror", lambda e: errs.append(str(e)))
     p.goto("file:///home/claude/suburb-fit/index.html")
     p.wait_for_timeout(600)
-    p.click('#landExample')     # past the front page
+    p.click('#landBroker')      # past the front page, into the broker workspace with the example client
     p.click('#toggleEntries')   # and open all the entries so the tables are visible
     p.set_input_files("#file", files)
     p.wait_for_timeout(800)
