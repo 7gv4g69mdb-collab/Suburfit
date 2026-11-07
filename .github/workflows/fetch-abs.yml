@@ -16,5 +16,5 @@ jobs:
           git config user.name "suburb-fit-bot"
           git config user.email "actions@users.noreply.github.com"
           git pull -q --rebase origin main || true
-          git add src/data/abs_sal_sa.json 2>/dev/null || true
+          git add src/data/abs_sal_sa.json src/data/abs_sal_sa_shapes.json 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "Update ABS suburb centres" && git push)

@@ -21,7 +21,7 @@ for base in BASES:
         print("layer", base, meta.get("name"), fields)
         name_f = next(f for f in fields if f.upper().startswith("SAL_NAME"))
         state_f = next(f for f in fields if f.upper().startswith("STATE_CODE") or f.upper().startswith("STE_CODE"))
-        out, off = {}, 0
+        out, shapes, off = {}, {}, 0
         while True:
             q = urllib.parse.urlencode({"where": f"{state_f}='4'", "outFields": name_f, "returnGeometry": "true", "outSR": "4326",
                                         "geometryPrecision": "5", "maxAllowableOffset": "0.0005", "resultOffset": off, "resultRecordCount": 200, "f": "json"})
@@ -32,10 +32,13 @@ for base in BASES:
                 lat, lng = centroid(g["rings"])
                 name = re.sub(r"\s*\(SA\)$", "", f["attributes"][name_f]).upper()
                 out[name] = {"lat": round(lat, 5), "lng": round(lng, 5)}
+                # Simplified boundary (lng, lat pairs, 4 decimals is about 10 m) for the map
+                shapes[name] = [[[round(x, 4), round(y, 4)] for x, y in ring] for ring in g["rings"] if len(ring) > 3]
             print("got", off, len(feats))
             if not feats or not d.get("exceededTransferLimit") and len(feats) < 200: break
             off += len(feats)
         json.dump(out, open(os.path.join(HERE, "abs_sal_sa.json"), "w"), indent=0, sort_keys=True)
+        json.dump(shapes, open(os.path.join(HERE, "abs_sal_sa_shapes.json"), "w"), separators=(",", ":"), sort_keys=True)
         print("saved", len(out)); break
     except Exception as e:
         print("FAIL", base, repr(e))
