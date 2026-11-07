@@ -2,10 +2,13 @@
 import json, os, re, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); APP = os.path.join(HERE, "..", "artifact.html")
 subprocess.run([sys.executable, os.path.join(HERE, "gen.py")], check=True)
+subprocess.run([sys.executable, os.path.join(HERE, "gen_shapes.py")], check=True)
 new = open(os.path.join(HERE, "suburbs.js")).read(); meta = json.load(open(os.path.join(HERE, "suburbs_meta.json")))
 s = open(APP).read()
 m = re.search(r'  const SUBURBS = \[.*?\]\.map\(s => \(\{ \.\.\.s, region: "City of " \+ s\.council \}\)\);', s, re.S)
 s = s[:m.start()] + new + s[m.end():]
+shapes = open(os.path.join(HERE, "shapes.js")).read()
+s = re.sub(r"  const SHAPES = \{.*?\};", lambda _: shapes, s, count=1, flags=re.S)
 first, last = meta["quarters"][0], meta["quarters"][-1]
 months = {"1": "March", "2": "June", "3": "September", "4": "December"}
 q, y = last[1], last.split()[1]
