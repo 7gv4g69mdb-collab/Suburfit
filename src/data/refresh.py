@@ -4,6 +4,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); APP = os.path.join(HERE, ".."
 subprocess.run([sys.executable, os.path.join(HERE, "gen.py")], check=True)
 subprocess.run([sys.executable, os.path.join(HERE, "gen_shapes.py")], check=True)
 subprocess.run([sys.executable, os.path.join(HERE, "gen_map.py")], check=True)
+subprocess.run([sys.executable, os.path.join(HERE, "gen_rents.py")], check=True)
 new = open(os.path.join(HERE, "suburbs.js")).read(); meta = json.load(open(os.path.join(HERE, "suburbs_meta.json")))
 s = open(APP).read()
 m = re.search(r'  const SUBURBS = \[.*?\]\.map\(s => \(\{ \.\.\.s, region: "City of " \+ s\.council \}\)\);', s, re.S)
@@ -12,6 +13,8 @@ shapes = open(os.path.join(HERE, "shapes.js")).read()
 s = re.sub(r"  const SHAPES = \{.*?\};", lambda _: shapes, s, count=1, flags=re.S)
 extra = open(os.path.join(HERE, "mapdata.js")).read()
 s = re.sub(r"  const MAP_EXTRA = \[.*?\];", lambda _: extra, s, count=1, flags=re.S)
+rents = open(os.path.join(HERE, "rents.js")).read()
+s = re.sub(r"  const RENTS = \{.*?\};\n  const RENT_PERIOD = \"[^\"]*\";", lambda _: rents, s, count=1, flags=re.S)
 first, last = meta["quarters"][0], meta["quarters"][-1]
 months = {"1": "March", "2": "June", "3": "September", "4": "December"}
 q, y = last[1], last.split()[1]

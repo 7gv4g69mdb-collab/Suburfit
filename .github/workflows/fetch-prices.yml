@@ -11,6 +11,7 @@ on:
     paths:
       - ".github/workflows/fetch-prices.yml"
       - "src/data/fetch_vg.py"
+      - "src/data/fetch_rents.py"
 
 permissions:
   contents: write
@@ -25,9 +26,10 @@ jobs:
           python-version: "3.12"
       - run: pip install openpyxl xlrd
       - run: python src/data/fetch_vg.py
-      - name: Rebuild app and public site if prices changed
+      - run: python src/data/fetch_rents.py
+      - name: Rebuild app and public site if prices or rents changed
         run: |
-          if git diff --quiet -- src/data/raw && [ -z "$(git ls-files --others --exclude-standard src/data/raw)" ]; then echo "No new quarter"; exit 0; fi
+          if git diff --quiet -- src/data/raw src/data/rent && [ -z "$(git ls-files --others --exclude-standard src/data/raw src/data/rent)" ]; then echo "No new quarter"; exit 0; fi
           python src/data/refresh.py
           mkdir -p /tmp/libs/jspdf-src/dist /tmp/libs/qrlib
           curl -sSfL https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js -o /tmp/libs/jspdf-src/dist/jspdf.umd.min.js
