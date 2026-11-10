@@ -1144,6 +1144,75 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
 .leaflet-tooltip.name-tip { font: 13px/1.35 var(--font-body); border-radius: 8px; }
 #mapBox.labels-off .price-label { display: none; }
 @media (max-width: 560px) { #mapBox { height: 56vh; } .map-dialog { padding: 16px; } }
+
+/* ---------- Phones: less scrolling, the answer first ---------- */
+.m-fold-head { display: none; }
+@media (max-width: 700px) {
+  .data-date, .trust-wrap { display: none !important; }
+  .appbar .bs { display: none; }
+  .appbar { padding-block: calc(env(safe-area-inset-top, 0px) + 8px) 8px; }
+  .site-menu > summary { padding: 7px 12px; min-height: 40px; }
+  /* one-line step indicator */
+  .wiz-steps { display: none; }
+  .wiz-top { margin-bottom: 10px; }
+  .wiz-now { display: flex !important; justify-content: space-between; font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
+  .wiz-now span:last-child { color: var(--muted); font-weight: 400; }
+  .wrap { padding-block: 14px 40px; }
+  body.wiz .inputs > section.panel.wiz-cur { padding: 18px 16px; }
+  body.wiz .inputs > section.panel.wiz-cur h2 { font-size: 1.45rem; }
+  .step-head { gap: 10px; margin-bottom: 12px; }
+  .step-head .step-no { display: none; }
+  .step-head p { font-size: 0.86rem; }
+  label, .label-like { font-size: 0.9rem; }
+  .hint { font-size: 0.8rem; }
+  input[type="number"], input[type="text"], input[type="email"], input[type="tel"], input[type="search"], select { font-size: 16px; min-height: 46px; }
+  /* step 1: first home buttons and household side by side */
+  #fhbModes button span { display: none; }
+  #fhbModes button { min-height: 52px; place-content: center; text-align: center; }
+  section[aria-labelledby="s1h"] > .grid2 { grid-template-columns: 1fr 1fr; gap: 12px; }
+  section[aria-labelledby="s1h"] > .grid2 > .pay-block { grid-column: 1 / -1; }
+  /* step 2: examples as one compact line */
+  .examples span:not(.muted) { font-size: 0.74rem; padding: 2px 7px; }
+  .quick-main { padding: 12px; }
+  .mw-opt { min-height: 0; padding: 12px; }
+  .mw-opt span span { display: none; }
+  /* step 5: two suburbs per row, short cards */
+  .picks { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pick { padding: 9px 10px; gap: 2px; }
+  .pick .nm { font-size: 0.92rem; }
+  .pick .pr { font-size: 0.78rem; }
+  .pick .st { font-size: 0.74rem; }
+  .pick .upto { display: none; }
+  .pick-wrap .pick { padding-right: 30px; }
+  .star { width: 28px; height: 28px; top: 4px; right: 2px; }
+  .pick-tools .seg-toggle { overflow-x: auto; max-width: 100%; flex-wrap: nowrap; }
+  .pick-tools .seg-toggle button { white-space: nowrap; }
+  /* results: answer first, the rest tap to open */
+  .res-hero { padding: 16px; gap: 12px; border-radius: 16px; }
+  .hero-top > div > p, .hero-top .eyebrow { display: none; }
+  .hero-top h2 { font-size: 1.3rem; }
+  .hero-top .btn-row button { min-height: 38px; padding: 6px 12px; font-size: 0.88rem; }
+  .hero-num { font-size: 2.6rem; margin: 2px 0; }
+  .hero-facts { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .hero-facts div { padding: 8px 10px; }
+  .hero-facts b { font-size: 1.05rem; }
+  .hero-facts .small { font-size: 0.74rem; }
+  .take-head { font-size: 0.88rem; padding: 10px 12px; }
+  .lender-note { font-size: 0.84rem; padding: 10px 12px; }
+  #leadPanel { display: none !important; }
+  .lead-panel { padding: 18px 16px; gap: 14px; }
+  .lead-points { display: none; }
+  .m-fold { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 0 !important; overflow: hidden; }
+  .m-fold-head { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 10px; text-align: left; padding: 14px 16px; min-height: 52px; border: 0; border-radius: 0; background: var(--surface); font-weight: 700; font-size: 0.98rem; color: var(--ink); grid-column: 1 / -1; }
+  .m-fold-head::after { content: ""; flex: none; width: 9px; height: 9px; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg); margin-top: -4px; transition: transform .15s; }
+  .m-fold.m-open > .m-fold-head::after { transform: rotate(-135deg); margin-top: 4px; }
+  .m-fold:not(.m-open) > :not(.m-fold-head) { display: none !important; }
+  .m-fold.m-open { padding: 0 16px 16px !important; }
+  .m-fold.m-open > .m-fold-head { margin: 0 -16px 8px; width: calc(100% + 32px); }
+  .lower, .extras, .results { gap: 10px; }
+  .lower { margin-top: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .m-fold-head::after { transition: none; } }
 </style>
 
 <!-- Brand bar -->
@@ -1339,6 +1408,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
 
   <div class="wiz-top" id="wizTop">
     <ol class="wiz-steps" id="wizSteps" aria-label="Steps"></ol>
+    <div class="wiz-now" id="wizNow" hidden aria-live="polite"><span id="wizNowName"></span><span id="wizNowCount"></span></div>
     <div class="wiz-bar" aria-hidden="true"><span id="wizBar"></span></div>
   </div>
 
@@ -1354,13 +1424,13 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     </div>
     <div class="hero-grid">
       <div class="hero-main" id="hHead"></div>
-      <figure class="donut-wrap" aria-labelledby="donutCap">
+      <figure class="donut-wrap" aria-labelledby="donutCap" data-mfold="Where your money goes each month">
         <div class="donut-box"><svg id="hDonut" viewBox="0 0 200 200" role="img"></svg><div class="donut-centre" id="hDonutC"></div></div>
         <figcaption id="donutCap" class="sr-only">Where the monthly take-home pay goes</figcaption>
         <ul class="donut-legend" id="hLegend"></ul>
       </figure>
     </div>
-    <div class="sliders">
+    <div class="sliders" data-mfold="Try different numbers: price, deposit and interest rate">
       <div class="slider"><div class="sl-top"><label for="slPrice">Purchase price</label><span class="num" id="slPriceV"></span></div><input type="range" id="slPrice"><div class="sl-foot"><span id="slPriceMin"></span><button type="button" class="link-btn" id="slPriceReset">Use the estimate</button><span id="slPriceMax"></span></div></div>
       <div class="slider"><div class="sl-top"><label for="slDep" id="slDepL">Deposit</label><span class="num" id="slDepV"></span></div><input type="range" id="slDep"><div class="sl-foot"><span id="slDepMin"></span><span id="slDepMax"></span></div></div>
       <div class="slider"><div class="sl-top"><label for="slRate">Interest rate</label><span class="num" id="slRateV"></span></div><input type="range" id="slRate" min="3" max="10" step="0.05"><div class="sl-foot"><span>3%</span><span>10%</span></div></div>
@@ -1389,7 +1459,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
   </section>
 
   <div class="extras broker-only">
-    <section class="panel" aria-labelledby="schH">
+    <section class="panel" aria-labelledby="schH" data-mfold="Government help you may be able to get">
       <h2 id="schH">Help you may be able to get</h2>
       <p class="muted small" style="margin-top:2px">Based on what you entered. Each scheme has more rules than shown, so check the official site or ask a broker.</p>
       <div class="schemes" id="schemes"></div>
@@ -1521,10 +1591,6 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
       <!-- STEP 3 -->
       <section class="panel broker-only" aria-labelledby="s3h">
         <div class="step-head"><span class="step-no">3</span><div><h2 id="s3h">Your deposit and loan</h2><p class="muted small">Savings, deposit, interest rate and any first home buyer help.</p></div></div>
-        <div class="seg-toggle" role="group" aria-label="How the loan is set">
-          <button type="button" id="modeDeposit" aria-pressed="true">Price minus deposit</button>
-          <button type="button" id="modeFixed" aria-pressed="false">Fixed loan amount</button>
-        </div>
         <div class="grid2">
           <div id="depositWrap"><label for="deposit">Deposit you can put in</label><div class="money"><input id="deposit" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Loan = price minus this deposit.</p></div>
           <div id="loanWrap" hidden><label for="loan">Loan amount wanted</label><div class="money"><input id="loan" type="number" min="0" step="5000" inputmode="decimal"></div><p class="hint">Deposit needed = price minus this loan.</p></div>
@@ -1534,20 +1600,33 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
             <div class="money"><input id="cardLimits" type="number" min="0" step="500" inputmode="decimal" placeholder="0"></div>
             <p class="hint">Add up the limits on all your credit cards. Banks count your full limit, even if you pay it off each month, so this changes how much you can borrow.</p>
           </div>
-          <div><label for="rate">Interest rate (% p.a.)</label><input id="rate" type="number" min="0" max="20" step="0.05" inputmode="decimal"></div>
-          <div><label for="term">Loan term (years)</label><input id="term" type="number" min="5" max="40" step="1" inputmode="numeric"></div>
-          <div><label for="otherCosts">Legal, conveyancing and registration</label><div class="money"><input id="otherCosts" type="number" min="0" step="500" inputmode="decimal"></div><p class="hint">Rough allowance; check with the conveyancer.</p></div>
         </div>
-        <div class="checks">
-          <label class="check"><input type="checkbox" id="dutyOnLoan"> Add stamp duty to the loan instead of paying it from savings</label>
-          <label class="check"><input type="checkbox" id="lmiOnLoan"> Add lenders mortgage insurance to the loan (if it applies)</label>
-          <label class="check"><input type="checkbox" id="fhb"> First home buyer</label>
-          <div class="checks indent" id="fhbOpts">
+        <div class="checks fhb-checks">
+          <label class="check" hidden><input type="checkbox" id="fhb"> First home buyer</label>
+          <div class="checks" id="fhbOpts">
             <label class="check"><input type="checkbox" id="newBuild"> Buying a new build (no stamp duty, plus the $15,000 First Home Owner Grant)</label>
             <label class="check"><input type="checkbox" id="useScheme"> Use the 5% Deposit Scheme where eligible (no mortgage insurance)</label>
             <p class="hint">The 5% Deposit Scheme covers first home buyers on homes up to $900,000 in Adelaide, with no income cap since October 2025. SA stamp duty relief and the grant only apply to new homes.</p>
           </div>
         </div>
+        <details class="fold loan-more" id="loanMore">
+          <summary>More loan options <span class="muted small">interest rate, loan term, fees</span></summary>
+          <div class="inner">
+            <div class="seg-toggle" role="group" aria-label="How the loan is set">
+          <button type="button" id="modeDeposit" aria-pressed="true">Price minus deposit</button>
+          <button type="button" id="modeFixed" aria-pressed="false">Fixed loan amount</button>
+        </div>
+            <div class="grid2">
+          <div><label for="rate">Interest rate (% p.a.)</label><input id="rate" type="number" min="0" max="20" step="0.05" inputmode="decimal"></div>
+          <div><label for="term">Loan term (years)</label><input id="term" type="number" min="5" max="40" step="1" inputmode="numeric"></div>
+          <div><label for="otherCosts">Legal, conveyancing and registration</label><div class="money"><input id="otherCosts" type="number" min="0" step="500" inputmode="decimal"></div><p class="hint">Rough allowance; check with the conveyancer.</p></div>
+            </div>
+            <div class="checks">
+          <label class="check"><input type="checkbox" id="dutyOnLoan"> Add stamp duty to the loan instead of paying it from savings</label>
+          <label class="check"><input type="checkbox" id="lmiOnLoan"> Add lenders mortgage insurance to the loan (if it applies)</label>
+            </div>
+          </div>
+        </details>
       </section>
 
       <!-- STEP 4 -->
@@ -1636,8 +1715,8 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
         </div>
         <p class="hint" id="pickHint" style="margin:-4px 0 10px">Star a suburb to add it to the shortlist that's compared in the results, the petrol table and the PDF.</p>
         <div id="subPick"></div>
-        <div class="label-like" style="margin-top:14px">Key facts: <span id="factsName"></span></div>
-        <div class="facts-sel" id="factsSel"></div>
+        <div data-mfold="Key facts about this suburb"><div class="label-like" style="margin-top:14px">Key facts: <span id="factsName"></span></div>
+        <div class="facts-sel" id="factsSel"></div></div>
         <details class="fold sub-facts" id="subFacts">
           <summary>Compare all suburbs: distance to the city and beach, prices and more</summary>
           <div class="inner">
@@ -1651,7 +1730,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
             <div class="money"><input id="price" type="number" min="0" step="5000" inputmode="decimal"></div>
             <p class="hint"><span id="priceSrc"></span> <button type="button" class="link" id="resetPrice">Reset to estimate</button></p>
           </div>
-          <div style="grid-column:1/-1;min-width:0" class="price-est">
+          <div style="grid-column:1/-1;min-width:0" class="price-est" data-mfold="How the price is estimated">
             <div class="eyebrow" style="margin-bottom:4px">How the price is estimated<span class="tag-est">Estimate</span></div>
             <table class="breakdown"><tbody id="priceEst"></tbody></table>
           </div>
@@ -1704,7 +1783,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
 
     <!-- RESULTS -->
     <aside class="results broker-only" aria-live="polite">
-      <section class="panel verdict">
+      <section class="panel verdict" data-mfold="Full breakdown: budget, money to buy, bank check">
         <div class="where">
           <div><div class="eyebrow" id="rCouncil"></div><h2 id="rSub" style="font-size:1.5rem"></h2></div>
           <span class="pill" id="rPill"><span class="dot"></span><span></span></span>
@@ -1755,7 +1834,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel" data-mfold="Compare your shortlisted suburbs">
         <h3>Compare the shortlist</h3>
         <p class="muted small">Where the monthly take-home pay goes in each shortlisted suburb, best first. Star suburbs in step 5 to add them.</p>
         <div class="legend">
@@ -1771,7 +1850,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
   </div>
 
   <div class="lower broker-only">
-    <section class="panel" aria-labelledby="pathH">
+    <section class="panel" aria-labelledby="pathH" data-mfold="Path to buying: when you could be ready">
       <h2 id="pathH">Path to buying</h2>
       <p class="muted small" style="margin-top:2px">How long until each suburb is within reach, what's still to sort out, and progress since the last check-in.</p>
       <div class="grid2" style="margin-top:12px">
@@ -1797,7 +1876,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
         <p class="hint">Update their savings at each catch-up and record a check-in to track progress. In the live version, buyers get an alert when interest rates or prices change their results.</p>
       </div>
     </section>
-    <section class="panel" aria-labelledby="sumH">
+    <section class="panel" aria-labelledby="sumH" data-mfold="Summary to share or download">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
         <h2 id="sumH">Summary to share</h2>
         <div class="btn-row"><button type="button" id="copySummary">Copy summary</button><button type="button" class="primary" id="pdfBtn2">PDF report</button></div>
@@ -1808,7 +1887,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     </section>
   </div>
 
-  <section class="panel broker-only checklist" id="docsPanel" aria-labelledby="docsH">
+  <section class="panel broker-only checklist" id="docsPanel" aria-labelledby="docsH" data-mfold="Checklist: get ready for pre-approval">
     <div class="docs-head"><div><h2 id="docsH">Get ready for pre-approval</h2><p class="muted small">What a lender will usually ask for. Tick things off as you gather them; it's saved on this device.</p></div><div class="docs-count" id="docsCount"></div></div>
     <div class="progress" aria-hidden="true"><span id="docsBar"></span></div>
     <ul class="docs" id="docsList"></ul>
@@ -1835,7 +1914,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     <div class="lead-done" id="leadDone" hidden></div>
   </section>
 
-  <footer class="fine broker-only">
+  <footer class="fine broker-only" data-mfold="Sources and notes">
     <p>Prototype for discussion only. It is an estimate, not credit or financial advice, and not a lender serviceability assessment. Council rates, sewerage and the emergency services levy are worked out from the purchase price unless a property's own figures are entered; in practice they use the Valuer-General's capital value, which is usually lower.</p>
     <div class="sources">
       <span>House prices: SA Valuer-General <a href="https://data.sa.gov.au/data/dataset/metro-median-house-sales" target="_blank" rel="noopener">metropolitan median house sales</a>, Q4 2025 to Q3 2026 (latest release, October 2026), combined into a 12-month figure weighted by the number of sales; suburbs with under 15 sales are marked. Hindmarsh, Ashford, Southwark and Rosewater have no separate house sales in that data and are left out. Price by bedrooms: sales medians for the 12 months to October 2026 from <a href="https://www.property.com.au/sa/seaton-5023" target="_blank" rel="noopener">property.com.au</a> suburb pages, with small-sample gaps smoothed. Bathroom (±4% per bathroom against the typical number) and block-size adjustments, and typical block sizes, are estimates.</span>
@@ -3639,6 +3718,13 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     if (x && mapObj) { mapFocused = null; mapInfoExtra(x); mapObj.fitBounds(window.L.polygon(x.r.map(r => r.map(([a, b]) => [b, a]))).getBounds(), { maxZoom: 13.5, padding: [60, 60] }); }
   });
 
+  // ---------- Tap-to-open sections on phones ----------
+  document.querySelectorAll("[data-mfold]").forEach(el => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "m-fold-head"; b.textContent = el.dataset.mfold; b.setAttribute("aria-expanded", "false");
+    b.onclick = () => { const open = el.classList.toggle("m-open"); b.setAttribute("aria-expanded", String(open)); if (open && el.querySelector("#mapBox")) setTimeout(() => mapObj && mapObj.invalidateSize(), 50); };
+    el.classList.add("m-fold"); el.insertBefore(b, el.firstChild);
+  });
+
   // ---------- Site menu ----------
   function renderAreas() {
     const all = subs(), byCouncil = {};
@@ -3729,6 +3815,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     $("wizSteps").querySelectorAll("[data-wi]").forEach(b => b.onclick = () => { if (b.dataset.wi === "res") wizGo(pages.length); else { wizIdx = Number(b.dataset.wi); renderWiz(); wizScroll(); } });
     $("wizBar").style.width = ((wizIdx + 1) / total * 100).toFixed(1) + "%";
     $("wizCount").textContent = `Step ${wizIdx + 1} of ${total}`;
+    { const cur = pages[wizIdx], h = cur && cur.querySelector("h2"); $("wizNow").hidden = false; $("wizNowName").textContent = wizOn && h ? h.textContent : "Your results"; $("wizNowCount").textContent = wizOn ? `Step ${wizIdx + 1} of ${total}` : ""; }
     $("wizSave").hidden = wizIdx === 0 || document.body.classList.contains("intake");
     $("wizPrev").disabled = wizIdx === 0;
     const last = wizIdx === pages.length - 1;
