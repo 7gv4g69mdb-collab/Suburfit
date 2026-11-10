@@ -10,7 +10,7 @@ for url in open(os.path.join(HERE, "doc_urls.txt")):
         data = urllib.request.urlopen(req, timeout=90).read()
     except Exception as e:
         print("FAIL", url, e); continue
-    if url.lower().endswith((".csv", ".json", ".css", ".js")):
+    if url.lower().endswith((".csv", ".json", ".css", ".js", ".xlsx")):
         open(os.path.join(OUT, name), "wb").write(data)
     elif data[:4] == b"%PDF":
         p = os.path.join(OUT, "tmp.pdf"); open(p, "wb").write(data)

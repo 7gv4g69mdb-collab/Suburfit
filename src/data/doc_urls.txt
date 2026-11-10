@@ -40,3 +40,6 @@ https://www.governmentgazette.sa.gov.au/2026/July/2026_046.pdf
 # Leaflet 1.9.4 (map library) stylesheet and script
 https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css
 https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js
+# SA Private Rent Report (Consumer and Business Services bond data, CC BY 4.0): median weekly rent by suburb
+https://data.sa.gov.au/data/dataset/8eb97a72-9919-448b-8de6-fc1530b3f7ec/resource/b4aa86f1-7efa-4690-9793-bd36df97ad29/download/private-rental-report-2026-06.xlsx
+https://data.sa.gov.au/data/dataset/8eb97a72-9919-448b-8de6-fc1530b3f7ec/resource/d4cd6144-c7e4-43b2-abb4-f0e4f35d00a9/download/private-rental-report-2026-03.xlsx
