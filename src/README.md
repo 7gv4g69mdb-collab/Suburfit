@@ -1,4 +1,4 @@
-# Fit To Buy source
+# Fit to Buy source
 
 - `artifact.html`: the main app as published on Claude (uses `window.claude` for storage, downloads and user).
 - `standalone/build.py`: makes the public `index.html` (inlines jsPDF and qrcodejs, adds a localStorage shim for `window.claude`).
