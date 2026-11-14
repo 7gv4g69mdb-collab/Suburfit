@@ -1,0 +1,7 @@
+// Cloudflare deploy settings for fittobuy.com.au: serves the public/ folder as the "fittobuy" Worker.
+// Used by Cloudflare's Git connection (Workers Builds), which runs `npx wrangler deploy` on every push to main.
+{
+  "name": "fittobuy",
+  "compatibility_date": "2026-11-01",
+  "assets": { "directory": "./public" }
+}
