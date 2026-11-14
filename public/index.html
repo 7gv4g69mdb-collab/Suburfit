@@ -8,6 +8,8 @@
 </head>
 <body>
 <title>Fit To Buy</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%23062b52%22/%3E%3Cpath%20d%3D%22M10%2033%2032%2015l22%2018%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M43%2023v-7h5v11%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%225%22%20stroke-linejoin%3D%22round%22/%3E%3Cg%20fill%3D%22%23f7892a%22%3E%3Crect%20x%3D%2225%22%20y%3D%2230%22%20width%3D%226%22%20height%3D%226%22%20rx%3D%221%22/%3E%3Crect%20x%3D%2233%22%20y%3D%2230%22%20width%3D%226%22%20height%3D%226%22%20rx%3D%221%22/%3E%3Crect%20x%3D%2225%22%20y%3D%2238%22%20width%3D%226%22%20height%3D%226%22%20rx%3D%221%22/%3E%3Crect%20x%3D%2233%22%20y%3D%2238%22%20width%3D%226%22%20height%3D%226%22%20rx%3D%221%22/%3E%3C/g%3E%3C/svg%3E">
+<meta name="theme-color" content="#062b52">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
@@ -1177,6 +1179,50 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
 .timeline b { display: block; font-size: 1rem; }
 .tl-time { display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--accent); margin: 2px 0 4px; }
 .timeline p { margin: 0; }
+
+/* ---------- Fit To Buy navy and orange (matches the logo) ---------- */
+:root {
+  --navy: #062b52; --navy-deep: #041f3d; --orange: #f7892a; --orange-hover: #e8771a;
+  --bg: #f3f5f9; --surface: #ffffff; --surface-2: #f6f8fb; --ink: #13233a; --muted: #55647a; --line: #dde3ec;
+  --brand: #062b52; --brand-ink: #f3f6fb; --accent: #0b3d73; --accent-soft: #e4ecf6; --sky: #e6edf6;
+  --jac: #6d7fc4; --wattle: #f7892a;
+  --st-home-door: #f7892a; --st-lit: #f7b26a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #08111d; --surface: #0e1a2a; --surface-2: #132235; --ink: #e7edf5; --muted: #9cacc0; --line: #22344b;
+    --brand: #041a33; --accent: #8db7ea; --accent-soft: #16273d; --sky: #0e1a2a; --st-home-door: #f7892a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #08111d; --surface: #0e1a2a; --surface-2: #132235; --ink: #e7edf5; --muted: #9cacc0; --line: #22344b;
+  --brand: #041a33; --accent: #8db7ea; --accent-soft: #16273d; --sky: #0e1a2a; --st-home-door: #f7892a;
+}
+body { background: var(--bg); }
+.appbar { background: var(--brand); border-bottom: 3px solid var(--orange); }
+.brand { gap: 10px; }
+.brand .logo-mark { flex: none; }
+.brand .bn { color: #fff; }
+.brand .bn-o { color: var(--orange); }
+.brand .bs { color: #c7d4e6; opacity: 1; letter-spacing: 0.02em; }
+/* Front page banner: the logo's navy, with the main button in its orange */
+.hero-band { background: var(--navy); color: #fff;
+  --st-wall: #eef3f9; --st-brick: #c98a6b; --st-line: #021a33; --st-glass: #9fb6d1; --st-lit: #f7892a; --st-door: #7d90a8; --st-home-door: #f7892a;
+  --st-jac: #7f8fd6; --st-gum: #5f8f8a; --st-trunk: #33465c; --st-trunk-gum: #8ea0b5; --st-fence: #2b4a6e; --st-verge: #0d3a66; }
+.hero-band h1 { color: #fff; }
+.hero-band .land-lede { color: #d3deec; }
+.hero-band .muted, .hero-band .small { color: #aebfd6; }
+#landStart, #landStart2, .hero-band button.primary { background: var(--orange); border-color: var(--orange); color: var(--navy); font-weight: 800; }
+#landStart:hover, #landStart2:hover, .hero-band button.primary:hover { background: var(--orange-hover); border-color: var(--orange-hover); color: var(--navy); }
+#landStart:focus-visible, #landStart2:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.la-stage { border-left-color: var(--orange); }
+.la-n { background: var(--orange); color: var(--navy); }
+.wiz-bar > span, .wiz-progress > span, .progress > span { background: var(--orange); }
+/* Map labels in navy */
+.price-label .ml-p { background: var(--navy); }
+.price-label .ml-n { color: #13233a; }
+.price-label.extra .ml-p { color: var(--navy); border-color: #c5d2e3; }
+.price-label.extra .ml-n { color: #3c4a5e; }
 /* ---------- Phones: less scrolling, the answer first ---------- */
 .m-fold-head { display: none; }
 @media (max-width: 700px) {
@@ -1251,8 +1297,8 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
 <div class="appbar">
   <div class="appbar-in">
     <div class="brand">
-      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" fill="currentColor" opacity="0.14"/><path d="M8 15.5 15 9l7 6.5V22a1 1 0 0 1-1 1h-4v-5h-4v5H9a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      <div><div class="bn" id="brandName">Fit To Buy</div><div class="bs" id="brandSub">Home affordability by suburb</div></div>
+      <svg class="logo-mark" width="38" height="34" viewBox="0 0 38 34" aria-hidden="true"><path d="M3 17 19 4.5 35 17" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M27.5 10.4V5.5h3.6v7.7" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/><g fill="#f7892a"><rect x="14.6" y="15.2" width="4" height="4" rx=".6"/><rect x="19.4" y="15.2" width="4" height="4" rx=".6"/><rect x="14.6" y="20" width="4" height="4" rx=".6"/><rect x="19.4" y="20" width="4" height="4" rx=".6"/></g></svg>
+      <div><div class="bn" id="brandName">Fit To <span class="bn-o">Buy</span></div><div class="bs" id="brandSub">Plan today. Buy tomorrow.</div></div>
     </div>
     <div class="acts broker-only pro-only">
       <button type="button" id="openClients">Saved clients</button>
@@ -2568,8 +2614,10 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
   const CARD_RECEIVED_RE = /(payment received|payment - thank|payment thank ?you|thank you for your payment|payment recd|bpay payment.*thank)/i;
   const REFUND_RE = /\b(refund|reversal|reversed|returned|credit adj(ustment)?)\b/i;
 
-  const BRAND_COLOURS = [["#1e3f35", "Gumleaf"], ["#0f2f38", "Harbour"], ["#12304c", "Navy"], ["#0f4f4f", "Teal"], ["#3b2a5a", "Plum"], ["#1f4a2c", "Forest"], ["#2b2f36", "Charcoal"], ["#6b2a1f", "Brick"]];
+  const BRAND_COLOURS = [["#062b52", "Fit To Buy navy"], ["#1e3f35", "Gumleaf"], ["#0f2f38", "Harbour"], ["#12304c", "Navy"], ["#0f4f4f", "Teal"], ["#3b2a5a", "Plum"], ["#1f4a2c", "Forest"], ["#2b2f36", "Charcoal"], ["#6b2a1f", "Brick"]];
 
+  // Header name: the Fit To Buy wordmark (with "Buy" in orange) unless a broker has set their own business name
+  function setBrandName(name) { if (name) $("brandName").textContent = name; else $("brandName").innerHTML = 'Fit To <span class="bn-o">Buy</span>'; }
   // ---------- State ----------
   function defaultState() {
     const s = {
@@ -3477,14 +3525,14 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     if (!window.jspdf || !lastReport) { msg.className = "status-msg err"; msg.textContent = "The PDF tool didn't load. Check the connection and reload the page."; return; }
     const R = lastReport, { jsPDF } = window.jspdf, doc = new jsPDF({ unit: "pt", format: "a4" });
     const W = 595, M = 44, clean = t => String(t).replace(/−/g, "-").replace(/[✓↑↓]/g, "");
-    const hex = brand.colour || BRAND_COLOURS[0][0], rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+    const hex = !brand.colour || brand.colour === "#1e3f35" ? BRAND_COLOURS[0][0] : brand.colour, rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
     let y = 0;
     const header = () => {
       doc.setFillColor(...rgb); doc.rect(0, 0, W, 78, "F");
       doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(17);
       doc.text(clean(brand.business || "Fit To Buy"), M, 36);
       doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
-      doc.text(clean([brand.broker, brand.phone, brand.email].filter(Boolean).join("  |  ") || "Home affordability by suburb"), M, 54);
+      doc.text(clean([brand.broker, brand.phone, brand.email].filter(Boolean).join("  |  ") || "Plan today. Buy tomorrow."), M, 54);
       if (brand.licence) doc.text(clean(brand.licence), M, 67);
       doc.setTextColor(20, 30, 43); y = 108;
     };
@@ -3734,7 +3782,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
   }
   // ---------- Price map (median house sale price by suburb, last 12 months) ----------
   const PRICE_BANDS = [[0, 700000, "Under $700k"], [700000, 850000, "$700k to $850k"], [850000, 1000000, "$850k to $1m"], [1000000, 1250000, "$1m to $1.25m"], [1250000, 1500000, "$1.25m to $1.5m"], [1500000, Infinity, "Over $1.5m"]];
-  const BAND_COL = ["#dcebb4", "#b6d78f", "#88bb74", "#589c63", "#33784f", "#1a523e"];
+  const BAND_COL = ["#dce8f4", "#b5cde7", "#88acd6", "#5b87bf", "#3263a1", "#0d3d73"];
   const bandOf = v => Math.max(0, PRICE_BANDS.findIndex(([a, b]) => v >= a && v < b));
   let mapObj = null, mapPolys = {}, mapFocused = null;
   function loadLeaflet() {
@@ -3806,7 +3854,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
         layer._sf = { few };
         layer.bindTooltip(`<b>${escapeHtml(sub.name)}</b><br>${fmt(sub.median)} median`, { className: "name-tip", sticky: true });
         layer.on("click", () => { mapFocused = null; focusSub(sub); });
-        layer.on("mouseover", () => layer.setStyle({ fillOpacity: 0.7, color: "#2e5e4e", weight: 2.5 })); layer.on("mouseout", () => layer.setStyle({ fillOpacity: 0.45, color: style.color, weight: style.weight }));
+        layer.on("mouseover", () => layer.setStyle({ fillOpacity: 0.7, color: "#f7892a", weight: 2.5 })); layer.on("mouseout", () => layer.setStyle({ fillOpacity: 0.45, color: style.color, weight: style.weight }));
         layer.addTo(mapObj); mapPolys[sub.id] = layer; group.push(layer); allMapLayers.push(layer);
         mapLabels.push({ pri: 100000 + sub.sales, t: L.tooltip({ permanent: true, direction: "center", className: "price-label", interactive: false }).setLatLng([sub.lat, sub.lng]).setContent(`<span class="ml-n">${escapeHtml(sub.name)}</span><span class="ml-p">${shortMoney(sub.median)}</span>`).addTo(mapObj) });
       });
@@ -4430,7 +4478,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     if (!window.jspdf || !lastNote) { msg.className = "status-msg err"; msg.textContent = "The PDF tool didn't load. Check the connection and reload the page."; return; }
     const { jsPDF } = window.jspdf, doc = new jsPDF({ unit: "pt", format: "a4" });
     const W = 595, M = 44, clean = t => String(t).replace(/−/g, "-").replace(/[✓↑↓²]/g, c => c === "²" ? "2" : "");
-    const hex = brand.colour || BRAND_COLOURS[0][0], rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+    const hex = !brand.colour || brand.colour === "#1e3f35" ? BRAND_COLOURS[0][0] : brand.colour, rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
     let y = 0;
     const header = () => {
       doc.setFillColor(...rgb); doc.rect(0, 0, W, 60, "F");
@@ -4589,9 +4637,9 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     state.suburb = sub.id; closeAll(); ["nsName", "nsMedian", "nsRate", "nsPetrol"].forEach(id => $(id).value = ""); syncPrice(); changed();
   }
   function applyBrand() {
-    document.documentElement.style.setProperty("--brand", brand.colour || BRAND_COLOURS[0][0]);
-    $("brandName").textContent = brand.business || "Fit To Buy";
-    $("brandSub").textContent = brand.business ? [brand.broker, brand.phone].filter(Boolean).join(" · ") || "Home affordability by suburb" : "Home affordability by suburb";
+    document.documentElement.style.setProperty("--brand", !brand.colour || brand.colour === "#1e3f35" ? BRAND_COLOURS[0][0] : brand.colour);
+    setBrandName(brand.business);
+    $("brandSub").textContent = brand.business ? [brand.broker, brand.phone].filter(Boolean).join(" · ") || "Plan today. Buy tomorrow." : "Plan today. Buy tomorrow.";
     $("intakeFrom").textContent = brand.business ? `For ${brand.business}${brand.broker ? " · " + brand.broker : ""}` : "Prepared for your broker";
   }
   function openBrand() {
@@ -4795,7 +4843,7 @@ body.wiz .inputs > section.panel.wiz-cur h2 { font-size: clamp(1.6rem, 3.4vw, 2.
     const living = readOpenInputs(), sub = subById(state.suburb), s = scenario(sub), st = status(s);
     const b = { business: o.bb || brand.business, broker: o.bn || brand.broker, phone: o.bp || brand.phone, email: o.be || brand.email, licence: o.bl || brand.licence, colour: o.bc || brand.colour };
     document.documentElement.style.setProperty("--brand", b.colour || BRAND_COLOURS[0][0]);
-    $("brandName").textContent = b.business || "Fit To Buy"; $("brandSub").textContent = "Open inspection";
+    setBrandName(b.business); $("brandSub").textContent = "Open inspection";
     $("openBrandLine").textContent = "";
     $("ovAgency").textContent = [o.g, o.n].filter(Boolean).join(" · ") || "Open inspection";
     $("ovAddress").textContent = o.a || `Home in ${sub.name}`;
