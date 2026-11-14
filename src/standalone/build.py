@@ -1,7 +1,7 @@
 # Usage: python3 build.py LIBS_DIR [SOURCE_HTML] [OUTPUT_HTML]
 # LIBS_DIR holds jspdf-src/dist/jspdf.umd.min.js and qrlib/qrcode.min.js (jsPDF 2.5.1 and qrcodejs 1.0.0 from cdnjs).
 import sys
-# Keep the site out of Google until launch. Set to False when Fit to Buy goes public.
+# Keep the site out of Google until launch. Set to False when Fit To Buy goes public.
 HIDE_FROM_SEARCH = True
 SP=sys.argv[1]
 SRC=sys.argv[2] if len(sys.argv)>2 else '/home/claude/suburb-fit/index.html'
