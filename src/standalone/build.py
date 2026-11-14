@@ -1,6 +1,8 @@
 # Usage: python3 build.py LIBS_DIR [SOURCE_HTML] [OUTPUT_HTML]
 # LIBS_DIR holds jspdf-src/dist/jspdf.umd.min.js and qrlib/qrcode.min.js (jsPDF 2.5.1 and qrcodejs 1.0.0 from cdnjs).
 import sys
+# Keep the site out of Google until launch. Set to False when Fit to Buy goes public.
+HIDE_FROM_SEARCH = True
 SP=sys.argv[1]
 SRC=sys.argv[2] if len(sys.argv)>2 else '/home/claude/suburb-fit/index.html'
 OUT=sys.argv[3] if len(sys.argv)>3 else 'index.html'
@@ -46,5 +48,10 @@ assert src
 # Default the QR page link to wherever this file is hosted
 src=src.replace('$("oaPage").value = $("oaPage").value || brand.pageUrl || "";','$("oaPage").value = $("oaPage").value || brand.pageUrl || (window.__standalone && /^https?:/.test(location.href) ? location.href.replace(/#.*$/, "") : "");')
 src=src.replace("Saved clients are kept in this page's storage on claude.ai and only you and your editors can see them. Open the page in claude.ai as its owner to use them.","Saved clients are kept in this browser only.")
-out='<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>\n</head>\n<body>\n'+src+'\n</body>\n</html>\n'
+out='<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'+('<meta name="robots" content="noindex, nofollow">\n' if HIDE_FROM_SEARCH else '')+'<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>\n</head>\n<body>\n'+src+'\n</body>\n</html>\n'
 open(OUT,'w').write(out); print(len(out))
+# The folder Cloudflare Pages serves: just the site, nothing else from the repo
+import os
+PUB=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','..','public'); os.makedirs(PUB,exist_ok=True)
+open(os.path.join(PUB,'index.html'),'w').write(out)
+open(os.path.join(PUB,'robots.txt'),'w').write("User-agent: *\nDisallow: /\n" if HIDE_FROM_SEARCH else "User-agent: *\nAllow: /\n")

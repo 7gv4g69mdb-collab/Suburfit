@@ -39,5 +39,5 @@ jobs:
         run: |
           git config user.name "suburb-fit-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add src/data index.html src/artifact.html
+          git add src/data index.html public src/artifact.html
           if git diff --cached --quiet; then echo "Nothing to commit"; else git commit -m "Update house prices from the Valuer-General" && git push; fi
