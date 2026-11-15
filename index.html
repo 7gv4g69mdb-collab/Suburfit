@@ -1223,6 +1223,13 @@ body { background: var(--bg); }
 .price-label .ml-n { color: #13233a; }
 .price-label.extra .ml-p { color: var(--navy); border-color: #c5d2e3; }
 .price-label.extra .ml-n { color: #3c4a5e; }
+
+/* Large logo on the front page banner (desktop and tablet; phones already show it in the header) */
+.land-logo { display: none; }
+@media (min-width: 821px) {
+  .hero-band .land-hero, .hero-band .land-hero:has(.land-preview[hidden]) { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); }
+  .land-logo { display: block; justify-self: center; width: min(100%, 400px); }
+}
 /* ---------- Phones: less scrolling, the answer first ---------- */
 .m-fold-head { display: none; }
 @media (max-width: 700px) {
@@ -1431,6 +1438,7 @@ body { background: var(--bg); }
         <div class="btn-row land-cta"><button type="button" class="primary" id="landStart">Start, it takes about 3 minutes</button><button type="button" id="landExample" hidden>See an example</button></div>
         <p class="small muted">Free. No sign-up. Your figures stay on your device.</p>
       </div>
+      <div class="land-logo" aria-hidden="true"><svg viewBox="0 0 400 290" width="100%"><path d="M58 128 200 34l142 94" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M286 82V46h24v52" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/><g fill="#f7892a"><rect x="177" y="84" width="20" height="20" rx="3"/><rect x="203" y="84" width="20" height="20" rx="3"/><rect x="177" y="110" width="20" height="20" rx="3"/><rect x="203" y="110" width="20" height="20" rx="3"/></g><text x="200" y="212" text-anchor="middle" font-family="Bricolage Grotesque, Segoe UI, system-ui, sans-serif" font-weight="800" font-size="74" letter-spacing="-2"><tspan fill="#fff">Fit To </tspan><tspan fill="#f7892a">Buy</tspan></text><path d="M128 236h144" stroke="#f7892a" stroke-width="3" stroke-linecap="round"/><text x="200" y="270" text-anchor="middle" font-family="Atkinson Hyperlegible, Segoe UI, system-ui, sans-serif" font-weight="700" font-size="19" letter-spacing="2.2" fill="#dfe7f2">PLAN TODAY. BUY TOMORROW.</text></svg></div>
       <div class="land-preview" aria-label="Example of the results" id="landPreview" hidden>
       </div>
     </div>
