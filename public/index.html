@@ -702,6 +702,9 @@ label.check.head { font-weight: 600; margin-bottom: 10px; }
 .pick { text-align: left; display: grid; gap: 3px; padding: 10px 12px; border-radius: 10px; background: var(--surface); }
 .pick .nm { font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
 .pick .pr { font-size: 0.83rem; color: var(--muted); }
+.pick .pr-l { font-size: 0.72rem; text-transform: none; color: var(--muted); }
+.pick-note { font-size: 0.86rem; color: var(--muted); margin: 0 0 10px; }
+.pick-note b { color: var(--ink); }
 .pick .st { font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
 .pick .st i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; display: inline-block; }
 .pick[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
@@ -1843,6 +1846,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           </div>
         </div>
         <p class="hint" id="pickHint" style="margin:-4px 0 10px">Star a suburb to add it to the shortlist that's compared in the results, the petrol table and the PDF.</p>
+        <p class="pick-note" id="pickNote"></p>
         <div id="subPick"></div>
         <div data-mfold="Key facts about this suburb"><div class="label-like" style="margin-top:14px">Key facts: <span id="factsName"></span></div>
         <div class="facts-sel" id="factsSel"></div></div>
@@ -3400,7 +3404,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     const b = document.createElement("button");
     b.type = "button"; b.className = "pick"; b.id = "pick-" + s.id;
     b.setAttribute("aria-pressed", String(s.id === state.suburb));
-    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num">${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : isUnit() ? (unitData(s) === "solid" ? "" : unitData(s) === "few" ? '<span class="tag-est">Few unit sales</span>' : '<span class="tag-est">Estimated</span>') : fewTag(s) + variesTag(s)}${fhbOk() && priceFor(s) <= SCHEME_CAP ? '<span class="tag-ok" title="Within the $900,000 cap for the 5% Deposit Scheme and Help to Buy">5% scheme</span>' : ""}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)}</span>${(() => { const u = upTo(s); return u === null ? "" : `<span class="upto">${u ? "Estimated top price " + shortMoney(u) : "Checks don't pass yet"}</span>`; })()}`;
+    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num"><span class="pr-l">${state.priceOverride[s.id] != null ? "Your price" : `Est. ${state.bedrooms === 5 ? "5+" : state.bedrooms}-bed price`}</span> ${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : isUnit() ? (unitData(s) === "solid" ? "" : unitData(s) === "few" ? '<span class="tag-est">Few unit sales</span>' : '<span class="tag-est">Estimated</span>') : fewTag(s) + variesTag(s)}${fhbOk() && priceFor(s) <= SCHEME_CAP ? '<span class="tag-ok" title="Within the $900,000 cap for the 5% Deposit Scheme and Help to Buy">5% scheme</span>' : ""}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)} left a month</span>`;
     b.onclick = () => selectSuburb(s.id);
     const star = document.createElement("button");
     star.type = "button"; star.className = "star"; star.textContent = starred ? "★" : "☆";
@@ -3412,6 +3416,10 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   }
   function renderSubPick() {
     const wrap = $("subPick"); wrap.innerHTML = "";
+    { const sel = subById(state.suburb), u = sel && upTo(sel), beds = state.bedrooms === 5 ? "5+" : state.bedrooms;
+      $("pickNote").hidden = pickCollapsed;
+      $("pickNote").innerHTML = `Prices are estimated for a ${beds}-bedroom house like the one you described, worked out from each suburb's median house sale price. ` +
+        (u ? `On your figures, your <b>estimated top price</b> is about <b>${fmt(u)}</b> ${term("top")}` : `On your figures, the checks don't pass at any price yet ${term("top")}`); }
     $("pickTools").hidden = pickCollapsed; $("pickHint").hidden = pickCollapsed;
     if (pickCollapsed) {
       const sel = subById(state.suburb);
@@ -4376,6 +4384,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 
   // ---------- Plain-English explanations ----------
   const GLOSSARY = {
+    top: ["Estimated top price", "The highest price where, on the figures you entered, your savings cover the deposit, stamp duty and fees, you still have money left over each month after buying, and our rough lender check passes. It's an estimate, not a lender's assessment, and it's usually similar across suburbs, changing a little with each council's rates and insurance."],
     bank: ["Lender check (estimate)", "Banks check you could still afford the loan if interest rates rose about 3%, using their own minimum living costs and counting credit card limits as if they were used. This is a rough version of that check. Only a lender can approve a loan."],
     lmi: ["Lenders mortgage insurance (LMI)", "A one-off cost charged when your deposit is under 20% of the price. It protects the lender, not you. It's often added to the loan. The 5% Deposit Scheme can remove it for first home buyers."],
     duty: ["Stamp duty", "A state government tax paid when you buy a property, based on the price. First home buyers in SA pay none on new homes, off-the-plan homes and land to build on."],
@@ -4441,7 +4450,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>${st.canBuy ? "left over each month" : "left over each month, if you could buy at this price"}</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.label}</span></span></div>
       ${canBuyHtml(s, st, sub)}
       <div class="hero-facts">
-        <div><span class="muted small">Estimated top price</span><b>${(() => { const u = upToInfo(sub); return u && u.max ? fmt(u.max) : "Not yet"; })()}</b><span class="small muted">using your ${fmt(funds())} savings as the deposit</span></div>
+        <div><span class="muted small">Estimated top price ${term("top")}</span><b>${(() => { const u = upToInfo(sub); return u && u.max ? fmt(u.max) : "Not yet"; })()}</b><span class="small muted">using your ${fmt(funds())} savings as the deposit</span></div>
         <div><span class="muted small">Loan needed</span><b>${fmt(s.loan)}</b><span class="small muted">${fmt(s.repay)} a month</span></div>
         <div><span class="muted small">Money needed to buy</span><b>${fmt(s.cashNeeded)}</b><span class="small" style="color:var(--${short > 0 ? "bad" : "good"})">${short > 0 ? fmt(short) + " short of your " + fmt(funds()) + " savings" : "Covered by your " + fmt(funds()) + " savings"}</span></div>
         <div><span class="muted small">Lender check (estimate) ${term("bank")}</span><b style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${s.lenderSurplus >= 0 ? "Likely to pass" : "Unlikely to pass"}</b></div>
