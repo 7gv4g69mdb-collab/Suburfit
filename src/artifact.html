@@ -851,6 +851,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 .sv-note { font-size: 0.85rem; color: var(--muted); }
 @media (max-width: 600px) { .sv-facts { grid-template-columns: 1fr 1fr; } .sv-card { padding: 18px 16px; } }
 #svStart { background: var(--orange); border-color: var(--orange); color: var(--navy); font-weight: 800; min-height: 50px; padding: 12px 22px; }
+.gi-note { font-size: 0.8rem; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 0; }
 /* ---------- Phones: less scrolling, the answer first ---------- */
 .m-fold-head { display: none; }
 @media (max-width: 700px) {
@@ -1056,7 +1057,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <div class="land-hero">
       <div class="land-copy">
         <h1 id="landH">Where could you afford to buy your first home?</h1>
-        <p class="land-lede">Enter your pay, savings and spending. See what you'd have left each month in each suburb, how much you could spend, and which government schemes could help. Now covering 185 Adelaide suburbs, with more cities to come.</p>
+        <p class="land-lede">Enter your pay, savings and spending. Get an estimate of what you'd have left each month in each suburb, a price range, and which government schemes you may be eligible for. Now covering 185 Adelaide suburbs, with more cities to come.</p>
         <div class="btn-row land-cta"><button type="button" class="primary" id="landStart">Start, it takes about 3 minutes</button><button type="button" id="landExample" hidden>See an example</button></div>
         <p class="small muted">Free. No sign-up. Your figures stay on your device.</p>
       </div>
@@ -1074,8 +1075,8 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       </div>
       <div class="la-journey">
         <div class="la-stage"><span class="la-n">1</span><div><b>Just thinking about it</b><span>Find out whether buying is realistic, which suburbs suit your budget, and what you'd have left each month once the bills are paid.</span></div></div>
-        <div class="la-stage"><span class="la-n">2</span><div><b>Saving a deposit</b><span>See how much you need, including stamp duty and fees, and a date you could be ready by. Check which government schemes could get you there sooner.</span></div></div>
-        <div class="la-stage"><span class="la-n">3</span><div><b>Ready to look</b><span>Know the most you could spend in each suburb and whether a bank is likely to say yes, so you can house hunt with confidence. Talk to a local broker if you'd like help with the loan.</span></div></div>
+        <div class="la-stage"><span class="la-n">2</span><div><b>Saving a deposit</b><span>See an estimate of what you need, including stamp duty and fees, and how long saving could take. See which government schemes you may be eligible for.</span></div></div>
+        <div class="la-stage"><span class="la-n">3</span><div><b>Ready to look</b><span>See an estimated top price for each suburb and a rough lender check, so you know what to ask. A licensed broker can look at your actual loan options.</span></div></div>
       </div>
       <p class="la-note small muted">Fit To Buy gives estimates to help you plan. It isn't a bank and doesn't give financial advice, and a broker only sees your details if you choose to send them.</p>
       <div class="btn-row"><button type="button" class="primary" id="landStart2">Start, it takes about 3 minutes</button></div>
@@ -1083,13 +1084,13 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <ol class="land-steps">
       <li><b>Tell us about you</b><span>Take-home pay, savings and a rough idea of spending. Upload bank statements if you want more accuracy.</span></li>
       <li><b>Pick the home you want</b><span>Bedrooms, bathrooms and block size. Every suburb is priced for that home.</span></li>
-      <li><b>See where you fit</b><span>What's left each month, what you could spend, schemes that help, and how to get there if you're not ready yet.</span></li>
+      <li><b>See where you fit</b><span>Estimates of what's left each month, a price range, schemes you may be eligible for, and how long saving could take.</span></li>
     </ol>
     <div class="land-get">
       <h2>What you'll get</h2>
       <ul>
         <li>Your budget after buying, in every suburb, using real 2026-27 rates, water, levy and insurance costs</li>
-        <li>The most you could spend in each suburb</li>
+        <li>An estimated top price for each suburb</li>
         <li>Government schemes you may qualify for, like the 5% Deposit Scheme and First Home Owner Grant</li>
         <li>A date you could be ready by, if you're still saving</li>
         <li>A checklist of what a lender will ask for</li>
@@ -1127,6 +1128,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div><div class="eyebrow">Your results</div><h2 id="heroH">Here's how buying looks</h2><p class="muted small">Tap any step above to go back and change it, or use View all your entries to see and edit everything on one page.</p></div>
       <div class="btn-row"><button type="button" id="wizEdit">Go through the steps again</button><button type="button" id="shareBtn">Share these results</button><button type="button" class="primary" id="toLead">Speak to a broker</button></div>
     </div>
+    <p class="gi-note">General information only, not financial or credit advice. These estimates use only the figures you entered. Only a lender can approve a loan, so speak to a licensed broker or adviser before deciding.</p>
     <div class="hero-grid">
       <div class="hero-main" id="hHead"></div>
       <figure class="donut-wrap" aria-labelledby="donutCap" data-mfold="Where your money goes each month">
@@ -1503,7 +1505,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <div class="tabs" role="tablist" aria-label="Result detail">
             <button type="button" role="tab" id="tab-budget" aria-selected="true" aria-controls="pane-budget">Budget</button>
             <button type="button" role="tab" id="tab-cash" aria-selected="false" aria-controls="pane-cash">Money to buy</button>
-            <button type="button" role="tab" id="tab-lender" aria-selected="false" aria-controls="pane-lender">Would a bank say yes?</button>
+            <button type="button" role="tab" id="tab-lender" aria-selected="false" aria-controls="pane-lender">Lender check (estimate)</button>
             <button type="button" role="tab" id="tab-repay" aria-selected="false" aria-controls="pane-repay">Repayments</button>
             <button type="button" role="tab" id="tab-take" aria-selected="false" aria-controls="pane-take">How to get there</button>
           </div>
@@ -1565,7 +1567,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div class="path-head" id="pathHead"></div>
       <div class="path-grid">
         <div>
-          <div class="label-like">Ready to buy in <span id="pathSubName"></span>?</div>
+          <div class="label-like">Estimated time to buy in <span id="pathSubName"></span></div>
           <div class="flags" id="pathReady"></div>
         </div>
         <div>
@@ -1746,7 +1748,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div class="seg-toggle" id="ccNew"><button type="button" data-v="0" aria-pressed="true">Established home</button><button type="button" data-v="1" aria-pressed="false">New build or off the plan</button></div>
       <table class="breakdown" aria-live="polite"><tbody id="ccOut"></tbody></table>
       <p class="small" id="ccNote"></p>
-      <div class="btn-row"><button type="button" class="primary" id="ccGo">Check what I could afford</button></div>
+      <div class="btn-row"><button type="button" class="primary" id="ccGo">Check my budget</button></div>
       <p class="small muted">Stamp duty: RevenueSA residential rates. Transfer and mortgage registration: Land Services SA fees 2026–27. Mortgage insurance is a rough guide; lenders set the real figure. Not financial advice.</p>
     </div>
   </div>
@@ -1772,7 +1774,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <div class="help-body">
       <p>How buying a home usually goes in South Australia, and roughly how long each part takes. Every purchase is different, so use this as a guide.</p>
       <ol class="timeline">
-        <li><b>Work out your budget</b><span class="tl-time">A few minutes to a few days</span><p>Check what you could afford and which schemes you may get. Start saving your payslips and bank statements, as lenders ask for them.</p></li>
+        <li><b>Work out your budget</b><span class="tl-time">A few minutes to a few days</span><p>Get an estimate of your budget and which schemes you may be eligible for. Start saving your payslips and bank statements, as lenders ask for them.</p></li>
         <li><b>Get pre-approval</b><span class="tl-time">About 1 to 2 weeks</span><p>A lender or broker checks your income, spending and debts and says how much they're likely to lend. It usually lasts around 3 to 6 months. Ask about the 5% Deposit Scheme and First Home Owner Grant now, as they're applied for through the lender.</p></li>
         <li><b>Search and inspect</b><span class="tl-time">Weeks to months</span><p>Go to open inspections and ask the agent for the Form 1 (vendor's statement). It lists rates, easements and anything affecting the land. Book a building and pest inspection before you commit.</p></li>
         <li><b>Make an offer or bid at auction</b><span class="tl-time">A day to a few weeks</span><p>For a private sale you make an offer, often subject to finance and a building inspection. At auction there's no cooling-off period and no conditions, so have your finance and inspections done first.</p></li>
@@ -1782,7 +1784,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
         <li><b>Conveyancing and settlement</b><span class="tl-time">Usually 4 to 8 weeks after signing</span><p>Your conveyancer handles the searches, the transfer and settlement. Stamp duty and the government transfer fee are paid at settlement. Arrange home insurance before settlement, as your lender will ask for it.</p></li>
         <li><b>Final inspection and keys</b><span class="tl-time">Settlement day</span><p>Check the home is as agreed a day or two before. Once settlement goes through, the agent hands over the keys.</p></li>
       </ol>
-      <div class="btn-row"><button type="button" class="primary" id="tlGo">Check what I could afford</button><button type="button" id="tlCosts">See upfront costs</button></div>
+      <div class="btn-row"><button type="button" class="primary" id="tlGo">Check my budget</button><button type="button" id="tlCosts">See upfront costs</button></div>
       <p class="small muted">General information only, not legal or financial advice. Cooling-off rules: <a href="https://lawhandbook.sa.gov.au/ch23s08s08s01.php" target="_blank" rel="noopener">SA Law Handbook</a> and the Land and Business (Sale and Conveyancing) Regulations 2025.</p>
     </div>
   </div>
@@ -1811,7 +1813,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div><h3>Is my information safe?</h3><p>Your figures are worked out in your own browser. Bank statements are never uploaded. Nothing is sent to anyone unless you choose to send it.</p></div>
       <div><h3>How accurate are the numbers?</h3><p>Prices come from official sales records, and costs from 2026-27 council, water, levy and energy rates. They're estimates for a typical home in each suburb, so a real property can cost more or less. Where a figure is less certain, we label it.</p></div>
       <div><h3>Is this financial advice?</h3><p>No. Fit To Buy helps you plan. It isn't a bank and doesn't decide whether you'll get a loan. A broker or lender can give you a proper assessment.</p></div>
-      <div><h3>What does "Would a bank say yes?" mean?</h3><p>Banks test whether you could still afford the loan if interest rates rose 3%, and they use minimum living costs. We run a similar check, so you can see early whether a loan is likely to be a stretch.</p></div>
+      <div><h3>What does "Lender check (estimate)" mean?</h3><p>Banks test whether you could still afford the loan if interest rates rose 3%, and they use minimum living costs. We run a similar check, so you can see early whether a loan is likely to be a stretch.</p></div>
       <div><h3>Why do you ask about my rent?</h3><p>Rent stops when you buy, and your loan repayment takes its place. Knowing your rent stops us counting both.</p></div>
       <div><h3>Can I save and come back later?</h3><p>Yes. Press "Save for later" on any step and we'll email you a link that opens where you left off.</p></div>
       <div><h3>What happens if I talk to a broker?</h3><p>Only if you ask, a local mortgage broker contacts you to talk through your loan options. You don't have to go ahead.</p></div>
@@ -2504,7 +2506,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     const base = { budget, lenderOk, cashOk, depOk, savingsOk, canBuy };
     if (canBuy) return { cls, label: budget, ...base };
     // Their own figures not working (over budget) is the clearest message, so it comes first. Bank wording stays hedged: it's an estimate, not a lender's assessment.
-    const bankLabel = s.lenderSurplus > -300 ? "Bank may say no" : "Bank likely to say no";
+    const bankLabel = s.lenderSurplus > -300 ? "May not pass lender check" : "Unlikely to pass lender check";
     const label = s.after < 0 ? "Over budget" : !savingsOk && !lenderOk ? "Not yet: savings and bank" : !savingsOk ? "Need more savings" : bankLabel;
     return { cls: cls === "bad" || !savingsOk ? "bad" : "warn", label, ...base };
   }
@@ -2843,7 +2845,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     const b = document.createElement("button");
     b.type = "button"; b.className = "pick"; b.id = "pick-" + s.id;
     b.setAttribute("aria-pressed", String(s.id === state.suburb));
-    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num">${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : isUnit() ? (unitData(s) === "solid" ? "" : unitData(s) === "few" ? '<span class="tag-est">Few unit sales</span>' : '<span class="tag-est">Estimated</span>') : fewTag(s) + variesTag(s)}${fhbOk() && priceFor(s) <= SCHEME_CAP ? '<span class="tag-ok" title="Within the $900,000 cap for the 5% Deposit Scheme and Help to Buy">5% scheme</span>' : ""}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)}</span>${(() => { const u = upTo(s); return u === null ? "" : `<span class="upto">${u ? "You could spend up to " + shortMoney(u) : "Not affordable yet"}</span>`; })()}`;
+    b.innerHTML = `<span class="nm"><span>${escapeHtml(s.name)}</span></span><span class="pr num">${fmt(priceFor(s))}${s.postcode ? " · " + s.postcode : ""}${s.custom ? '<span class="tag-ok">Added</span>' : isUnit() ? (unitData(s) === "solid" ? "" : unitData(s) === "few" ? '<span class="tag-est">Few unit sales</span>' : '<span class="tag-est">Estimated</span>') : fewTag(s) + variesTag(s)}${fhbOk() && priceFor(s) <= SCHEME_CAP ? '<span class="tag-ok" title="Within the $900,000 cap for the 5% Deposit Scheme and Help to Buy">5% scheme</span>' : ""}</span><span class="st ${st.cls}"><i></i>${st.label} · ${fmt(sc.after)}</span>${(() => { const u = upTo(s); return u === null ? "" : `<span class="upto">${u ? "Estimated top price " + shortMoney(u) : "Checks don't pass yet"}</span>`; })()}`;
     b.onclick = () => selectSuburb(s.id);
     const star = document.createElement("button");
     star.type = "button"; star.className = "star"; star.textContent = starred ? "★" : "☆";
@@ -2964,7 +2966,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     const iq = $("insQuote");
     if (document.activeElement !== iq) { iq.value = state.insQuote > 0 ? state.insQuote : Math.round(s.pc.insurance); iq.classList.toggle("is-est", !(state.insQuote > 0)); }
 
-    const lst = s.lenderSurplus >= 0 ? { cls: "good", label: "Likely yes" } : { cls: "bad", label: "Likely no" };
+    const lst = s.lenderSurplus >= 0 ? { cls: "good", label: "Likely to pass" } : { cls: "bad", label: "Unlikely to pass" };
     const lp = $("lPill"); lp.className = "pill " + lst.cls; lp.lastElementChild.textContent = lst.label;
     $("lenderWhyTab").hidden = s.lenderSurplus >= 0; if (s.lenderSurplus < 0) $("lenderWhyTab").innerHTML = lenderNoteHtml(s, st);
     const usingHem = s.lenderLiving > s.declaredLiving;
@@ -3039,7 +3041,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     if (state.fhb && state.own !== "none") flags.push(["warn", "i", "First home buyer schemes, the grant and stamp duty relief aren't counted, because you own a property now."]);
     if (!state.cardLimits) flags.push(["warn", "i", "If you have credit cards, add their limits in the Deposit & loan step. Banks count them, even if they're paid off."]);
     if (s.depCapped) flags.push(["warn", "i", `Your deposit is set to ${fmt(s.depositNeeded)}, not the ${fmt(state.deposit)} entered, so your savings also cover stamp duty and fees.`]);
-    flags.push(short > 0 ? ["bad", "!", `You need ${fmt(s.cashNeeded)} to buy, ${fmt(short)} more than you have now.`] : ["good", "✓", `You have the ${fmt(s.cashNeeded)} needed to buy, including stamp duty.`]);
+    flags.push(short > 0 ? ["bad", "!", `The estimated money needed to buy is ${fmt(s.cashNeeded)}, ${fmt(short)} more than the savings entered.`] : ["good", "✓", `The savings entered cover the estimated ${fmt(s.cashNeeded)} needed to buy, including stamp duty.`]);
     flags.push(s.afterStress < 0 ? ["bad", "!", `If rates rose to ${testRate}%, the repayment would be ${fmt(s.repayStress)} and your budget would go ${fmt(s.afterStress)} a month. Banks check this before approving a loan.`] : ["good", "✓", `If rates rose to ${testRate}%, the repayment would be ${fmt(s.repayStress)} and you'd still have ${fmt(s.afterStress)} left each month.`]);
     const chg = s.after - s.now;
     flags.push([chg < 0 ? "warn" : "good", chg < 0 ? "↓" : "↑", `Each month you'd have ${fmt(Math.abs(chg))} ${chg < 0 ? "less" : "more"} than now (your rent and bills are replaced by the new home's costs).`]);
@@ -3112,7 +3114,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       ["Left over now", `${fmt(s.now)} a month`],
       ["Total costs after buying", `${fmt(s.totalCosts)} a month (living costs, loan repayment, rates, bills and insurance)`],
       ["Left over after buying", `${fmt(s.after)} a month (${st.budget.toLowerCase()}${st.lenderOk ? "" : ", but a lender may say no"})`],
-      ["Would a bank say yes?", `${lst.label} (${fmt(s.lenderSurplus)} left over on the bank's test)`],
+      ["Lender check (estimate)", `${lst.label} (${fmt(s.lenderSurplus)} left over on the bank's test)`],
       ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(funds())} available${s.propCash ? ` (savings ${fmt(state.savings)} plus ${fmt(s.propCash)} from current property)` : ""}`],
       ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
     ];
@@ -3276,7 +3278,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     return { max: Math.floor(lo / 5000) * 5000, why: why(hi) };
   }
   function upTo(sub) { const u = upToInfo(sub); return u ? u.max : null; }
-  const LIMIT_TEXT = { savings: "your savings (deposit, stamp duty and fees)", bank: "what a bank would likely lend", budget: "keeping at least 5% of your pay left over each month" };
+  const LIMIT_TEXT = { savings: "your savings (deposit, stamp duty and fees)", bank: "our rough lender check", budget: "keeping at least 5% of your pay left over each month" };
   const shortMoney = v => v >= 1e6 ? "$" + (v / 1e6).toFixed(2) + "m" : "$" + Math.round(v / 1000) + "k";
 
   // ---------- Schemes checker ----------
@@ -3287,18 +3289,18 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     // 5% Deposit Scheme
     if (!fhb) add("no", "5% Deposit Scheme", owns ? "For first home buyers. You told us you own a property." : "For first home buyers. Tick “first home buyer” in the deposit and loan step if this is your first home.", "https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme", "Official details");
     else if (price > SCHEME_CAP) add("no", "5% Deposit Scheme", `Buy with a 5% deposit and no lenders mortgage insurance, but the Adelaide price cap is ${fmt(SCHEME_CAP)} and this home is ${fmt(price)}.`, "https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme", "Official details");
-    else add("yes", "5% Deposit Scheme", `Likely suits you: buy with as little as 5% deposit and no lenders mortgage insurance. Price cap ${fmt(SCHEME_CAP)} in Adelaide; no income limit. You generally can't keep more than 6 months of living costs and repayments in savings after buying.`, "https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme", "Official details");
+    else add("yes", "5% Deposit Scheme", `You may be eligible: buy with as little as 5% deposit and no lenders mortgage insurance. Price cap ${fmt(SCHEME_CAP)} in Adelaide; no income limit. You generally can't keep more than 6 months of living costs and repayments in savings after buying.`, "https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme", "Official details");
     // Help to Buy
     const incCap = couple ? 165000 : 103000;
     if (owns) add("no", "Help to Buy (shared equity)", "For people who don't own a property.", "https://www.housingaustralia.gov.au/support-buy-home/help-to-buy", "Official details");
     else if (gross > incCap || price > SCHEME_CAP) add("no", "Help to Buy (shared equity)", `The government buys up to 40% of a new home or 30% of an existing one, so you borrow less. Limits: income up to ${fmt(incCap)} before tax ${couple ? "for a couple" : "for one person"} (yours is estimated at ${fmt(gross)}) and price up to ${fmt(SCHEME_CAP)}.`, "https://www.housingaustralia.gov.au/support-buy-home/help-to-buy", "Official details");
     else add("maybe", "Help to Buy (shared equity)", `You may qualify: the government buys up to ${state.newBuild ? "40%" : "30%"} of the home, so you borrow less, with as little as 2% deposit. Your estimated income (${fmt(gross)}) and the price are within the limits. Places are limited.`, "https://www.housingaustralia.gov.au/support-buy-home/help-to-buy", "Official details");
     // FHOG
-    if (fhb && state.newBuild) add("yes", "First Home Owner Grant", `Likely suits you: up to ${fmt(FHOG)} towards a new home. Already counted in your results.`, "https://revenuesa.sa.gov.au/FHOG/grant-details", "RevenueSA");
+    if (fhb && state.newBuild) add("yes", "First Home Owner Grant", `You may be eligible: up to ${fmt(FHOG)} towards a new home. Already counted in your results.`, "https://revenuesa.sa.gov.au/FHOG/grant-details", "RevenueSA");
     else add("no", "First Home Owner Grant", fhb ? `Up to ${fmt(FHOG)}, but only for new homes, off-the-plan homes or building. Tick "new build" in the deposit and loan step if that's your plan.` : `Up to ${fmt(FHOG)} for first home buyers building or buying a new home.`, "https://revenuesa.sa.gov.au/FHOG/grant-details", "RevenueSA");
     // Stamp duty relief
     const duty = stampDuty(price);
-    if (fhb && state.newBuild) add("yes", "Stamp duty relief", `Likely suits you: no stamp duty on a new home, saving about ${fmt(duty)}. Already counted.`, "https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief", "RevenueSA");
+    if (fhb && state.newBuild) add("yes", "Stamp duty relief", `You may be eligible: no stamp duty on a new home, saving about ${fmt(duty)}. Already counted.`, "https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief", "RevenueSA");
     else add("no", "Stamp duty relief", fhb ? `First home buyers pay no stamp duty on new homes, off-the-plan homes or land to build on. On an existing home like this one, duty is about ${fmt(duty)}.` : "Full relief is for first home buyers buying new homes or land.", "https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief", "RevenueSA");
     // HomeStart
     // HomeStart's Starter and Advantage loans: household income up to $110,000 a year after tax
@@ -3349,7 +3351,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   // ---------- Share your results (results only, never the figures entered) ----------
   // The link carries a small snapshot of the results page in the part after "#", which browsers never send to a server.
   const svMonth = m => { const d = new Date(); d.setMonth(d.getMonth() + m); return d.toLocaleDateString("en-AU", { month: "long", year: "numeric" }); };
-  const bankWord = s => s.lenderSurplus >= 0 ? "Likely yes" : s.lenderSurplus > -300 ? "May say no" : "Likely to say no";
+  const bankWord = s => s.lenderSurplus >= 0 ? "Likely to pass" : s.lenderSurplus > -300 ? "May not pass" : "Unlikely to pass";
   function shareSnap() {
     const sub = subById(state.suburb), s = scenario(sub), st = status(s);
     let w = null;
@@ -3378,7 +3380,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     let o; try { o = JSON.parse(unb64url(location.hash.slice(3))); } catch (e) { return false; }
     if (!o || o.v !== 1) return false;
     const E = escapeHtml, home = location.href.replace(/#.*$/, "");
-    const when = o.ok ? "They could buy here now, based on the figures they entered." : o.w === "now" ? "A bigger deposit from their savings would let them buy here now." : o.w ? `They could be ready to buy here around ${E(o.w)}, if they keep saving.` : "Not within the next few years on their current figures.";
+    const when = o.ok ? "On the figures they entered, buying here looks possible." : o.w === "now" ? "On their figures, a larger deposit from their savings would pass these checks now." : o.w ? `On their figures, saving could reach this around ${E(o.w)}.` : "Not within the next few years on the figures entered.";
     $("sharedView").innerHTML = `
       <div class="sv-card sv-top"><div class="sv-sub small">Fit To Buy results, shared on ${E(o.d)}</div>
         <h1 id="svH">Buying a home in ${E(o.n)} for ${fmt(o.p)}</h1>
@@ -3386,16 +3388,16 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
         <div><span class="pill ${E(o.cls)}"><span class="dot"></span><span>${E(o.lb)}</span></span></div></div>
       <div class="sv-card">
         <div class="sv-facts">
-          <div><span>Would a bank say yes?</span><b>${E(o.b)}</b></div>
+          <div><span>Lender check (estimate)</span><b>${E(o.b)}</b></div>
           <div><span>Loan</span><b>${fmt(o.loan)}</b><span>${fmt(o.r)} a month at ${E(String(o.rt))}% over ${E(String(o.tm))} years</span></div>
           <div><span>Money needed with a 5% deposit</span><b>${fmt(o.cash5)}</b><span>Deposit, stamp duty and fees</span></div>
           <div><span>Council</span><b>${E(o.c === "Other" ? "Other" : "City of " + o.c)}</b></div>
         </div>
         <p>${when}</p>
-        ${o.sch && o.sch.length ? `<div><b>Government help they may get</b><ul>${o.sch.map(x => `<li>${E(x)}</li>`).join("")}</ul></div>` : ""}
+        ${o.sch && o.sch.length ? `<div><b>Government schemes they may be eligible for</b><ul>${o.sch.map(x => `<li>${E(x)}</li>`).join("")}</ul></div>` : ""}
       </div>
       ${o.sl && o.sl.length ? `<div class="sv-card"><b>Other suburbs on their shortlist</b><ul class="sv-list">${o.sl.map(([n, p, l, lb, c]) => `<li class="sv-row"><b>${E(n)}</b><span class="pill ${E(c)}"><span class="dot"></span><span>${E(lb)}</span></span><span class="small muted">${fmt(p)} · ${fmt(l)} left each month</span></li>`).join("")}</ul></div>` : ""}
-      <p class="sv-note">These are estimates from the figures they entered on ${E(o.d)}, not a lender's assessment or financial advice. Prices and interest rates change, so the numbers won't update.</p>
+      <p class="sv-note">General information only, not financial or credit advice. These are estimates from the figures they entered on ${E(o.d)}, not a lender's assessment, and they don't consider anyone's full situation. Prices and interest rates change, so the numbers won't update. Speak to a licensed mortgage broker or financial adviser before making decisions.</p>
       <div class="btn-row"><button type="button" class="primary" id="svStart">Check your own budget</button></div>`;
     $("sharedView").hidden = false; window.scrollTo(0, 0);
     document.body.classList.add("shared"); document.body.classList.remove("landing");
@@ -3800,7 +3802,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
         <table><tr><td>80% of ${fmt(state.ownValue)} (what lenders usually lend against without mortgage insurance)</td><td class="r">${fmt(state.ownValue * 0.8)}</td></tr><tr><td>Loan still owing</td><td class="r">−${fmt(state.ownLoan)}</td></tr>
         <tr class="t"><td>Using ${fmt(used)}: total for deposit and costs (with ${fmt(state.savings)} savings)</td><td class="r">${fmt(funds())}</td></tr></table>
         <p class="small">Equity is borrowed against your current home, so it adds about ${fmt(s.eqRepay)} a month in repayments. Your current loan repayment of ${fmt(s.ownRepay)} and its costs of about ${fmt(s.ownHold)} a month continue${state.ownRent ? `, and rent adds about ${fmt(s.rentNet)} a month` : ""}. These are included in your results.</p>
-        <ul class="own-notes"><li>Some lenders go above 80% with mortgage insurance, and all of them check you can afford both loans (the "Would a bank say yes?" check covers this).</li><li>If it's rented, SA land tax may apply and tax deductions may help. Neither is included here, so ask an accountant.</li></ul>
+        <ul class="own-notes"><li>Some lenders go above 80% with mortgage insurance, and all of them check you can afford both loans (our rough lender check covers this).</li><li>If it's rented, SA land tax may apply and tax deductions may help. Neither is included here, so ask an accountant.</li></ul>
         ${state.loanMode === "deposit" ? `<div class="btn-row"><button type="button" id="ownToDep">Put it towards my deposit</button><span class="small muted">Sets the deposit to what's left after stamp duty and costs for ${escapeHtml(s.sub.name)}.</span></div>` : ""}`;
     }
     const btn = $("ownToDep");
@@ -3810,7 +3812,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 
   // ---------- Plain-English explanations ----------
   const GLOSSARY = {
-    bank: ["Would a bank say yes?", "Banks check you could still afford the loan if interest rates rose about 3%, using their own minimum living costs and counting credit card limits as if they were used. This is a rough version of that check. Only a lender can approve a loan."],
+    bank: ["Lender check (estimate)", "Banks check you could still afford the loan if interest rates rose about 3%, using their own minimum living costs and counting credit card limits as if they were used. This is a rough version of that check. Only a lender can approve a loan."],
     lmi: ["Lenders mortgage insurance (LMI)", "A one-off cost charged when your deposit is under 20% of the price. It protects the lender, not you. It's often added to the loan. The 5% Deposit Scheme can remove it for first home buyers."],
     duty: ["Stamp duty", "A state government tax paid when you buy a property, based on the price. First home buyers in SA pay none on new homes, off-the-plan homes and land to build on."],
     esl: ["Emergency services levy (ESL)", "A yearly SA government charge on every property that funds fire, ambulance and emergency services. It's based on the property's value."],
@@ -3843,17 +3845,17 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   // Plain answer to "Can I buy here?", with what stands in the way
   function canBuyHtml(s, st, sub) {
     const short = s.cashNeeded - funds(), u = upToInfo(sub);
-    if (st.canBuy) return `<div class="take-head good"><b>Yes, you could buy here at this price.</b> You have the ${fmt(s.cashNeeded)} needed and a bank would likely approve the ${fmt(s.loan)} loan.${s.depCapped ? ` That uses a ${fmt(s.depositNeeded)} deposit, as the rest of your savings goes on stamp duty and fees.` : ""}</div>`;
+    if (st.canBuy) return `<div class="take-head good"><b>On your figures, buying here at this price looks possible.</b> Your savings cover the estimated ${fmt(s.cashNeeded)} needed, and a ${fmt(s.loan)} loan is likely to pass our rough lender check.${s.depCapped ? ` That assumes a ${fmt(s.depositNeeded)} deposit, with the rest of your savings going on stamp duty and fees.` : ""} Only a lender can approve a loan.</div>`;
     const items = [];
     if (short > 0) items.push(`<li><b>${fmt(short)} more savings.</b> Buying at ${fmt(s.price)} needs ${fmt(s.cashNeeded)} (deposit, stamp duty and fees) and you have ${fmt(funds())}.</li>`);
     if (!st.depOk) items.push(`<li><b>A deposit of at least 5%</b> (${fmt(Math.ceil(s.price * 0.05 / 1000) * 1000)}). Most lenders won't go lower.</li>`);
-    if (!st.lenderOk) items.push(`<li><b>A smaller loan.</b> A bank would likely say no to ${fmt(s.loan)} on your income and spending.</li>`);
-    const tip = u && u.max ? `With your savings and income, the most you could likely pay is about <b>${fmt(u.max)}</b>, limited by ${LIMIT_TEXT[u.why] || "your figures"}.${u.max < s.price ? " Try a cheaper suburb, a smaller home, or the “Under $900k” list." : ""}` : "With the savings entered, buying isn't possible yet. The “How to get there” tab shows how long it could take.";
+    if (!st.lenderOk) items.push(`<li><b>A smaller loan.</b> A ${fmt(s.loan)} loan is unlikely to pass our rough lender check on the income and spending entered.</li>`);
+    const tip = u && u.max ? `On the figures entered, our estimate of the highest price that passes these checks is about <b>${fmt(u.max)}</b>, limited by ${LIMIT_TEXT[u.why] || "your figures"}.${u.max < s.price ? " Cheaper suburbs, a smaller home or the “Under $900k” list will show different results." : ""}` : "On the savings entered, these checks don't pass yet. The “How to get there” tab estimates how long saving could take.";
     const save = planSave(s), m = monthsToBuy(sub, save);
     const growth = state.priceGrowth ? ` with prices rising ${state.priceGrowth}% a year` : "";
     const best = m === 0 ? bestAt(sub, s.price) : null;
     const when = m === null ? (save > 0 ? `Saving ${fmt(save)} a month${growth}, you wouldn't catch up with this price within 20 years.` : "You aren't saving anything each month right now, so this can't move closer yet.")
-      : `<b>When you could buy here:</b> about ${monthLabel(m)}, if you keep saving ${fmt(save)} a month${state.priceGrowth ? ` and prices rise ${state.priceGrowth}% a year` : ""}. The “How to get there” tab shows the plan.`;
+      : `<b>Estimated time to reach this price:</b> about ${monthLabel(m)}, if saving continues at ${fmt(save)} a month${state.priceGrowth ? ` and prices rise ${state.priceGrowth}% a year` : ""}. The “How to get there” tab shows the working.`;
     if (m === 0) {
       // Smallest deposit, in $5,000 steps, that passes the bank check and the 5% minimum, within the savings they have
       const passes = d => { const x = withState({ loanMode: "deposit", deposit: d }, () => scenario(sub)); return x.lenderSurplus >= 0 && depShare(x) >= 0.05 - 1e-9 && x.cashNeeded <= funds() + 0.5 && !x.depCapped; };
@@ -3862,9 +3864,9 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       for (let i = 0; i < 24 && hi - lo > 1000; i++) { const mid = (lo + hi) / 2; if (passes(mid)) hi = mid; else lo = mid; }
       let need = Math.ceil(hi / 5000) * 5000; if (!passes(need)) need = Math.ceil(hi / 1000) * 1000;
       const cash = withState({ loanMode: "deposit", deposit: need }, () => scenario(sub)).cashNeeded;
-      return `<div class="take-head warn"><b>You could buy here now with a bigger deposit.</b> You've entered ${fmt(funds())} in savings but a ${fmt(s.depositNeeded)} deposit. A deposit of about <b>${fmt(need)}</b> should be enough for a bank to likely approve the loan, and your savings would still cover stamp duty and fees (${fmt(cash)} in total). If your savings figure isn't right, change it in the Deposit &amp; loan step.</div>`;
+      return `<div class="take-head warn"><b>On your figures, a larger deposit would pass these checks now.</b> You've entered ${fmt(funds())} in savings but a ${fmt(s.depositNeeded)} deposit. With a deposit of about <b>${fmt(need)}</b>, the loan is likely to pass our rough lender check and your savings would still cover stamp duty and fees (${fmt(cash)} in total). If your savings figure isn't right, change it in the Deposit &amp; loan step.</div>`;
     }
-    return `<div class="take-head bad"><b>Not yet at ${fmt(s.price)}.</b> ${when}<br>To buy here now you'd need:<ul style="margin:6px 0;padding-left:18px">${items.join("")}</ul>${tip}</div>`;
+    return `<div class="take-head bad"><b>Not yet at ${fmt(s.price)}, on these figures.</b> ${when}<br>For these checks to pass now, the estimate needs:<ul style="margin:6px 0;padding-left:18px">${items.join("")}</ul>${tip}</div>`;
   }
 
   // ---------- Results hero: headline, doughnut and sliders ----------
@@ -3875,10 +3877,10 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>${st.canBuy ? "left over each month" : "left over each month, if you could buy at this price"}</span><span class="pill ${st.cls}"><span class="dot"></span><span>${st.label}</span></span></div>
       ${canBuyHtml(s, st, sub)}
       <div class="hero-facts">
-        <div><span class="muted small">You could spend up to</span><b>${(() => { const u = upToInfo(sub); return u && u.max ? fmt(u.max) : "Not yet"; })()}</b><span class="small muted">using your ${fmt(funds())} savings as the deposit</span></div>
+        <div><span class="muted small">Estimated top price</span><b>${(() => { const u = upToInfo(sub); return u && u.max ? fmt(u.max) : "Not yet"; })()}</b><span class="small muted">using your ${fmt(funds())} savings as the deposit</span></div>
         <div><span class="muted small">Loan needed</span><b>${fmt(s.loan)}</b><span class="small muted">${fmt(s.repay)} a month</span></div>
         <div><span class="muted small">Money needed to buy</span><b>${fmt(s.cashNeeded)}</b><span class="small" style="color:var(--${short > 0 ? "bad" : "good"})">${short > 0 ? fmt(short) + " short of your " + fmt(funds()) + " savings" : "Covered by your " + fmt(funds()) + " savings"}</span></div>
-        <div><span class="muted small">Would a bank say yes? ${term("bank")}</span><b style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${s.lenderSurplus >= 0 ? "Likely yes" : "Likely fails"}</b></div>
+        <div><span class="muted small">Lender check (estimate) ${term("bank")}</span><b style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${s.lenderSurplus >= 0 ? "Likely to pass" : "Unlikely to pass"}</b></div>
       </div>${st.lenderOk ? "" : `<div class="lender-note">${lenderNoteHtml(s, st)}</div>`}`;
     // Doughnut: where the take-home pay goes
     const living = s.kept + s.commuteNew, running = s.pc.total / 12, left = Math.max(0, s.after), gap = Math.max(0, -s.after);
@@ -3984,7 +3986,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     if (document.activeElement !== $("planSave")) $("planSave").value = state.planSave ?? "";
     const pct = Math.max(0, Math.min(100, funds() / Math.max(1, s.cashNeeded) * 100));
     $("pathHead").innerHTML = `<div><div class="eyebrow">${escapeHtml(sub.name)} · cash needed ${fmt(s.cashNeeded)}</div><div class="when">${whenText(m)}</div>
-        <div class="small muted">${m === 0 ? `${fmt(funds())} available already covers settlement.` : m === null ? `Saving ${fmt(save)} a month won't catch up with prices. Try a cheaper suburb or saving more.` : `Saving ${fmt(save)} a month${state.priceGrowth ? `, with prices up ${state.priceGrowth}% a year` : ""}. ${m} month${m > 1 ? "s" : ""} away.`}</div></div>
+        <div class="small muted">${m === 0 ? `${fmt(funds())} available already covers settlement.` : m === null ? `At ${fmt(save)} a month, saving doesn't catch up with prices in this estimate. A cheaper suburb or a higher saving rate would change this.` : `Saving ${fmt(save)} a month${state.priceGrowth ? `, with prices up ${state.priceGrowth}% a year` : ""}. ${m} month${m > 1 ? "s" : ""} away.`}</div></div>
       <div class="num" style="font-weight:700">${Math.round(pct)}%</div>
       <div class="progress" role="img" aria-label="${Math.round(pct)}% of the cash needed is saved"><span style="width:${pct.toFixed(1)}%"></span></div>`;
     $("pathSubName").textContent = sub.name;
@@ -3992,7 +3994,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       [funds() >= s.cashNeeded, `Money available covers the ${fmt(s.cashNeeded)} needed at settlement`, `${fmt(s.cashNeeded - funds())} more savings needed`],
       [depShare(s) >= 0.05 - 1e-9, "Deposit is at least 5% of the price", `Deposit is under 5% (${Math.round(depShare(s) * 100)}%), below most lenders' minimum`],
       [s.after >= state.income * 0.05, `Budget after buying is ${st.budget.toLowerCase()} (${fmt(s.after)} left each month)`, `Budget after buying is ${st.budget.toLowerCase()} (${fmt(s.after)} a month)`],
-      [s.lenderSurplus >= 0, "A bank would likely say yes to this loan", "A bank would likely say no to this loan as it stands"]
+      [s.lenderSurplus >= 0, "This loan is likely to pass our rough lender check", "This loan is unlikely to pass our rough lender check as entered"]
     ];
     const ready = checks.every(c => c[0]);
     $("pathReady").innerHTML = checks.map(([ok, yes, no]) => `<div class="flag ${ok ? "good" : "bad"}"><span class="ic" aria-hidden="true">${ok ? "✓" : "!"}</span><span>${ok ? yes : no}</span></div>`).join("") +
@@ -4071,7 +4073,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     }
     if (s.lenderSurplus < 0) {
       const dep = Math.ceil(-s.lenderSurplus / perDollarStress / 1000) * 1000;
-      levers.push(["!", `A bank would likely say no: ${fmt(-s.lenderSurplus)} a month short on its test`, `Borrowing about ${fmt(dep)} less should pass at the ${(state.rate + state.buffer).toFixed(2)}% test rate. Cutting card limits also helps (each $1,000 frees ${fmt(1000 * state.cardRate / 100)} a month).`]);
+      levers.push(["!", `Rough lender check: ${fmt(-s.lenderSurplus)} a month short`, `On these figures, borrowing about ${fmt(dep)} less would pass at the ${(state.rate + state.buffer).toFixed(2)}% test rate. Lower card limits also change the check (each $1,000 counts as ${fmt(1000 * state.cardRate / 100)} a month).`]);
       text.push(`For a bank to likely say yes, borrow about ${fmt(dep)} less or lower your credit card limits.`);
     }
     if (short > 0) {
@@ -4082,7 +4084,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     // Suburbs that work as they are
     const ok = subs().map(x => scenario(x)).filter(x => x.after >= target && x.lenderSurplus >= 0 && x.cashNeeded <= funds()).sort((a, b) => b.price - a.price);
     const best = ok.slice(0, 5);
-    text.push(best.length ? `Suburbs that meet the goal, where a bank would likely say yes and savings cover the costs: ${best.map(x => `${x.sub.name} (${fmt(x.price)})`).join(", ")}.` : "No suburb in the list meets the goal, passes the lender check and is covered by savings for this home.");
+    text.push(best.length ? `Suburbs that meet the goal, pass the rough lender check and are covered by savings on these figures: ${best.map(x => `${x.sub.name} (${fmt(x.price)})`).join(", ")}.` : "No suburb in the list meets the goal, passes the lender check and is covered by savings for this home.");
     return { goal, goalLabel, target, gap, meets, head, levers, best, okCount: ok.length, text };
   }
   function renderTake(t) {
@@ -4091,7 +4093,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       ${t.levers.length ? `<div class="label-like">${t.meets ? "Still to sort out" : "Any one of these would get there"}</div><div class="levers">${t.levers.map(([i, h, d]) => `<div class="lever"><span class="li" aria-hidden="true">${i}</span><div><b>${h}</b><span class="lv">${d}</span></div></div>`).join("")}</div>` : ""}
       <div class="label-like" style="margin-top:14px">Suburbs that work for this home${t.okCount ? ` <span class="muted small">(${t.okCount} of ${subs().length}, highest price first)</span>` : ""}</div>
       ${t.best.length ? `<div class="take-subs">${t.best.map(x => `<button type="button" class="take-sub" data-sub="${x.sub.id}"><span><b>${escapeHtml(x.sub.name)}</b> <span class="muted num">${fmt(x.price)}</span></span><span class="num">${fmt(x.after)} left</span></button>`).join("")}</div>`
-        : `<p class="muted small">None of the ${subs().length} suburbs meet the goal, where a bank would likely say yes and savings cover the costs, for a ${state.bedrooms === 5 ? "5+" : state.bedrooms}-bedroom home. Try fewer bedrooms or a lower goal.</p>`}
+        : `<p class="muted small">None of the ${subs().length} suburbs meet the goal, pass the rough lender check and are covered by savings, for a ${state.bedrooms === 5 ? "5+" : state.bedrooms}-bedroom home on these figures. Fewer bedrooms or a lower goal would change the result.</p>`}
       <p class="hint" style="margin-top:10px">Each option is worked out on its own, using the same rate, deposit and costs.</p>`;
     $("takeBody").querySelectorAll("[data-sub]").forEach(b => b.onclick = () => { const id = b.dataset.sub; if (!state.shortlist.includes(id)) state.shortlist.push(id); selectSuburb(id); });
   }
@@ -4535,8 +4537,8 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       const perDollar = repayment(1, state.rate, state.term);
       const lvr = Math.round(s.lvr * 100);
       const tips = [];
-      if (gap > 0) tips.push(`To be comfortable here (${fmt(target)} left each month) you'd need about ${fmt(gap)} a month more, or to borrow around ${fmt(Math.ceil(gap / perDollar / 1000) * 1000)} less.`);
-      if (short > 0) tips.push(`You'd need about ${fmt(short)} more in savings for the deposit and costs${s.now > 0 ? "" : ""}.`);
+      if (gap > 0) tips.push(`To have ${fmt(target)} left each month here, the estimate needs about ${fmt(gap)} a month more, or a loan around ${fmt(Math.ceil(gap / perDollar / 1000) * 1000)} smaller.`);
+      if (short > 0) tips.push(`The estimate needs about ${fmt(short)} more in savings for the deposit and costs.`);
       if (lvr > 95) tips.push(`Your savings would cover less than a 5% deposit after stamp duty. Most lenders need at least 5%.`);
       if (s.lenderSurplus < 0) tips.push("A lender would likely want a bigger deposit or lower spending before approving this loan.");
       if (fhbOk() && s.schemeUsed) tips.push("As a first home buyer you may qualify for the 5% Deposit Scheme, which removes mortgage insurance.");
