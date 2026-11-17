@@ -1230,6 +1230,34 @@ body { background: var(--bg); }
   .hero-band .land-hero, .hero-band .land-hero:has(.land-preview[hidden]) { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); }
   .land-logo { display: block; justify-self: center; width: min(100%, 400px); }
 }
+
+/* Share your results */
+.share-panel { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; border-left: 4px solid var(--orange); }
+.share-panel > div:first-child { flex: 1 1 320px; }
+.share-panel h3 { margin: 0 0 4px; }
+.share-btns { display: grid; gap: 8px; }
+.btn-like { display: flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink) !important; font-weight: 700; text-decoration: none; }
+.btn-like:hover { border-color: var(--accent); }
+#shLink { width: 100%; font-size: 14px; color: var(--muted); }
+body.shared .wrap > :not(#sharedView) { display: none !important; }
+body.shared .site-menu, body.shared .wiz-top { display: none !important; }
+.shared-view { max-width: 760px; margin: 0 auto; display: grid; gap: 16px; }
+.sv-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: grid; gap: 16px; }
+.sv-top { background: var(--navy); color: #fff; border-color: var(--navy); }
+.sv-top .sv-sub { color: #c7d4e6; }
+.sv-top h1 { color: #fff; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.15; margin: 0; }
+.sv-big { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.2rem, 7vw, 3rem); line-height: 1; }
+.sv-big.neg { color: #ffb4a8; }
+.sv-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; }
+.sv-facts div { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.sv-facts b { display: block; font-family: var(--font-display); font-size: 1.15rem; }
+.sv-facts span { font-size: 0.82rem; color: var(--muted); }
+.sv-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.sv-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.sv-row .small { grid-column: 1 / -1; }
+.sv-note { font-size: 0.85rem; color: var(--muted); }
+@media (max-width: 600px) { .sv-facts { grid-template-columns: 1fr 1fr; } .sv-card { padding: 18px 16px; } }
+#svStart { background: var(--orange); border-color: var(--orange); color: var(--navy); font-weight: 800; min-height: 50px; padding: 12px 22px; }
 /* ---------- Phones: less scrolling, the answer first ---------- */
 .m-fold-head { display: none; }
 @media (max-width: 700px) {
@@ -1347,6 +1375,7 @@ body { background: var(--bg); }
 </div>
 
 <div class="wrap">
+<section class="shared-view" id="sharedView" hidden aria-labelledby="svH"></section>
   <header class="top broker-only pro-only">
     <div>
       <div class="eyebrow">185 Adelaide suburbs across six councils, west, north and south, with 2026-27 costs</div>
@@ -1504,11 +1533,6 @@ body { background: var(--bg); }
     <div class="hero-top">
       <div><div class="eyebrow">Your results</div><h2 id="heroH">Here's how buying looks</h2><p class="muted small">Tap any step above to go back and change it, or use View all your entries to see and edit everything on one page.</p></div>
       <div class="btn-row"><button type="button" id="wizEdit">Go through the steps again</button><button type="button" id="shareBtn">Share these results</button><button type="button" class="primary" id="toLead">Speak to a broker</button></div>
-    </div>
-    <div class="share-box" id="shareBox" hidden>
-      <label for="shareLink" style="margin:0">Link to these results</label>
-      <div class="share-row"><input id="shareLink" type="text" readonly><button type="button" id="shareCopy">Copy</button></div>
-      <p class="hint">Anyone with this link can see the figures you entered. Send it to a partner or keep it to come back to later.</p>
     </div>
     <div class="hero-grid">
       <div class="hero-main" id="hHead"></div>
@@ -2002,6 +2026,11 @@ body { background: var(--bg); }
     <div class="lead-done" id="leadDone" hidden></div>
   </section>
 
+  <section class="panel broker-only share-panel" aria-labelledby="shareH">
+    <div><h3 id="shareH">Share your results</h3>
+    <p class="muted small">Send a link by text or email to a partner, family member or broker. It shows only the results page: the suburb, price, what's left each month, the bank check and your shortlist. It doesn't include your pay, spending, savings, debts or anything else you typed in.</p></div>
+    <div class="btn-row"><button type="button" class="primary" id="shareBtn2">Share your results</button></div>
+  </section>
   <footer class="fine broker-only" data-mfold="Sources and notes">
     <p>Prototype for discussion only. It is an estimate, not credit or financial advice, and not a lender serviceability assessment. Council rates, sewerage and the emergency services levy are worked out from the purchase price unless a property's own figures are entered; in practice they use the Valuer-General's capital value, which is usually lower.</p>
     <div class="sources">
@@ -2162,6 +2191,22 @@ body { background: var(--bg); }
       </ol>
       <div class="btn-row"><button type="button" class="primary" id="tlGo">Check what I could afford</button><button type="button" id="tlCosts">See upfront costs</button></div>
       <p class="small muted">General information only, not legal or financial advice. Cooling-off rules: <a href="https://lawhandbook.sa.gov.au/ch23s08s08s01.php" target="_blank" rel="noopener">SA Law Handbook</a> and the Land and Business (Sale and Conveyancing) Regulations 2025.</p>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="dlgShare" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dsH" style="width:min(520px,100%)">
+    <div class="dh"><h2 id="dsH">Share your results</h2><button type="button" class="close">Close</button></div>
+    <div class="help-body">
+      <p>Anyone with this link sees your results page for <b id="shSub"></b> and your shortlist. They can't see or change what you entered: no pay, spending, savings or debts.</p>
+      <div class="share-btns">
+        <button type="button" class="primary" id="shNative" hidden>Share…</button>
+        <a class="btn-like" id="shSms" href="#">Send by text message</a>
+        <a class="btn-like" id="shMail" href="#">Send by email</a>
+        <button type="button" id="shCopy">Copy link</button>
+      </div>
+      <input id="shLink" type="text" readonly aria-label="Link to your results">
+      <p class="small muted">The figures are fixed as of today. If you change anything later, share a new link.</p>
     </div>
   </div>
 </div>
@@ -3738,6 +3783,65 @@ body { background: var(--bg); }
     $("factsTable").querySelectorAll("[data-sort]").forEach(b => b.onclick = () => { const k = b.dataset.sort; if (factsSort === k) factsDir = -factsDir; else { factsSort = k; factsDir = 1; } renderFacts(subById(state.suburb)); });
   }
 
+
+  // ---------- Share your results (results only, never the figures entered) ----------
+  // The link carries a small snapshot of the results page in the part after "#", which browsers never send to a server.
+  const svMonth = m => { const d = new Date(); d.setMonth(d.getMonth() + m); return d.toLocaleDateString("en-AU", { month: "long", year: "numeric" }); };
+  const bankWord = s => s.lenderSurplus >= 0 ? "Likely yes" : s.lenderSurplus > -300 ? "May say no" : "Likely to say no";
+  function shareSnap() {
+    const sub = subById(state.suburb), s = scenario(sub), st = status(s);
+    let w = null;
+    if (!st.canBuy) { const m = monthsToBuy(sub, planSave(s)); w = m === null ? "" : m === 0 ? "now" : svMonth(m); }
+    const sch = [...document.querySelectorAll(".scheme.yes b")].map(b => b.textContent.trim()).filter(Boolean).slice(0, 5);
+    const sl = (state.shortlist || []).filter(id => id !== state.suburb).map(subById).filter(Boolean).slice(0, 6).map(x => { const y = scenario(x), t = status(y); return [x.name, Math.round(y.price), Math.round(y.after), t.label, t.cls]; });
+    return { v: 1, d: new Date().toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }), n: sub.name, c: sub.council, p: Math.round(s.price),
+      l: Math.round(s.after), lb: st.label, cls: st.cls, ok: st.canBuy ? 1 : 0, b: bankWord(s), loan: Math.round(s.loan), r: Math.round(s.repay), rt: state.rate, tm: state.term,
+      // Cash needed with a 5% deposit depends only on the price and buyer type, so it doesn't reveal their savings
+      cash5: Math.round(withState({ savings: 1e9, loanMode: "deposit", deposit: Math.ceil(s.price * 0.05) }, () => scenario(sub).cashNeeded)), w, sch, sl };
+  }
+  function shareUrl() { const base = SITE.siteUrl || location.href.replace(/#.*$/, ""); return `${base}#v.${b64url(JSON.stringify(shareSnap()))}`; }
+  function openShareDlg() {
+    const link = shareUrl(), sub = subById(state.suburb);
+    $("shSub").textContent = sub.name; $("shLink").value = link;
+    const msg = `Here are my home buying results for ${sub.name} from Fit To Buy: ${link}`;
+    $("shSms").href = "sms:?&body=" + encodeURIComponent(msg);
+    $("shMail").href = "mailto:?subject=" + encodeURIComponent("My Fit To Buy results for " + sub.name) + "&body=" + encodeURIComponent(msg);
+    $("shNative").hidden = !navigator.share;
+    $("shNative").onclick = () => navigator.share({ title: "My Fit To Buy results", text: `My home buying results for ${sub.name}`, url: link }).catch(() => {});
+    $("shCopy").textContent = "Copy link";
+    openDlg("dlgShare");
+  }
+  $("shCopy").onclick = async () => { try { await navigator.clipboard.writeText($("shLink").value); $("shCopy").textContent = "Copied"; } catch (e) { $("shLink").select(); } };
+  function showShared() {
+    let o; try { o = JSON.parse(unb64url(location.hash.slice(3))); } catch (e) { return false; }
+    if (!o || o.v !== 1) return false;
+    const E = escapeHtml, home = location.href.replace(/#.*$/, "");
+    const when = o.ok ? "They could buy here now, based on the figures they entered." : o.w === "now" ? "A bigger deposit from their savings would let them buy here now." : o.w ? `They could be ready to buy here around ${E(o.w)}, if they keep saving.` : "Not within the next few years on their current figures.";
+    $("sharedView").innerHTML = `
+      <div class="sv-card sv-top"><div class="sv-sub small">Fit To Buy results, shared on ${E(o.d)}</div>
+        <h1 id="svH">Buying a home in ${E(o.n)} for ${fmt(o.p)}</h1>
+        <div><div class="sv-big${o.l < 0 ? " neg" : ""}">${fmt(o.l)}</div><div class="sv-sub">left over each month after buying, if they could buy at this price</div></div>
+        <div><span class="pill ${E(o.cls)}"><span class="dot"></span><span>${E(o.lb)}</span></span></div></div>
+      <div class="sv-card">
+        <div class="sv-facts">
+          <div><span>Would a bank say yes?</span><b>${E(o.b)}</b></div>
+          <div><span>Loan</span><b>${fmt(o.loan)}</b><span>${fmt(o.r)} a month at ${E(String(o.rt))}% over ${E(String(o.tm))} years</span></div>
+          <div><span>Money needed with a 5% deposit</span><b>${fmt(o.cash5)}</b><span>Deposit, stamp duty and fees</span></div>
+          <div><span>Council</span><b>${E(o.c === "Other" ? "Other" : "City of " + o.c)}</b></div>
+        </div>
+        <p>${when}</p>
+        ${o.sch && o.sch.length ? `<div><b>Government help they may get</b><ul>${o.sch.map(x => `<li>${E(x)}</li>`).join("")}</ul></div>` : ""}
+      </div>
+      ${o.sl && o.sl.length ? `<div class="sv-card"><b>Other suburbs on their shortlist</b><ul class="sv-list">${o.sl.map(([n, p, l, lb, c]) => `<li class="sv-row"><b>${E(n)}</b><span class="pill ${E(c)}"><span class="dot"></span><span>${E(lb)}</span></span><span class="small muted">${fmt(p)} · ${fmt(l)} left each month</span></li>`).join("")}</ul></div>` : ""}
+      <p class="sv-note">These are estimates from the figures they entered on ${E(o.d)}, not a lender's assessment or financial advice. Prices and interest rates change, so the numbers won't update.</p>
+      <div class="btn-row"><button type="button" class="primary" id="svStart">Check your own budget</button></div>`;
+    $("sharedView").hidden = false; window.scrollTo(0, 0);
+    document.body.classList.add("shared"); document.body.classList.remove("landing");
+    $("svStart").onclick = () => { history.replaceState(null, "", home); location.reload(); };
+    document.title = `Fit To Buy results for ${o.n}`;
+    return true;
+  }
+
   // ---------- Share results by link (no account) ----------
   const SHARE_SKIP = ["merchants", "incomeSources", "incomeDetected", "petrol", "checkins", "goals", "intakeNotes", "isExample"];
   function shareToken() {
@@ -5045,9 +5149,8 @@ body { background: var(--bg); }
   $("landBroker").onclick = () => { setPro(true); showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
   $("brandName").closest(".brand").style.cursor = "pointer";
   $("brandName").closest(".brand").onclick = () => { if (!isIntake() && !isOpen()) showLanding(true); };
-  $("shareBtn").onclick = makeShare;
+  $("shareBtn").onclick = openShareDlg; $("shareBtn2").onclick = openShareDlg;
   $("subFacts").addEventListener("toggle", () => renderFacts(subById(state.suburb)));
-  $("shareCopy").onclick = () => { const t = $("shareLink"); try { navigator.clipboard.writeText(t.value).then(() => { $("shareCopy").textContent = "Copied"; setTimeout(() => $("shareCopy").textContent = "Copy", 1500); }, () => { t.select(); }); } catch (e) { t.select(); } };
   document.addEventListener("click", e => { const t = e.target.closest(".term"); if (t) { e.preventDefault(); e.stopPropagation(); showTerm(t); return; } if (!e.target.closest("#termPop")) $("termPop").hidden = true; });
   $("toSources").onclick = () => { const f = document.querySelector("footer.fine"); if (!f) return; if (document.body.classList.contains("wiz")) { wizOn = false; renderWiz(); render(); } setTimeout(() => f.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
   document.querySelectorAll("#ownModes [data-own]").forEach(b => b.addEventListener("click", () => setOwn(b.dataset.own)));
@@ -5100,7 +5203,7 @@ body { background: var(--bg); }
   // ---------- Start ----------
   syncInputs();
   if (isIntake() || isOpen()) applyMode();
-  else if (location.hash.startsWith("#s.")) { loadSample(); if (readShare()) { wizOn = false; } $("exampleNote").hidden = true; }
+  else if (location.hash.startsWith("#v.")) { loadSample(); if (!showShared()) showLanding(true); }
   else if (location.hash.startsWith("#r.")) { loadSample(); if (readResume()) { $("exampleNote").hidden = true; showLanding(false); } else showLanding(true); }
   else { loadSample(); showLanding(true); }
   dirty = false; updateSavedState(); applyBrand(); renumberSteps();
