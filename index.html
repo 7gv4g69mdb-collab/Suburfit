@@ -1262,6 +1262,13 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 @media (max-width: 600px) { .sv-facts { grid-template-columns: 1fr 1fr; } .sv-card { padding: 18px 16px; } }
 #svStart { background: var(--orange); border-color: var(--orange); color: var(--navy); font-weight: 800; min-height: 50px; padding: 12px 22px; }
 .gi-note { font-size: 0.8rem; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 0; }
+
+/* Privacy policy */
+.policy h3 { font-size: 1.02rem; margin: 14px 0 2px; }
+.policy p { margin: 0 0 8px; }
+.policy-sum { background: var(--accent-soft); border-radius: 12px; padding: 12px 16px; }
+.policy-sum ul { margin: 6px 0 0; padding-left: 18px; }
+.pp-link { font-size: 0.85rem; }
 /* ---------- Phones: less scrolling, the answer first ---------- */
 .m-fold-head { display: none; }
 @media (max-width: 700px) {
@@ -1366,7 +1373,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
         <button type="button" role="menuitem" data-go="schemes">First home buyer schemes<span>5% Deposit Scheme, Help to Buy, grants</span></button>
         <button type="button" role="menuitem" data-go="faq">Common questions<span>Is it free, is it accurate, is it advice?</span></button>
         <button type="button" role="menuitem" data-go="about">About Fit To Buy<span>Who we are and how we're paid</span></button>
-        <button type="button" role="menuitem" data-go="privacy">Privacy<span>How your figures are handled</span></button>
+        <button type="button" role="menuitem" data-go="privacy">Privacy policy<span>What we collect and how it is used</span></button>
         <hr>
         <button type="button" role="menuitem" data-go="brokers">For mortgage brokers<span>Open the broker tools</span></button>
       </div>
@@ -1401,7 +1408,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <div class="intake-steps"><span><b>1</b> Your household</span><span><b>2</b> Your spending</span><span><b>3</b> Send it to your broker</span></div>
     <div class="trust">
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Independent</b><span class="muted">Not a bank, and not owned by a broker group or property portal.</span></div></div>
-    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>How we handle your figures</button></span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>Privacy policy</button></span></div></div>
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Free for buyers</b><span class="muted">Always. Results are never adjusted to favour a lender or broker.</span></div></div>
   </div>
     <div class="intake-name"><label for="clientNameIntake">Your name</label><input id="clientNameIntake" type="text" autocomplete="name" style="max-width:340px"></div>
@@ -1436,7 +1443,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <section class="panel" id="ovResult" aria-live="polite"></section>
     <div class="trust">
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Independent</b><span class="muted">Not a bank, and not owned by a broker group or property portal.</span></div></div>
-    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>How we handle your figures</button></span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>Privacy policy</button></span></div></div>
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Free for buyers</b><span class="muted">Always. Results are never adjusted to favour a lender or broker.</span></div></div>
   </div>
     <section class="panel" id="ovBrokers" aria-labelledby="ovBrokH">
@@ -1453,7 +1460,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <div style="grid-column:1/-1"><label for="fMsg">Message (optional)</label><textarea id="fMsg" rows="2" placeholder="e.g. Looking to buy in the next few months"></textarea></div>
         </div>
         <label class="check"><input type="checkbox" id="fNumbers" checked> Include the figures I entered above, so the broker can get started</label>
-        <label class="check"><input type="checkbox" id="fConsent"> <span id="fConsentTxt">I agree to my details being sent to the broker I've chosen so they can contact me about finance.</span></label>
+        <label class="check"><input type="checkbox" id="fConsent"> <span id="fConsentTxt">I agree to my details being sent to the broker I've chosen so they can contact me about finance.</span></label> <a href="#privacy" class="pp-link" data-privacy>Privacy policy</a>
         <div class="btn-row"><button type="button" class="primary" id="fSend">Send to broker</button><span class="status-msg" id="fMsgOut" aria-live="polite"></span></div>
         <div id="fOut" hidden></div>
       </div>
@@ -1519,7 +1526,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 
   <div class="broker-only trust-wrap"><div class="trust">
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Independent</b><span class="muted">Not a bank, and not owned by a broker group or property portal.</span></div></div>
-    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>How we handle your figures</button></span></div></div>
+    <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Private</b><span class="muted">Your figures are worked out on your device. Nothing is shared unless you choose to send it. <button type="button" class="link-btn" data-privacy>Privacy policy</button></span></div></div>
     <div class="trust-item"><span class="ti" aria-hidden="true">✓</span><div><b>Free for buyers</b><span class="muted">Always. Results are never adjusted to favour a lender or broker.</span></div></div>
   </div></div>
 
@@ -1568,7 +1575,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div><label for="tEmail">Email</label><input id="tEmail" type="email" autocomplete="email" inputmode="email"></div>
       <div><label for="tPhone">Contact number</label><input id="tPhone" type="tel" autocomplete="tel" inputmode="tel"></div>
       <div><label for="tTime">Best time to call</label><select id="tTime"><option>Any time</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekend</option></select></div>
-      <label class="check lead-consent"><input type="checkbox" id="tConsent"> <span id="tConsentTxt">I agree to my details and results being sent to a broker so they can contact me about a home loan.</span></label>
+      <label class="check lead-consent"><input type="checkbox" id="tConsent"> <span id="tConsentTxt">I agree to my details and results being sent to a broker so they can contact me about a home loan.</span></label> <a href="#privacy" class="pp-link" data-privacy>Privacy policy</a>
       <button type="button" class="primary lead-send" id="tSend">Send my details to a broker</button>
       <p class="status-msg" id="tMsg" aria-live="polite"></p>
     </div>
@@ -2024,7 +2031,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div><label for="lEmail">Email</label><input id="lEmail" type="email" autocomplete="email" inputmode="email"></div>
       <div><label for="lPhone">Contact number</label><input id="lPhone" type="tel" autocomplete="tel" inputmode="tel"></div>
       <div><label for="lTime">Best time to call</label><select id="lTime"><option>Any time</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekend</option></select></div>
-      <label class="check lead-consent"><input type="checkbox" id="lConsent"> <span id="lConsentTxt">I agree to my details and results being sent to a broker so they can contact me about a home loan.</span></label>
+      <label class="check lead-consent"><input type="checkbox" id="lConsent"> <span id="lConsentTxt">I agree to my details and results being sent to a broker so they can contact me about a home loan.</span></label> <a href="#privacy" class="pp-link" data-privacy>Privacy policy</a>
       <button type="button" class="primary lead-send" id="lSend">Send my details to a broker</button>
       <p class="status-msg" id="lMsg" aria-live="polite"></p>
     </div>
@@ -2083,15 +2090,54 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 <!-- Privacy and independence -->
 <div class="term-pop" id="termPop" role="tooltip" hidden></div>
 <div class="overlay" id="dlgPrivacy" hidden>
-  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dpH" style="width:min(640px,100%)">
-    <div class="dh"><h2 id="dpH">How we handle your figures</h2><button type="button" class="close">Close</button></div>
-    <div class="privacy-body">
-      <div><h3>Worked out on your device</h3><p>Everything you type, and any bank statements you upload, is processed in your own browser. Statements are never uploaded. Only the monthly totals are used.</p></div>
-      <div><h3>Nothing is shared unless you choose to</h3><p>Your details only go to a broker when you press send, and only to the broker you pick. If your broker saves your figures, they're kept in that broker's private client list.</p></div>
-      <div><h3>Independent</h3><p>Fit To Buy isn't a bank or lender, and isn't owned by a broker group, real estate agency or property portal. We don't sell loans.</p></div>
-      <div><h3>Free for buyers, and honest about how we're paid</h3><p>Buyers never pay. Brokers may pay to be listed or to receive enquiries. That never changes your numbers, which use the same public data for everyone.</p></div>
-      <div><h3>Where the numbers come from</h3><p>Public 2026-27 sources: SA Valuer-General sales, council rates, SA Water, RevenueSA, the AER energy price, the ATO and federal home buyer schemes. Results are estimates and general information, not credit advice.</p></div>
-      <p class="hint">Prototype. A full privacy policy will be published before launch.</p>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dpH" style="width:min(720px,100%)">
+    <div class="dh"><h2 id="dpH">Privacy policy</h2><button type="button" class="close">Close</button></div>
+    <div class="privacy-body policy">
+      <p class="small muted">Last updated 17 November 2026</p>
+      <p>This policy explains what personal information the Fit To Buy website (fittobuy.com.au) handles, why, and the choices you have. Fit To Buy is a business name registered in Australia. We aim to handle personal information in line with the Australian Privacy Principles in the Privacy Act 1988 (Cth).</p>
+      <div class="policy-sum">
+        <b>In short</b>
+        <ul>
+          <li>Your figures are worked out on your own device. We don't keep a database of buyers or their figures.</li>
+          <li>Nothing about you is sent anywhere unless you press a button to send it.</li>
+          <li>Bank statements you upload never leave your device.</li>
+          <li>Your details only go to a broker if you ask for that, and we don't use advertising cookies.</li>
+        </ul>
+      </div>
+
+      <h3>1. What you enter</h3>
+      <p>Your pay, spending, savings, deposit, debts, household and the home you describe are used only to work out your results, and that happens in your browser. They aren't sent to us.</p>
+      <p>If you upload bank statements, your browser reads them and keeps only monthly spending totals. The files themselves are never uploaded.</p>
+      <p>A few things are saved in your browser's storage on your device, such as the ticks on your pre-approval checklist. You can remove them at any time by clearing this site's data in your browser settings.</p>
+
+      <h3>2. When information leaves your device</h3>
+      <p><b>Speak to a broker.</b> If you tick the consent box and press send, your name, email, phone number, best time to call, your results and the figures you entered are sent to a mortgage broker so they can contact you about a home loan. This is sent through a form service (Formspree, based in the United States) or through your own email app. Once the broker receives it, they handle it under their own privacy policy and their obligations as a credit licensee or credit representative, so ask them for a copy. Brokers may pay Fit To Buy for enquiries. That never changes your results.</p>
+      <p><b>Save for later.</b> If you ask us to email you a link, your first name, your email address and the link are sent through an email service (EmailJS, based in the United States) so the email can be delivered. The link itself contains the figures you've entered, so anyone with the link can see them. Keep the email private. If you also tick the optional box, your name, email and the link are sent to a mortgage broker so they can contact you.</p>
+      <p><b>Share your results.</b> A share link contains only your results page: the suburb, price, what's left each month, the lender check and your shortlist. It doesn't contain your pay, spending, savings or debts. The results sit in the part of the link after the "#", which browsers don't send to our servers. Anyone you send the link to can see those results.</p>
+
+      <h3>3. Information collected automatically</h3>
+      <p>The site is hosted by Cloudflare. When you visit, Cloudflare processes technical information such as your IP address, browser type and the pages requested, to deliver the site and protect it from attacks, and may keep short-term logs.</p>
+      <p>Some parts of the site load from other providers, which receive your IP address and browser details when they do: map images from CARTO and OpenStreetMap, the map library from cdnjs (Cloudflare), and fonts from Google Fonts.</p>
+      <p>We don't currently use analytics or advertising cookies. If we add visitor statistics, we'll choose a privacy-friendly service and update this policy first.</p>
+
+      <h3>4. Overseas providers</h3>
+      <p>The providers named above may store or process information in the United States and other countries. We choose established providers and send them only what's needed for the task.</p>
+
+      <h3>5. How long it's kept</h3>
+      <p>We don't keep your figures. Emails sent through EmailJS and enquiries sent through Formspree are kept by those services under their own retention settings. Brokers keep enquiries as their legal and licence obligations require.</p>
+
+      <h3>6. Security</h3>
+      <p>Everything is sent over an encrypted (HTTPS) connection. Because your figures stay on your device, the main thing to protect is any link you save or share, so treat those like a private document.</p>
+
+      <h3>7. Who the site is for</h3>
+      <p>Fit To Buy is designed for adults planning to buy a home. It isn't intended for people under 18.</p>
+
+      <h3>8. Access, correction and complaints</h3>
+      <p>You can ask what personal information we hold about you, ask us to correct it, or make a privacy complaint by contacting us at <span class="pp-email">our email address, which will be listed here</span>. We'll respond within 30 days. For an enquiry you sent to a broker, contact that broker directly.</p>
+      <p>If you're not satisfied with our response, you can contact the Office of the Australian Information Commissioner at <a href="https://www.oaic.gov.au" target="_blank" rel="noopener">oaic.gov.au</a> or on 1300 363 992.</p>
+
+      <h3>9. Changes to this policy</h3>
+      <p>If we change how we handle personal information, we'll update this page and the date at the top before the change takes effect.</p>
     </div>
   </div>
 </div>
@@ -2250,7 +2296,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <p class="muted small">We'll email you a link. Click <b>Continue</b> in the email and you'll come back to this step with everything you've entered.</p>
       <div><label for="svName">Your first name</label><input id="svName" type="text" autocomplete="given-name"></div>
       <div><label for="svEmail">Email address</label><input id="svEmail" type="email" autocomplete="email" inputmode="email"></div>
-      <label class="check"><input type="checkbox" id="svBroker"> A local mortgage broker can also contact me (optional)</label>
+      <label class="check"><input type="checkbox" id="svBroker"> A local mortgage broker can also contact me (optional)</label> <a href="#privacy" class="pp-link" data-privacy>Privacy policy</a>
       <p class="hint">Your figures are kept inside the link itself, not stored by us, so keep the email private.</p>
       <div class="btn-row"><button type="button" class="primary" id="svSend">Email me the link</button><span class="status-msg" id="svMsg" aria-live="polite"></span></div>
     </div>
@@ -2706,7 +2752,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   let state = defaultState();
   let customSuburbs = [];
   // Site settings for the public website. Fill these in once the accounts exist; the broker settings screen can also set them.
-  const SITE = { leadUrl: "", emailjs: { service: "", template: "", key: "" }, siteUrl: "https://fittobuy.com.au/" };
+  const SITE = { contactEmail: "", leadUrl: "", emailjs: { service: "", template: "", key: "" }, siteUrl: "https://fittobuy.com.au/" };
   let brand = { business: "", broker: "", phone: "", email: "", licence: "", colour: BRAND_COLOURS[0][0], leadUrl: SITE.leadUrl, emailjs: { ...SITE.emailjs } };
   let currentClientId = null;
   let db = null, userCap = null, downloads = null, canEdit = false;
@@ -4072,6 +4118,14 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   document.querySelectorAll("#rentType [data-v]").forEach(b => b.onclick = () => { rentType = b.dataset.v; setSeg("rentType", rentType); renderRents(); });
   const rentLine = name => { const r = rentFor(name); if (!r || !(r.house || r.unit)) return ""; const bits = []; if (r.house) bits.push(`houses ${fmt(r.house[0])}`); if (r.unit) bits.push(`units ${fmt(r.unit[0])}`); return `<div class="small"><b>Typical rent:</b> ${bits.join(", ")} a week <span class="muted">(new leases, ${RENT_PERIOD})</span></div>`; };
 
+
+  // ---------- Privacy policy ----------
+  function openPrivacy() {
+    const em = SITE.contactEmail;
+    document.querySelectorAll(".pp-email").forEach(e => { e.innerHTML = em ? `<a href="mailto:${escapeHtml(em)}">${escapeHtml(em)}</a>` : "our email address, which will be listed here"; });
+    openDlg("dlgPrivacy");
+  }
+  document.addEventListener("click", e => { const a = e.target.closest("[data-privacy]"); if (!a) return; e.preventDefault(); openPrivacy(); });
   // ---------- Site menu ----------
   function renderAreas() {
     const all = subs(), byCouncil = {};
@@ -4092,7 +4146,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     else if (go === "areas") { renderAreas(); openDlg("dlgAreas"); }
     else if (go === "faq") openDlg("dlgFaq");
     else if (go === "about") openDlg("dlgAbout");
-    else if (go === "privacy") openDlg("dlgPrivacy");
+    else if (go === "privacy") openPrivacy();
     else if (go === "brokers") $("landBroker").click();
   }));
   document.addEventListener("click", e => { if ($("siteMenu").open && !e.target.closest("#siteMenu")) $("siteMenu").open = false; });
@@ -5187,7 +5241,6 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("slRate").addEventListener("input", e => { state.rate = Number(e.target.value); $("rate").value = state.rate; changed(); });
   bindNum("planSave", "planSave", { nullable: true }); bindNum("priceGrowth", "priceGrowth");
   $("checkIn").onclick = recordCheckIn;
-  document.addEventListener("click", e => { if (e.target.closest("[data-privacy]")) openDlg("dlgPrivacy"); });
   $("openGoals").onclick = () => openDlg("dlgGoals");
   $("openNote").onclick = () => { closeAll(); openNote(); }; $("notePdf").onclick = notePdf;
   $("noteCopy").onclick = () => copyText($("noteText").value, $("noteText"), $("noteMsg"));
@@ -5210,7 +5263,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   if (isIntake() || isOpen()) applyMode();
   else if (location.hash.startsWith("#v.")) { loadSample(); if (!showShared()) showLanding(true); }
   else if (location.hash.startsWith("#r.")) { loadSample(); if (readResume()) { $("exampleNote").hidden = true; showLanding(false); } else showLanding(true); }
-  else { loadSample(); showLanding(true); }
+  else { loadSample(); showLanding(true); if (location.hash === "#privacy") setTimeout(openPrivacy, 0); }
   dirty = false; updateSavedState(); applyBrand(); renumberSteps();
 
   // Light up storage features when the viewer provides them
