@@ -1137,7 +1137,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   <section class="res-hero broker-only" id="resHero" aria-labelledby="heroH">
     <div class="hero-top">
       <div><div class="eyebrow">Your results</div><h2 id="heroH">Here's how buying looks</h2><p class="muted small">Tap any step above to go back and change it, or use View all your entries to see and edit everything on one page.</p></div>
-      <div class="btn-row"><button type="button" id="wizEdit">Go through the steps again</button><button type="button" class="primary" id="toLead">Speak to a broker</button></div>
+      <div class="btn-row"><button type="button" id="wizEdit">Go through the steps again</button><button type="button" id="shareBtn">Share your results</button><button type="button" class="primary" id="toLead">Speak to a broker</button></div>
     </div>
     <p class="gi-note">General information only, not financial or credit advice. These estimates use only the figures you entered. Only a lender can approve a loan, so speak to a licensed broker or adviser before deciding.</p>
     <div class="hero-grid">
@@ -1649,11 +1649,6 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <span>Property you own now: usable equity is 80% of its value minus the loan, a common lending rule of thumb; rent is counted at 75%; selling costs default to 2.5%; its yearly costs are estimated with the same council, ESL and SA Water formulas plus $2,000 insurance.</span>
     </div>
   </footer>
-  <section class="panel broker-only share-panel" aria-labelledby="shareH">
-    <div><h3 id="shareH">Share your results</h3>
-    <p class="muted small">Send a link by text or email to a partner or family member. It shows only the results page: the suburb, price, what's left each month, the lender check and your shortlist. It doesn't include your pay, spending, savings, debts or anything else you typed in.</p></div>
-    <div class="btn-row"><button type="button" class="primary" id="shareBtn2">Share your results</button></div>
-  </section>
 </div>
 
 <!-- Client goals -->
@@ -4844,7 +4839,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("landBroker").onclick = () => { setPro(true); showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
   $("brandName").closest(".brand").style.cursor = "pointer";
   $("brandName").closest(".brand").onclick = () => { if (!isIntake() && !isOpen()) showLanding(true); };
-  $("shareBtn2").onclick = openShareDlg;
+  $("shareBtn").onclick = openShareDlg;
   $("subFacts").addEventListener("toggle", () => renderFacts(subById(state.suburb)));
   document.addEventListener("click", e => { const t = e.target.closest(".term"); if (t) { e.preventDefault(); e.stopPropagation(); showTerm(t); return; } if (!e.target.closest("#termPop")) $("termPop").hidden = true; });
   $("toSources").onclick = () => { const f = document.querySelector("footer.fine"); if (!f) return; if (document.body.classList.contains("wiz")) { wizOn = false; renderWiz(); render(); } setTimeout(() => f.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
