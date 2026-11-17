@@ -1224,12 +1224,15 @@ body { background: var(--bg); }
 .price-label.extra .ml-p { color: var(--navy); border-color: #c5d2e3; }
 .price-label.extra .ml-n { color: #3c4a5e; }
 
-/* Large logo on the front page banner (desktop and tablet; phones already show it in the header) */
-.land-logo { display: none; }
-@media (min-width: 821px) {
-  .hero-band .land-hero, .hero-band .land-hero:has(.land-preview[hidden]) { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); }
-  .land-logo { display: block; justify-self: center; width: min(100%, 400px); }
-}
+/* Front page banner: the logo, then the headline under it, centred */
+.hero-band .land-hero, .hero-band .land-hero:has(.land-preview[hidden]) { grid-template-columns: minmax(0, 1fr); }
+.hero-band .land-copy { text-align: center; display: grid; justify-items: center; }
+.hero-band .land-copy h1 { max-width: 15ch; margin-inline: auto; }
+.hero-band .land-lede { max-width: 60ch; margin-inline: auto; }
+.hero-band .land-cta { justify-content: center; }
+.land-logo { width: min(300px, 70vw); margin: 0 auto 18px; }
+.land-logo svg { display: block; width: 100%; height: auto; }
+@media (max-width: 560px) { .land-logo { width: min(180px, 52vw); margin-bottom: 8px; } .hero-band .land-copy h1 { font-size: 2rem; margin-bottom: 8px; } .hero-band .land-lede { font-size: 0.98rem; } }
 
 /* Share your results */
 .share-panel { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; border-left: 4px solid var(--orange); }
@@ -1463,12 +1466,12 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <div class="hero-band">
     <div class="land-hero">
       <div class="land-copy">
-        <h1 id="landH">Where could you afford to buy your first home?</h1>
+        <div class="land-logo" role="img" aria-label="Fit To Buy. Plan today. Buy tomorrow."><svg viewBox="0 0 400 290" width="100%"><path d="M58 128 200 34l142 94" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M286 82V46h24v52" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/><g fill="#f7892a"><rect x="177" y="84" width="20" height="20" rx="3"/><rect x="203" y="84" width="20" height="20" rx="3"/><rect x="177" y="110" width="20" height="20" rx="3"/><rect x="203" y="110" width="20" height="20" rx="3"/></g><text x="200" y="212" text-anchor="middle" font-family="Poppins, Segoe UI, system-ui, sans-serif" font-weight="800" font-size="74" letter-spacing="-2"><tspan fill="#fff">Fit To </tspan><tspan fill="#f7892a">Buy</tspan></text><path d="M128 236h144" stroke="#f7892a" stroke-width="3" stroke-linecap="round"/><text x="200" y="270" text-anchor="middle" font-family="Atkinson Hyperlegible, Segoe UI, system-ui, sans-serif" font-weight="700" font-size="19" letter-spacing="2.2" fill="#dfe7f2">PLAN TODAY. BUY TOMORROW.</text></svg></div>
+        <h1 id="landH">Know where you stand before you start looking</h1>
         <p class="land-lede">Enter your pay, savings and spending. Get an estimate of what you'd have left each month in each suburb, a price range, and which government schemes you may be eligible for. Now covering 185 Adelaide suburbs, with more cities to come.</p>
         <div class="btn-row land-cta"><button type="button" class="primary" id="landStart">Start, it takes about 3 minutes</button><button type="button" id="landExample" hidden>See an example</button></div>
         <p class="small muted">Free. No sign-up. Your figures stay on your device.</p>
       </div>
-      <div class="land-logo" aria-hidden="true"><svg viewBox="0 0 400 290" width="100%"><path d="M58 128 200 34l142 94" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M286 82V46h24v52" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/><g fill="#f7892a"><rect x="177" y="84" width="20" height="20" rx="3"/><rect x="203" y="84" width="20" height="20" rx="3"/><rect x="177" y="110" width="20" height="20" rx="3"/><rect x="203" y="110" width="20" height="20" rx="3"/></g><text x="200" y="212" text-anchor="middle" font-family="Poppins, Segoe UI, system-ui, sans-serif" font-weight="800" font-size="74" letter-spacing="-2"><tspan fill="#fff">Fit To </tspan><tspan fill="#f7892a">Buy</tspan></text><path d="M128 236h144" stroke="#f7892a" stroke-width="3" stroke-linecap="round"/><text x="200" y="270" text-anchor="middle" font-family="Atkinson Hyperlegible, Segoe UI, system-ui, sans-serif" font-weight="700" font-size="19" letter-spacing="2.2" fill="#dfe7f2">PLAN TODAY. BUY TOMORROW.</text></svg></div>
       <div class="land-preview" aria-label="Example of the results" id="landPreview" hidden>
       </div>
     </div>
