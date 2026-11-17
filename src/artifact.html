@@ -1095,7 +1095,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
         <li>Your budget after buying, in every suburb, using real 2026-27 rates, water, levy and insurance costs</li>
         <li>An estimated top price for each suburb</li>
         <li>Government schemes you may qualify for, like the 5% Deposit Scheme and First Home Owner Grant</li>
-        <li>A date you could be ready by, if you're still saving</li>
+        <li>An estimated date you could be ready by, if you're still saving</li>
         <li>A checklist of what a lender will ask for</li>
         <li>The option to talk to a local broker, only if you want to</li>
       </ul>
@@ -1308,7 +1308,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <div>
             <label for="cardLimits">Credit card limits (optional)</label>
             <div class="money"><input id="cardLimits" type="number" min="0" step="500" inputmode="decimal" placeholder="0"></div>
-            <p class="hint">Add up the limits on all your credit cards. Banks count your full limit, even if you pay it off each month, so this changes how much you can borrow.</p>
+            <p class="hint">Add up the limits on all your credit cards. Lenders count your full limit, even if you pay it off each month, so it affects the lender check.</p>
           </div>
         </div>
         <div class="checks fhb-checks">
@@ -1562,7 +1562,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   <div class="lower broker-only">
     <section class="panel" aria-labelledby="pathH" data-mfold="Path to buying: when you could be ready">
       <h2 id="pathH">Path to buying</h2>
-      <p class="muted small" style="margin-top:2px">How long until each suburb is within reach, what's still to sort out, and progress since the last check-in.</p>
+      <p class="muted small" style="margin-top:2px">An estimate of how long until each suburb is within reach on your figures, and what's still to sort out.</p>
       <div class="grid2" style="margin-top:12px">
         <div><label for="planSave">Saving each month</label><div class="money"><input id="planSave" type="number" min="0" step="50" inputmode="decimal"></div><p class="hint" id="planSaveHint"></p></div>
         <div><label for="priceGrowth">House price growth per year (%)</label><input id="priceGrowth" type="number" min="-5" max="15" step="0.5"><p class="hint">Prices rising while they save pushes the date out. Use 0 to ignore.</p></div>
@@ -1578,7 +1578,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <div class="table-scroll"><table class="mini-table" id="pathTable"></table></div>
         </div>
       </div>
-      <div style="margin-top:18px">
+      <div style="margin-top:18px" class="pro-only">
         <div class="label-like">Check-ins</div>
         <div id="pathChanges" class="small"></div>
         <div class="btn-row" style="margin-top:8px"><button type="button" id="checkIn">Record a check-in</button><span class="status-msg" id="checkMsg" aria-live="polite"></span></div>
@@ -1626,19 +1626,19 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 
   <section class="panel broker-only share-panel" aria-labelledby="shareH">
     <div><h3 id="shareH">Share your results</h3>
-    <p class="muted small">Send a link by text or email to a partner, family member or broker. It shows only the results page: the suburb, price, what's left each month, the bank check and your shortlist. It doesn't include your pay, spending, savings, debts or anything else you typed in.</p></div>
+    <p class="muted small">Send a link by text or email to a partner, family member or broker. It shows only the results page: the suburb, price, what's left each month, the lender check and your shortlist. It doesn't include your pay, spending, savings, debts or anything else you typed in.</p></div>
     <div class="btn-row"><button type="button" class="primary" id="shareBtn2">Share your results</button></div>
   </section>
   <footer class="fine broker-only" data-mfold="Sources and notes">
-    <p>Prototype for discussion only. It is an estimate, not credit or financial advice, and not a lender serviceability assessment. Council rates, sewerage and the emergency services levy are worked out from the purchase price unless a property's own figures are entered; in practice they use the Valuer-General's capital value, which is usually lower.</p>
+    <p>General information only. These are estimates, not credit or financial advice, and not a lender's assessment. Council rates, sewerage and the emergency services levy are worked out from the purchase price unless a property's own figures are entered; in practice they use the Valuer-General's capital value, which is usually lower.</p>
     <div class="sources">
-      <span>House prices: SA Valuer-General <a href="https://data.sa.gov.au/data/dataset/metro-median-house-sales" target="_blank" rel="noopener">metropolitan median house sales</a>, Q4 2025 to Q3 2026 (latest release, October 2026), combined into a 12-month figure weighted by the number of sales; suburbs with under 15 sales are marked. Hindmarsh, Ashford, Southwark and Rosewater have no separate house sales in that data and are left out. Price by bedrooms: sales medians for the 12 months to October 2026 from <a href="https://www.property.com.au/sa/seaton-5023" target="_blank" rel="noopener">property.com.au</a> suburb pages, with small-sample gaps smoothed. Bathroom (±4% per bathroom against the typical number) and block-size adjustments, and typical block sizes, are estimates.</span>
+      <span>House prices: SA Valuer-General <a href="https://data.sa.gov.au/data/dataset/metro-median-house-sales" target="_blank" rel="noopener">metropolitan median house sales</a>, Q4 2025 to Q3 2026 (latest release, October 2026), combined into a 12-month figure weighted by the number of sales; suburbs with 15 or fewer sales are marked. Hindmarsh, Ashford and Southwark have no separate house sales in that data and are left out. Price by bedrooms: sales medians for the 12 months to October 2026 from <a href="https://www.property.com.au/sa/seaton-5023" target="_blank" rel="noopener">property.com.au</a> suburb pages, with small-sample gaps smoothed. Bathroom (±4% per bathroom against the typical number) and block-size adjustments, and typical block sizes, are estimates.</span>
       <span>Council rates: <a href="https://www.westtorrens.sa.gov.au/Council/Rates-and-charges/Rate-calculations" target="_blank" rel="noopener">City of West Torrens 2026/27</a> (rate 0.00171528, landscape levy 0.00005691, minimum $1,258). <a href="https://hdp-au-prod-app-ccs-yoursay-files.s3.ap-southeast-2.amazonaws.com/3117/8279/8811/Annual_Business_Plan_and_Budget_2026_27.pdf" target="_blank" rel="noopener">City of Charles Sturt 2026/27</a> (rate 0.00170947733, minimum $1,410, plus the Green Adelaide landscape levy of about 0.0000588). <a href="https://www.salisbury.sa.gov.au/council/council-plans-and-registers/city-management-plans/council-endorses-2026-27-annual-business-plan" target="_blank" rel="noopener">City of Salisbury 2026/27</a> (0.2636 cents in the dollar, minimum $1,340, with its discounts on homes valued over $969,000). <a href="https://www.playford.sa.gov.au/council/council-documents/annual-business-plan-and-budget" target="_blank" rel="noopener">City of Playford 2026/27</a> fixed charge of $1,304.30; its rate on value is estimated. Port Adelaide Enfield and Onkaparinga are estimated from their 2024-25 rates until their 2026-27 figures are checked, and are marked as estimates. Landscape levies for Salisbury, Playford and Port Adelaide Enfield are estimated.</span>
       <span>Water: <a href="https://sawater.com.au/__data/assets/pdf_file/0009/2178270/2026-27-SA-Water-Water-Sewerage-prices.pdf" target="_blank" rel="noopener">SA Water 2026-27 prices</a>. Emergency services levy: <a href="https://revenuesa.sa.gov.au/ESL/Rates-and-Factors" target="_blank" rel="noopener">RevenueSA 2026-27</a> ($50 fixed charge plus capital value × 0.000324 × residential factor 0.4 × Greater Adelaide area factor 1.0). Electricity: <a href="https://www.aer.gov.au/industry/retail/default-market-offer" target="_blank" rel="noopener">AER Default Market Offer 2026-27</a>.</span>
       <span>Suburb locations: <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3" target="_blank" rel="noopener">ABS Australian Statistical Geography Standard</a> suburb boundaries (CC BY 4.0). Distances are approximate.</span>
       <span>Stamp duty: <a href="https://revenuesa.sa.gov.au/stampduty/rate-of-stamp-duty" target="_blank" rel="noopener">RevenueSA rates</a> and <a href="https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief" target="_blank" rel="noopener">first home buyer relief</a>. Home and contents: Adelaide average quote of $2,559 for June 2026 from <a href="https://www.comparethemarket.com.au/news/home-insurance-quotes-surge-more-than-300-across-capital-cities/" target="_blank" rel="noopener">Compare the Market</a>; suburb and bedroom loadings are indicative only.</span>
       <span>Lender check: repayments tested at the interest rate plus APRA's minimum 3 percentage point <a href="https://www.apra.gov.au/node/42931" target="_blank" rel="noopener">serviceability buffer</a>. Credit cards are counted at 3.8% of the limit a month, a common lender assumption. The living-expense benchmark is a placeholder because lender HEM tables are licensed. Mortgage insurance uses rough premiums of 1%, 2% and 3.5% of the loan for 80-85%, 85-90% and 90-95% of the price. Before-tax income is estimated from take-home pay using the <a href="https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents" target="_blank" rel="noopener">2026-27 resident tax rates</a> plus the 2% Medicare levy.</span>
-      <span>First home buyers: <a href="https://www.canstar.com.au/home-loans/5-percent-deposit-scheme/" target="_blank" rel="noopener">5% Deposit Scheme</a> cap of $900,000 for Adelaide from October 2025. <a href="https://revenuesa.sa.gov.au/FHOG/grant-details" target="_blank" rel="noopener">SA First Home Owner Grant</a> of up to $15,000 for new homes.</span>
+      <span>First home buyers: <a href="https://www.canstar.com.au/home-loans/5-percent-deposit-scheme/" target="_blank" rel="noopener">5% Deposit Scheme</a> cap of $900,000 for Adelaide, with no income limit from October 2025 and a limit on savings kept after buying from July 2026. <a href="https://firsthomebuyers.gov.au/HTB-thresholds" target="_blank" rel="noopener">Help to Buy</a> 2026-27 income limits of $103,000 single and $165,000 joint or single parent, with a $900,000 Adelaide price cap. <a href="https://revenuesa.sa.gov.au/FHOG/grant-details" target="_blank" rel="noopener">SA First Home Owner Grant</a> of up to $15,000, and full stamp duty relief for first home buyers, on new homes. <a href="https://www.homestart.com.au/home-loans/borrowing-boost-loans/starter-loan" target="_blank" rel="noopener">HomeStart</a> Starter and Advantage loans: household income up to $110,000 after tax.</span>
       <span>Property you own now: usable equity is 80% of its value minus the loan, a common lending rule of thumb; rent is counted at 75%; selling costs default to 2.5%; its yearly costs are estimated with the same council, ESL and SA Water formulas plus $2,000 insurance.</span>
     </div>
   </footer>
@@ -1719,8 +1719,8 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <div class="help-body">
       <p>Government help can make a big difference to how soon you can buy. Fit To Buy checks these for you in your results. Rules are for 2026-27 and can change, so check the official pages before you rely on them.</p>
       <div><h3>5% Deposit Scheme</h3><p>Buy with a 5% deposit and no lenders mortgage insurance. In Adelaide the home must cost $900,000 or less. There's no income limit. After buying you generally can't keep more than 6 months of living costs and repayments in savings. <a href="https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme" target="_blank" rel="noopener">Official details</a></p></div>
-      <div><h3>Help to Buy</h3><p>The government buys up to 40% of a new home or 30% of an existing one, so you borrow less, with as little as a 2% deposit. Income limits are $103,000 for one person and $165,000 for a couple, and the Adelaide price cap is $900,000. Places are limited. <a href="https://www.housingaustralia.gov.au/support-buy-home/help-to-buy" target="_blank" rel="noopener">Official details</a></p></div>
-      <div><h3>First Home Owner Grant (SA)</h3><p>$15,000 towards a new home, an off-the-plan home or building a home. It doesn't apply to existing homes. <a href="https://revenuesa.sa.gov.au/FHOG/grant-details" target="_blank" rel="noopener">RevenueSA</a></p></div>
+      <div><h3>Help to Buy</h3><p>The government buys up to 40% of a new home or 30% of an existing one, so you borrow less, with as little as a 2% deposit. Income limits for 2026-27 are $103,000 for one person and $165,000 for a couple or single parent, and the Adelaide price cap is $900,000. Places are limited. <a href="https://www.housingaustralia.gov.au/support-buy-home/help-to-buy" target="_blank" rel="noopener">Official details</a></p></div>
+      <div><h3>First Home Owner Grant (SA)</h3><p>Up to $15,000 towards a new home, an off-the-plan home or building a home. It doesn't apply to existing homes. <a href="https://revenuesa.sa.gov.au/FHOG/grant-details" target="_blank" rel="noopener">RevenueSA</a></p></div>
       <div><h3>Stamp duty relief (SA)</h3><p>First home buyers pay no stamp duty on new homes, off-the-plan homes or land to build on. On an existing home, full stamp duty applies. <a href="https://www.revenuesa.sa.gov.au/stampduty/first-home-buyer-relief" target="_blank" rel="noopener">RevenueSA</a></p></div>
       <div><h3>HomeStart Finance</h3><p>The SA Government's own lender, with loans for smaller deposits. Its Starter and Advantage loans have a household income limit of $110,000 a year after tax. <a href="https://www.homestart.com.au" target="_blank" rel="noopener">homestart.com.au</a></p></div>
     </div>
@@ -1815,7 +1815,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div><h3>Is it free?</h3><p>Yes, always, for buyers. There's no sign-up.</p></div>
       <div><h3>Is my information safe?</h3><p>Your figures are worked out in your own browser. Bank statements are never uploaded. Nothing is sent to anyone unless you choose to send it.</p></div>
       <div><h3>How accurate are the numbers?</h3><p>Prices come from official sales records, and costs from 2026-27 council, water, levy and energy rates. They're estimates for a typical home in each suburb, so a real property can cost more or less. Where a figure is less certain, we label it.</p></div>
-      <div><h3>Is this financial advice?</h3><p>No. Fit To Buy helps you plan. It isn't a bank and doesn't decide whether you'll get a loan. A broker or lender can give you a proper assessment.</p></div>
+      <div><h3>Is this financial advice?</h3><p>No. It's general information: estimates worked out from the figures you enter. Fit To Buy isn't a bank and doesn't decide whether you'll get a loan. A licensed broker or lender can assess your situation.</p></div>
       <div><h3>What does "Lender check (estimate)" mean?</h3><p>Banks test whether you could still afford the loan if interest rates rose 3%, and they use minimum living costs. We run a similar check, so you can see early whether a loan is likely to be a stretch.</p></div>
       <div><h3>Why do you ask about my rent?</h3><p>Rent stops when you buy, and your loan repayment takes its place. Knowing your rent stops us counting both.</p></div>
       <div><h3>Can I save and come back later?</h3><p>Yes. Press "Save for later" on any step and we'll email you a link that opens where you left off.</p></div>
@@ -2510,7 +2510,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     if (canBuy) return { cls, label: budget, ...base };
     // Their own figures not working (over budget) is the clearest message, so it comes first. Bank wording stays hedged: it's an estimate, not a lender's assessment.
     const bankLabel = s.lenderSurplus > -300 ? "May not pass lender check" : "Unlikely to pass lender check";
-    const label = s.after < 0 ? "Over budget" : !savingsOk && !lenderOk ? "Not yet: savings and bank" : !savingsOk ? "Need more savings" : bankLabel;
+    const label = s.after < 0 ? "Over budget" : !savingsOk && !lenderOk ? "Not yet: savings and lender check" : !savingsOk ? "Need more savings" : bankLabel;
     return { cls: cls === "bad" || !savingsOk ? "bad" : "warn", label, ...base };
   }
   // Plain-English reasons a lender's test fails, and what would fix it
@@ -2983,7 +2983,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <tr><td>Repayment at ${(state.rate + state.buffer).toFixed(2)}%</td><td class="r num">−${fmt(s.repayStress)}</td></tr>
       <tr><td>Rates, bills and insurance</td><td class="r num">−${fmt(s.pc.total / 12)}</td></tr>
       ${state.own === "keep" ? `<tr><td>Property you're keeping (loans tested at ${(state.rate + state.buffer).toFixed(2)}%, rent at 75%)</td><td class="r num">−${fmt(repayment(state.ownLoan, state.rate + state.buffer, 25) + repayment(s.eqUsed, state.rate + state.buffer, state.term) + s.ownHold - s.rentNet)}</td></tr>` : ""}
-      <tr class="total"><td>Left over on the bank's test</td><td class="r num" style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${fmt(s.lenderSurplus)}</td></tr>
+      <tr class="total"><td>Left over on the lender test</td><td class="r num" style="color:var(--${s.lenderSurplus >= 0 ? "good" : "bad"})">${fmt(s.lenderSurplus)}</td></tr>
 `;
     $("hemHint").textContent = `Blank uses a rough placeholder (${fmt(hemPlaceholder())} a month here). Enter the lender's HEM figure.`;
 
@@ -3117,16 +3117,16 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       ["Left over now", `${fmt(s.now)} a month`],
       ["Total costs after buying", `${fmt(s.totalCosts)} a month (living costs, loan repayment, rates, bills and insurance)`],
       ["Left over after buying", `${fmt(s.after)} a month (${st.budget.toLowerCase()}${st.lenderOk ? "" : ", but a lender may say no"})`],
-      ["Lender check (estimate)", `${lst.label} (${fmt(s.lenderSurplus)} left over on the bank's test)`],
+      ["Lender check (estimate)", `${lst.label} (${fmt(s.lenderSurplus)} left over on the lender test)`],
       ["Cash needed at settlement", `${fmt(s.cashNeeded)} of ${fmt(funds())} available${s.propCash ? ` (savings ${fmt(state.savings)} plus ${fmt(s.propCash)} from current property)` : ""}`],
-      ["Within reach", path.m === 0 ? "Now: savings already cover settlement" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
+      ["Within reach", path.m === 0 ? "Now, with savings used as the deposit" : path.m === null ? "Not within 20 years at the current savings rate" : `${monthLabel(path.m)}, saving ${fmt(path.save)} a month${state.priceGrowth ? ` with prices up ${state.priceGrowth}% a year` : ""}`]
     ];
     const costs = [["Loan repayment", fmt(s.repay)], ["Council rates", fmt(s.pc.council / 12)], ["Emergency services levy", fmt(s.pc.esl / 12)], ["Water and sewerage", fmt(s.pc.water / 12)], ["Electricity", fmt(s.pc.power / 12)], [isUnit() ? "Contents insurance" : "Home and contents insurance", fmt(s.pc.insurance / 12)], ...(isUnit() ? [["Strata fees", fmt(s.pc.strata / 12)]] : []), ["Living costs kept", fmt(s.kept)], ["Total costs each month", fmt(s.totalCosts)]];
     const compare = listSubs().map(sub => { const x = scenario(sub); return { name: sub.name, price: x.price, after: x.after, status: status(x).label, sel: sub.id === state.suburb }; });
     const notes = flags.map(f => f[2]);
     lastReport = { take, name, today, lines, costs, compare, notes, s, st, lst, cash: [["Deposit", fmt(s.depositNeeded)], ["Stamp duty", fmt(state.dutyOnLoan ? 0 : s.duty)], ...(s.lmi && !state.lmiOnLoan ? [["Mortgage insurance", fmt(s.lmi)]] : []), ["Government fees", fmt(s.gov)], ["Conveyancer and inspections", fmt(state.otherCosts)], ...(s.grant ? [["First Home Owner Grant", "-" + fmt(s.grant)]] : []), ["Cash needed", fmt(s.cashNeeded)]] };
     $("summary").innerHTML = `
-      <div class="eyebrow">${escapeHtml(name)} · prepared ${today}</div>
+      <div class="eyebrow">${state.clientName ? escapeHtml(state.clientName) + " · " : ""}Prepared ${today}</div>
       <dl>${lines.map(([k, v]) => `<dt>${k}</dt><dd>${escapeHtml(v)}</dd>`).join("")}</dl>
       <div><h3>Monthly home costs in ${escapeHtml(s.sub.name)}</h3><dl>${costs.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl></div>
       <div><h3>All suburbs, left over each month</h3><ul>${compare.map(c => `<li>${escapeHtml(c.name)}: ${fmt(c.after)} (${c.status.toLowerCase()})</li>`).join("")}</ul></div>
@@ -3294,9 +3294,9 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     else if (price > SCHEME_CAP) add("no", "5% Deposit Scheme", `Buy with a 5% deposit and no lenders mortgage insurance, but the Adelaide price cap is ${fmt(SCHEME_CAP)} and this home is ${fmt(price)}.`, "https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme", "Official details");
     else add("yes", "5% Deposit Scheme", `You may be eligible: buy with as little as 5% deposit and no lenders mortgage insurance. Price cap ${fmt(SCHEME_CAP)} in Adelaide; no income limit. You generally can't keep more than 6 months of living costs and repayments in savings after buying.`, "https://www.housingaustralia.gov.au/support-buy-home/5-deposit-scheme", "Official details");
     // Help to Buy
-    const incCap = couple ? 165000 : 103000;
+    const singleParent = !couple && state.children > 0, incCap = couple || singleParent ? 165000 : 103000;
     if (owns) add("no", "Help to Buy (shared equity)", "For people who don't own a property.", "https://www.housingaustralia.gov.au/support-buy-home/help-to-buy", "Official details");
-    else if (gross > incCap || price > SCHEME_CAP) add("no", "Help to Buy (shared equity)", `The government buys up to 40% of a new home or 30% of an existing one, so you borrow less. Limits: income up to ${fmt(incCap)} before tax ${couple ? "for a couple" : "for one person"} (yours is estimated at ${fmt(gross)}) and price up to ${fmt(SCHEME_CAP)}.`, "https://www.housingaustralia.gov.au/support-buy-home/help-to-buy", "Official details");
+    else if (gross > incCap || price > SCHEME_CAP) add("no", "Help to Buy (shared equity)", `The government buys up to 40% of a new home or 30% of an existing one, so you borrow less. Limits: income up to ${fmt(incCap)} before tax ${couple ? "for a couple" : singleParent ? "for a single parent" : "for one person"} (yours is estimated at ${fmt(gross)}) and price up to ${fmt(SCHEME_CAP)}.`, "https://www.housingaustralia.gov.au/support-buy-home/help-to-buy", "Official details");
     else add("maybe", "Help to Buy (shared equity)", `You may qualify: the government buys up to ${state.newBuild ? "40%" : "30%"} of the home, so you borrow less, with as little as 2% deposit. Your estimated income (${fmt(gross)}) and the price are within the limits. Places are limited.`, "https://www.housingaustralia.gov.au/support-buy-home/help-to-buy", "Official details");
     // FHOG
     if (fhb && state.newBuild) add("yes", "First Home Owner Grant", `You may be eligible: up to ${fmt(FHOG)} towards a new home. Already counted in your results.`, "https://revenuesa.sa.gov.au/FHOG/grant-details", "RevenueSA");
@@ -3308,7 +3308,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     // HomeStart
     // HomeStart's Starter and Advantage loans: household income up to $110,000 a year after tax
     const netYear = Math.round(state.income * 12);
-    if (depPct < 20 && netYear <= 110000) add("maybe", "HomeStart Finance", `Worth a look: the SA Government's own lender offers loans with smaller deposits, some from 2% for eligible borrowers. Its Starter and Advantage loans have a household income limit of $110,000 a year after tax, and yours is about ${fmt(netYear)}.`, "https://www.homestart.com.au", "homestart.com.au");
+    if (depPct < 20 && netYear <= 110000) add("maybe", "HomeStart Finance", `Worth a look: the SA Government's own lender offers loans with smaller deposits, some from 2% for eligible borrowers. Its Starter and Advantage loans have a household income limit of $110,000 a year after tax, and yours is about ${fmt(netYear)}. They also limit the savings you keep after buying.`, "https://www.homestart.com.au", "homestart.com.au");
     else add("no", "HomeStart Finance", depPct >= 20 ? "The SA Government's lender is mainly for buyers with smaller deposits. With your deposit, a standard loan may suit better." : `The SA Government's lender for smaller deposits. Its Starter and Advantage loans have a household income limit of $110,000 a year after tax, and yours is about ${fmt(netYear)}.`, "https://www.homestart.com.au", "homestart.com.au");
     $("schemes").innerHTML = items.join("");
   }
@@ -3984,12 +3984,12 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   }
   const whenText = m => m === 0 ? "Ready now" : m === null ? "Not within 20 years" : `About ${monthLabel(m)}`;
   function renderPath(s, sub) {
-    const save = planSave(s), m = monthsToReach(sub, save), st = status(s);
+    const save = planSave(s), m = monthsToBuy(sub, save), st = status(s);
     $("planSaveHint").textContent = state.planSave === null ? `Blank uses what's left over now: ${fmt(Math.max(0, s.now))} a month.` : `Left over now is ${fmt(s.now)} a month.`;
     if (document.activeElement !== $("planSave")) $("planSave").value = state.planSave ?? "";
     const pct = Math.max(0, Math.min(100, funds() / Math.max(1, s.cashNeeded) * 100));
     $("pathHead").innerHTML = `<div><div class="eyebrow">${escapeHtml(sub.name)} · cash needed ${fmt(s.cashNeeded)}</div><div class="when">${whenText(m)}</div>
-        <div class="small muted">${m === 0 ? `${fmt(funds())} available already covers settlement.` : m === null ? `At ${fmt(save)} a month, saving doesn't catch up with prices in this estimate. A cheaper suburb or a higher saving rate would change this.` : `Saving ${fmt(save)} a month${state.priceGrowth ? `, with prices up ${state.priceGrowth}% a year` : ""}. ${m} month${m > 1 ? "s" : ""} away.`}</div></div>
+        <div class="small muted">${m === 0 ? `On these figures, the checks pass now with your ${fmt(funds())} savings as the deposit.` : m === null ? `At ${fmt(save)} a month, saving doesn't catch up with prices in this estimate. A cheaper suburb or a higher saving rate would change this.` : `Saving ${fmt(save)} a month${state.priceGrowth ? `, with prices up ${state.priceGrowth}% a year` : ""}. ${m} month${m > 1 ? "s" : ""} away.`}</div></div>
       <div class="num" style="font-weight:700">${Math.round(pct)}%</div>
       <div class="progress" role="img" aria-label="${Math.round(pct)}% of the cash needed is saved"><span style="width:${pct.toFixed(1)}%"></span></div>`;
     $("pathSubName").textContent = sub.name;
@@ -4002,7 +4002,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     const ready = checks.every(c => c[0]);
     $("pathReady").innerHTML = checks.map(([ok, yes, no]) => `<div class="flag ${ok ? "good" : "bad"}"><span class="ic" aria-hidden="true">${ok ? "✓" : "!"}</span><span>${ok ? yes : no}</span></div>`).join("") +
       `<div class="flag ${ready ? "good" : "warn"}"><span class="ic" aria-hidden="true">${ready ? "★" : "i"}</span><span><b>${ready ? "Ready to talk to a broker about pre-approval." : "Not ready yet."}</b> ${ready ? "Every check passes for this suburb." : "Sort out the items above, or look at the suburbs that come within reach sooner."}</span></div>`;
-    const rows = listSubs().map(x => { const sx = scenario(x); return { x, sx, m: monthsToReach(x, save), st: status(sx) }; })
+    const rows = listSubs().map(x => { const sx = scenario(x); return { x, sx, m: monthsToBuy(x, save), st: status(sx) }; })
       .sort((a, b) => (a.m ?? 9999) - (b.m ?? 9999) || b.sx.after - a.sx.after);
     $("pathTable").innerHTML = `<thead><tr><th>Suburb</th><th class="r">Within reach</th><th class="r">Budget after</th></tr></thead><tbody>` +
       rows.map(r => `<tr class="${r.x.id === state.suburb ? "sel" : ""}"><td>${escapeHtml(r.x.name)}</td><td class="r">${whenText(r.m)}</td><td class="r"><span class="pill ${r.st.cls}" style="padding:0 8px;font-size:0.72rem">${r.st.label}</span></td></tr>`).join("") + "</tbody>";
