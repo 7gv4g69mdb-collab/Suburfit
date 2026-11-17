@@ -18,7 +18,8 @@ s = re.sub(r"  const RENTS = \{.*?\};\n  const RENT_PERIOD = \"[^\"]*\";", lambd
 first, last = meta["quarters"][0], meta["quarters"][-1]
 months = {"1": "March", "2": "June", "3": "September", "4": "December"}
 q, y = last[1], last.split()[1]
-s = re.sub(r"(\d+) Adelaide suburbs across six councils", f"{meta['count']} Adelaide suburbs across six councils", s)
+s = re.sub(r"(\d+) Adelaide suburbs across (\w+) councils", lambda m: f"{meta['count']} Adelaide suburbs across {m.group(2)} councils", s)
+s = re.sub(r"Now covering \d+ Adelaide suburbs", f"Now covering {meta['count']} Adelaide suburbs", s)
 s = re.sub(r"in \d+ suburbs, how much", f"in {meta['count']} suburbs, how much", s)
 s = re.sub(r'placeholder="Search \d+ suburbs', f'placeholder="Search {meta["count"]} suburbs', s)
 s = re.sub(r"12 months to (March|June|September|December) 20\d\d", f"12 months to {months[q]} {y}", s)
