@@ -1337,7 +1337,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   <div class="appbar-in">
     <div class="brand">
       <svg class="logo-mark" width="38" height="34" viewBox="0 0 38 34" aria-hidden="true"><path d="M3 17 19 4.5 35 17" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M27.5 10.4V5.5h3.6v7.7" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/><g fill="#f7892a"><rect x="14.6" y="15.2" width="4" height="4" rx=".6"/><rect x="19.4" y="15.2" width="4" height="4" rx=".6"/><rect x="14.6" y="20" width="4" height="4" rx=".6"/><rect x="19.4" y="20" width="4" height="4" rx=".6"/></g></svg>
-      <div><div class="bn" id="brandName">Fit To <span class="bn-o">Buy</span></div><div class="bs" id="brandSub">Plan today. Buy tomorrow.</div></div>
+      <div><div class="bn" id="brandName">Fit To <span class="bn-o">Buy</span></div><div class="bs" id="brandSub">Know where you stand before you buy.</div></div>
     </div>
     <div class="acts broker-only pro-only">
       <button type="button" id="openClients">Saved clients</button>
@@ -1466,7 +1466,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     <div class="hero-band">
     <div class="land-hero">
       <div class="land-copy">
-        <div class="land-logo" role="img" aria-label="Fit To Buy. Plan today. Buy tomorrow."><svg viewBox="0 0 400 290" width="100%"><path d="M58 128 200 34l142 94" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M286 82V46h24v52" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/><g fill="#f7892a"><rect x="177" y="84" width="20" height="20" rx="3"/><rect x="203" y="84" width="20" height="20" rx="3"/><rect x="177" y="110" width="20" height="20" rx="3"/><rect x="203" y="110" width="20" height="20" rx="3"/></g><text x="200" y="212" text-anchor="middle" font-family="Poppins, Segoe UI, system-ui, sans-serif" font-weight="800" font-size="74" letter-spacing="-2"><tspan fill="#fff">Fit To </tspan><tspan fill="#f7892a">Buy</tspan></text><path d="M128 236h144" stroke="#f7892a" stroke-width="3" stroke-linecap="round"/><text x="200" y="270" text-anchor="middle" font-family="Atkinson Hyperlegible, Segoe UI, system-ui, sans-serif" font-weight="700" font-size="19" letter-spacing="2.2" fill="#dfe7f2">PLAN TODAY. BUY TOMORROW.</text></svg></div>
+        <div class="land-logo" role="img" aria-label="Fit To Buy. Know where you stand before you buy."><svg viewBox="0 0 400 290" width="100%"><path d="M58 128 200 34l142 94" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M286 82V46h24v52" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/><g fill="#f7892a"><rect x="177" y="84" width="20" height="20" rx="3"/><rect x="203" y="84" width="20" height="20" rx="3"/><rect x="177" y="110" width="20" height="20" rx="3"/><rect x="203" y="110" width="20" height="20" rx="3"/></g><text x="200" y="212" text-anchor="middle" font-family="Poppins, Segoe UI, system-ui, sans-serif" font-weight="800" font-size="74" letter-spacing="-2"><tspan fill="#fff">Fit To </tspan><tspan fill="#f7892a">Buy</tspan></text><path d="M128 236h144" stroke="#f7892a" stroke-width="3" stroke-linecap="round"/><text x="200" y="270" text-anchor="middle" font-family="Atkinson Hyperlegible, Segoe UI, system-ui, sans-serif" font-weight="700" font-size="15.5" letter-spacing="1.3" fill="#dfe7f2">KNOW WHERE YOU STAND BEFORE YOU BUY</text></svg></div>
         <h1 id="landH">Know where you stand before you start looking</h1>
         <p class="land-lede">Fit To Buy is a free tool that shows what owning a home would mean for your money, suburb by suburb, before you talk to a bank. Enter your pay, savings and spending to see an estimate of what you'd have left each month after the mortgage and bills, a price range, and which government schemes you may be eligible for. Now covering 185 Adelaide suburbs.</p>
         <div class="btn-row land-cta"><button type="button" class="primary" id="landStart">Start, it takes about 3 minutes</button><button type="button" id="landExample" hidden>See an example</button></div>
@@ -3590,7 +3590,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(17);
       doc.text(clean(brand.business || "Fit To Buy"), M, 36);
       doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
-      doc.text(clean([brand.broker, brand.phone, brand.email].filter(Boolean).join("  |  ") || "Plan today. Buy tomorrow."), M, 54);
+      doc.text(clean([brand.broker, brand.phone, brand.email].filter(Boolean).join("  |  ") || "Know where you stand before you buy."), M, 54);
       if (brand.licence) doc.text(clean(brand.licence), M, 67);
       doc.setTextColor(20, 30, 43); y = 108;
     };
@@ -4756,7 +4756,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   function applyBrand() {
     document.documentElement.style.setProperty("--brand", !brand.colour || brand.colour === "#1e3f35" ? BRAND_COLOURS[0][0] : brand.colour);
     setBrandName(brand.business);
-    $("brandSub").textContent = brand.business ? [brand.broker, brand.phone].filter(Boolean).join(" · ") || "Plan today. Buy tomorrow." : "Plan today. Buy tomorrow.";
+    $("brandSub").textContent = brand.business ? [brand.broker, brand.phone].filter(Boolean).join(" · ") || "Know where you stand before you buy." : "Know where you stand before you buy.";
     $("intakeFrom").textContent = brand.business ? `For ${brand.business}${brand.broker ? " · " + brand.broker : ""}` : "Prepared for your broker";
   }
   function openBrand() {
