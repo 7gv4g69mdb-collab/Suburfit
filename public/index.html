@@ -954,6 +954,8 @@ body.wiz:not(.wiz-first) .data-date { display: none; }
 body.openhome .data-date { display: none; }
 .term { display: inline-grid; place-items: center; width: 18px; height: 18px; min-height: 0; padding: 0; margin-left: 5px; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--line)); background: var(--surface); color: var(--accent); font-size: 0.7rem; font-weight: 700; vertical-align: 1px; cursor: help; line-height: 1; }
 .term:hover { background: var(--accent-soft); }
+.term.term-link { display: inline; width: auto; height: auto; margin-left: 4px; padding: 0; border: 0; border-radius: 0; background: none; font-size: 0.8rem; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; vertical-align: baseline; white-space: nowrap; }
+.term.term-link:hover { background: none; color: var(--ink); }
 .term-pop { position: absolute; z-index: 60; display: grid; gap: 4px; background: var(--ink); color: var(--surface); padding: 12px 14px; border-radius: 10px; font-size: 0.85rem; line-height: 1.45; box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
 .term-pop b { font-size: 0.9rem; }
 /* Front page */
@@ -1639,11 +1641,11 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <div><label for="children">Children / dependants</label><input id="children" type="number" min="0" max="8" step="1" inputmode="numeric"></div>
           <div class="pay-block">
             <div class="grid2">
-              <div><label for="pay0">Borrower 1 take-home pay</label><div class="pay-row"><div class="money"><input id="pay0" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="payf0" aria-label="Borrower 1 pay frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div><p class="hint" id="payYr0"></p></div>
-              <div><label for="pay1">Borrower 2 take-home pay</label><div class="pay-row"><div class="money"><input id="pay1" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="payf1" aria-label="Borrower 2 pay frequency"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div><p class="hint" id="payYr1"></p></div>
-              <div><div class="label-like">Household take-home pay</div><div class="total-box"><span class="tb-num num" id="incomeTotal">$0</span><span class="muted small">a month</span></div><p class="hint" id="incomeYr" style="font-weight:600;color:var(--ink)"></p></div>
+              <div><label for="pay0">Your take-home pay<button type="button" class="term term-link" data-term="takehome" aria-label="What does this mean?">What's this?</button></label><div class="pay-row"><div class="money"><input id="pay0" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="payf0" aria-label="How often you're paid"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div><p class="hint" id="payYr0"></p></div>
+              <div id="pay1Wrap"><label for="pay1">Your partner's take-home pay</label><div class="pay-row"><div class="money"><input id="pay1" type="number" min="0" step="10" inputmode="decimal" placeholder="0"></div><select id="payf1" aria-label="How often your partner is paid"><option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div><p class="hint" id="payYr1"></p></div>
+              <div id="incomeTotalWrap"><div class="label-like">Household take-home pay</div><div class="total-box"><span class="tb-num num" id="incomeTotal">$0</span><span class="muted small">a month</span></div><p class="hint" id="incomeYr" style="font-weight:600;color:var(--ink)"></p></div>
             </div>
-            <p class="hint" id="incomeHint">After tax, as it lands in the bank. Leave Borrower 2 blank for a single borrower.</p>
+            <p class="hint" id="incomeHint">After tax: the amount that lands in your bank account.</p>
           </div>
         </div>
       </section>
@@ -1674,6 +1676,11 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <input id="qDebt" type="hidden"><select id="qDebtF" hidden aria-hidden="true"><option value="monthly">monthly</option></select>
           <div class="total-box" style="margin-top:12px"><span class="tb-num num" id="qTotal">$0</span><span class="muted small" id="qTotalSub">a month in total</span></div>
           <p class="hint" id="qNote"></p>
+          <div style="margin-top:14px;max-width:420px">
+            <label for="cardLimits">Credit card limits (optional)</label>
+            <div class="money"><input id="cardLimits" type="number" min="0" step="500" inputmode="decimal" placeholder="0"></div>
+            <p class="hint">Add up the limits on all your credit cards. Lenders count your full limit, even if you pay it off each month, so it affects the lender check<button type="button" class="term term-link" data-term="bank" aria-label="What does this mean?">What's this?</button></p>
+          </div>
           <div class="more-ways">
             <div class="mw-head"><b>Want a more accurate figure?</b><span>Choose one of these instead of a rough total. Both are optional.</span></div>
             <div class="mw-opts">
@@ -1741,23 +1748,19 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 
       <!-- STEP 3 -->
       <section class="panel broker-only" aria-labelledby="s3h">
-        <div class="step-head"><span class="step-no">3</span><div><h2 id="s3h">Your deposit and loan</h2><p class="muted small">Savings, deposit, interest rate and any first home buyer help.</p></div></div>
+        <div class="step-head"><span class="step-no">3</span><div><h2 id="s3h">Your savings</h2><p class="muted small">How much you've saved, and any first home buyer help.</p></div></div>
         <div class="grid2">
-          <div id="depositWrap"><label for="deposit">Deposit you can put in</label><div class="money"><input id="deposit" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Loan = price minus this deposit.</p></div>
+          <div id="depositWrap"><label for="deposit">Deposit you want to put in</label><div class="money"><input id="deposit" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">The loan is the price minus this deposit. <button type="button" class="link" id="depAutoOn">Work it out for me instead</button></p></div>
           <div id="loanWrap" hidden><label for="loan">Loan amount wanted</label><div class="money"><input id="loan" type="number" min="0" step="5000" inputmode="decimal"></div><p class="hint">Deposit needed = price minus this loan.</p></div>
-          <div><label for="savings">Total savings available</label><div class="money"><input id="savings" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Checked against deposit, stamp duty and fees.</p></div>
-          <div>
-            <label for="cardLimits">Credit card limits (optional)</label>
-            <div class="money"><input id="cardLimits" type="number" min="0" step="500" inputmode="decimal" placeholder="0"></div>
-            <p class="hint">Add up the limits on all your credit cards. Lenders count your full limit, even if you pay it off each month, so it affects the lender check.</p>
-          </div>
+          <div><label for="savings">How much have you saved?<button type="button" class="term term-link" data-term="savings" aria-label="What does this mean?">What's this?</button></label><div class="money"><input id="savings" type="number" min="0" step="1000" inputmode="decimal"></div><p class="hint">Everything you could put towards buying, including any money family is giving you.</p></div>
+          <div id="depAutoWrap"><div class="label-like">Your deposit<button type="button" class="term term-link" data-term="deposit" aria-label="What does this mean?">What's this?</button></div><p class="hint" style="margin-top:4px">We work this out for each home: your savings, minus stamp duty<button type="button" class="term term-link" data-term="duty" aria-label="What does this mean?">What's this?</button> and buying fees. <button type="button" class="link" id="depAutoOff">Choose my own amount</button></p></div>
         </div>
         <div class="checks fhb-checks">
           <label class="check" hidden><input type="checkbox" id="fhb"> First home buyer</label>
           <div class="checks" id="fhbOpts">
-            <label class="check"><input type="checkbox" id="newBuild"> Buying a new build (no stamp duty, plus the $15,000 First Home Owner Grant)</label>
-            <label class="check"><input type="checkbox" id="useScheme"> Use the 5% Deposit Scheme where eligible (no mortgage insurance)</label>
-            <p class="hint">The 5% Deposit Scheme covers first home buyers on homes up to $900,000 in Adelaide, with no income cap since October 2025. SA stamp duty relief and the grant only apply to new homes.</p>
+            <label class="check"><input type="checkbox" id="newBuild"> <span>Buying a newly built home (no stamp duty, plus the $15,000 First Home Owner Grant<button type="button" class="term term-link" data-term="fhog" aria-label="What does this mean?">What's this?</button>)</span></label>
+            <label class="check"><input type="checkbox" id="useScheme"> <span>Use the government's 5% Deposit Scheme if I'm eligible<button type="button" class="term term-link" data-term="scheme" aria-label="What does this mean?">What's this?</button></span></label>
+            <p class="hint">It lets first home buyers buy with a 5% deposit and skip lenders mortgage insurance<button type="button" class="term term-link" data-term="lmi" aria-label="What does this mean?">What's this?</button>, a one-off fee usually charged when your deposit is under 20%. It covers homes up to $900,000 in Adelaide, with no income cap since October 2025. SA stamp duty relief and the grant only apply to new homes.</p>
           </div>
         </div>
         <details class="fold loan-more" id="loanMore">
@@ -2035,7 +2038,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   </div>
 
   <section class="panel broker-only checklist" id="docsPanel" aria-labelledby="docsH" data-mfold="Checklist: get ready for pre-approval">
-    <div class="docs-head"><div><h2 id="docsH">Get ready for pre-approval</h2><p class="muted small">What a lender will usually ask for. Tick things off as you gather them; it's saved on this device.</p></div><div class="docs-count" id="docsCount"></div></div>
+    <div class="docs-head"><div><h2 id="docsH">Get ready for pre-approval<button type="button" class="term term-link" data-term="preapproval" aria-label="What does this mean?">What's this?</button></h2><p class="muted small">What a lender will usually ask for. Tick things off as you gather them; it's saved on this device.</p></div><div class="docs-count" id="docsCount"></div></div>
     <div class="progress" aria-hidden="true"><span id="docsBar"></span></div>
     <ul class="docs" id="docsList"></ul>
   </section>
@@ -3169,7 +3172,8 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     const gov = govFees(price);
     const availDep = Math.max(0, funds() - (state.dutyOnLoan ? 0 : duty) - state.otherCosts - gov + grant);
     let depCapped = false;
-    if (state.loanMode === "deposit") { depositNeeded = Math.min(state.deposit, price); if (depositNeeded > availDep) { depositNeeded = availDep; depCapped = true; } loan = Math.max(0, price - depositNeeded); }
+    // depAuto: the deposit is whatever savings are left after stamp duty and fees
+    if (state.loanMode === "deposit") { depositNeeded = state.depAuto ? price : Math.min(state.deposit, price); if (depositNeeded > availDep) { depositNeeded = availDep; depCapped = !state.depAuto; } loan = Math.max(0, price - depositNeeded); }
     else { loan = Math.min(state.loan, price * 0.95); depositNeeded = price - loan; }
     if (state.dutyOnLoan) loan += duty;
     const lvr = price ? loan / price : 0;
@@ -3408,7 +3412,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       const parts = src.length > 1 ? `: ${src.slice(0, 2).map(x => `${escapeHtml(x.name)} ${fmt(x.monthly)}`).join(" and ")}` : "";
       $("incomeHint").innerHTML = `Statements show about <b>${fmt(state.incomeDetected)}</b> a month coming in${parts}. <button type="button" class="link" id="useIncome">Use ${src.length > 1 ? "these" : "this"}</button>`;
       $("useIncome").onclick = useDetectedIncome;
-    } else $("incomeHint").textContent = "After tax, as it lands in the bank. Leave Borrower 2 blank for a single borrower.";
+    } else $("incomeHint").textContent = "After tax: the amount that lands in your bank account.";
   }
   const fmtDate = d => d.toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
   function setStatus(html) { $("importStatus").innerHTML = html; }
@@ -3495,7 +3499,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     $("insQuote").value = state.insQuote || "";
     $("clientNameIntake").value = state.clientName || "";
     $("fhbOpts").hidden = !state.fhb;
-    setMode(state.loanMode, true);
+    setMode(state.loanMode, true); syncAdults();
     renderCommuters(); renderExpenses(); renderMerchants(); rebuildPetrolRows(); syncPrice(); showIncomeHint();
   }
 
@@ -3535,12 +3539,14 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     });
   }
 
+  // One adult: no partner pay box
+  function syncAdults() { const two = state.adults >= 2; $("pay1Wrap").hidden = !two; $("incomeTotalWrap").hidden = !two; }
   function renderCommuters() {
     const wrap = $("commuters"); wrap.innerHTML = "";
     state.commuters.forEach((c, i) => {
       const d = document.createElement("div");
       d.className = "sub-card";
-      d.innerHTML = `<label class="check head"><input type="checkbox" id="c${i}-on"${c.on ? " checked" : ""}> Borrower ${i + 1} commutes</label>
+      d.innerHTML = `<label class="check head"><input type="checkbox" id="c${i}-on"${c.on ? " checked" : ""}> ${i ? "Your partner commutes" : "You commute"}</label>
         <div class="grid2"${c.on ? "" : " hidden"}>
           <div><label for="c${i}-work">Workplace</label><select id="c${i}-work">${WORKPLACES.map(w => `<option value="${w.id}"${w.id === c.work ? " selected" : ""}>${w.name}</option>`).join("")}</select></div>
           <div><label for="c${i}-mode">Travels by</label><select id="c${i}-mode"><option value="car"${c.mode === "car" ? " selected" : ""}>Car</option><option value="pt"${c.mode === "pt" ? " selected" : ""}>Bus, train or tram</option></select></div>
@@ -3660,7 +3666,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     state.loanMode = mode;
     $("modeDeposit").setAttribute("aria-pressed", String(mode === "deposit"));
     $("modeFixed").setAttribute("aria-pressed", String(mode === "fixed"));
-    $("depositWrap").hidden = mode !== "deposit"; $("loanWrap").hidden = mode !== "fixed";
+    $("depositWrap").hidden = mode !== "deposit" || !!state.depAuto; $("depAutoWrap").hidden = mode !== "deposit" || !state.depAuto; $("loanWrap").hidden = mode !== "fixed";
     if (!quiet) changed();
   }
 
@@ -3700,7 +3706,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <tr class="sub"><td>${isUnit() ? "Contents insurance (building covered by strata)" : "Home and contents insurance"}${state.insQuote > 0 ? '<span class="tag-ok">Quote</span>' : est}</td><td class="r num">${m(s.pc.insurance)}</td></tr>
       ${isUnit() ? `<tr class="sub"><td>Strata fees${term("strata")}${est}</td><td class="r num">${m(s.pc.strata)}</td></tr>` : ""}
       ${true ? `<tr class="sub"><td>Petrol and transport: included in living costs, same in every suburb</td><td></td></tr>` : `<tr><td>Commute to work <span class="muted small">(about ${fmt(weekly(s.commuteNew))} a week)</span></td><td class="r num">−${fmt(s.commuteNew)}</td></tr>
-      ${s.commute.map((c, i) => state.commuters[i].on ? `<tr class="sub"><td>Borrower ${i + 1}: ${c.wp ? c.wp.name : ""}${c.km ? `, ${c.km.toFixed(0)} km each way` : ""}${state.commuters[i].mode === "pt" && c.km ? " by public transport" : ""}</td><td class="r num">${fmt(c.cost)}</td></tr>` : "").join("")}`}
+      ${s.commute.map((c, i) => state.commuters[i].on ? `<tr class="sub"><td>${i ? "Your partner" : "You"}: ${c.wp ? c.wp.name : ""}${c.km ? `, ${c.km.toFixed(0)} km each way` : ""}${state.commuters[i].mode === "pt" && c.km ? " by public transport" : ""}</td><td class="r num">${fmt(c.cost)}</td></tr>` : "").join("")}`}
       ${state.own === "keep" ? `<tr><td>Property you're keeping</td><td class="r num">${s.ownNet > 0 ? "−" : "+"}${fmt(Math.abs(s.ownNet)).replace("−", "")}</td></tr>
       <tr class="sub"><td>Its loan repayment</td><td class="r num">−${fmt(s.ownRepay)}</td></tr>
       ${s.eqRepay ? `<tr class="sub"><td>Repayment on ${fmt(s.eqUsed)} of equity used</td><td class="r num">−${fmt(s.eqRepay)}</td></tr>` : ""}
@@ -4020,7 +4026,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     let dep = Math.max(0, Math.min(p, f - (fhbNew ? 0 : (state.dutyOnLoan ? 0 : stampDuty(p))) - feesFor(p) + (fhbNew ? FHOG : 0)));
     let x;
     for (let i = 0; i < 4; i++) {
-      x = withState({ loanMode: "deposit", deposit: dep, priceOverride: { ...state.priceOverride, [sub.id]: p } }, () => scenario(sub));
+      x = withState({ loanMode: "deposit", depAuto: false, deposit: dep, priceOverride: { ...state.priceOverride, [sub.id]: p } }, () => scenario(sub));
       const over = x.cashNeeded - f; if (over <= 0.5) break; dep = Math.max(0, dep - over);
     }
     return x;
@@ -4122,7 +4128,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     return { v: 1, d: new Date().toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }), n: sub.name, c: sub.council, p: Math.round(s.price),
       l: Math.round(s.after), lb: st.label, cls: st.cls, ok: st.canBuy ? 1 : 0, b: bankWord(s), loan: Math.round(s.loan), r: Math.round(s.repay), rt: state.rate, tm: state.term,
       // Cash needed with a 5% deposit depends only on the price and buyer type, so it doesn't reveal their savings
-      cash5: Math.round(withState({ savings: 1e9, loanMode: "deposit", deposit: Math.ceil(s.price * 0.05) }, () => scenario(sub).cashNeeded)), w, sch, sl };
+      cash5: Math.round(withState({ savings: 1e9, loanMode: "deposit", depAuto: false, deposit: Math.ceil(s.price * 0.05) }, () => scenario(sub).cashNeeded)), w, sch, sl };
   }
   function shareUrl() { const base = SITE.siteUrl || location.href.replace(/#.*$/, ""); return `${base}#v.${b64url(JSON.stringify(shareSnap()))}`; }
   function openShareDlg() {
@@ -4580,7 +4586,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
         ${state.loanMode === "deposit" ? `<div class="btn-row"><button type="button" id="ownToDep">Put it towards my deposit</button><span class="small muted">Sets the deposit to what's left after stamp duty and costs for ${escapeHtml(s.sub.name)}.</span></div>` : ""}`;
     }
     const btn = $("ownToDep");
-    if (btn) btn.onclick = () => { const price = priceFor(s.sub), duty = fhbOk() && state.newBuild ? 0 : stampDuty(price); state.deposit = Math.max(0, Math.min(price, Math.round((funds() - duty - feesFor(price)) / 1000) * 1000)); $("deposit").value = state.deposit; changed(); };
+    if (btn) btn.onclick = () => { const price = priceFor(s.sub), duty = fhbOk() && state.newBuild ? 0 : stampDuty(price); state.deposit = Math.max(0, Math.min(price, Math.round((funds() - duty - feesFor(price)) / 1000) * 1000)); state.depAuto = false; $("deposit").value = state.deposit; setMode(state.loanMode, true); changed(); };
   }
 
 
@@ -4595,6 +4601,10 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     deposit: ["Deposit", "The part of the price you pay from your own money. The rest is the loan. A deposit of 20% or more avoids lenders mortgage insurance."],
     equity: ["Equity", "The part of a property you own outright: its value minus what you still owe. Lenders usually let you borrow against it up to 80% of the value."],
     preapproval: ["Pre-approval", "A lender's conditional OK on how much you can borrow, before you find a home. It usually lasts about 3 months and makes offers stronger."],
+    takehome: ["Take-home pay", "Your pay after tax, as it lands in your bank account. It's the \"net pay\" on your payslip. Don't include super."],
+    savings: ["Savings", "Money you have now that could go towards buying a home: bank and savings accounts, term deposits, and any money family is giving you. Leave out super."],
+    scheme: ["5% Deposit Scheme", "An Australian Government scheme that lets eligible first home buyers buy with a deposit of as little as 5% without paying lenders mortgage insurance. In Adelaide it covers homes up to $900,000. A participating lender applies for you."],
+    fhog: ["First Home Owner Grant", "A $15,000 payment from the SA Government for first home buyers who buy or build a new home. It isn't available for existing homes."],
     settle: ["Money needed to buy", "Your deposit plus stamp duty, legal and registration costs, and any lenders mortgage insurance not added to the loan, less any grant."]
   };
   const term = k => GLOSSARY[k] ? `<button type="button" class="term" data-term="${k}" aria-label="What is ${GLOSSARY[k][0]}?">?</button>` : "";
@@ -4633,12 +4643,12 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       : `<b>Estimated time to reach this price:</b> about ${monthLabel(m)}, if saving continues at ${fmt(save)} a month${state.priceGrowth ? ` and prices rise ${state.priceGrowth}% a year` : ""}. The “How to get there” tab shows the working.`;
     if (m === 0) {
       // Smallest deposit, in $5,000 steps, that passes the bank check and the 5% minimum, within the savings they have
-      const passes = d => { const x = withState({ loanMode: "deposit", deposit: d }, () => scenario(sub)); return x.lenderSurplus >= 0 && depShare(x) >= 0.05 - 1e-9 && x.cashNeeded <= funds() + 0.5 && !x.depCapped; };
+      const passes = d => { const x = withState({ loanMode: "deposit", depAuto: false, deposit: d }, () => scenario(sub)); return x.lenderSurplus >= 0 && depShare(x) >= 0.05 - 1e-9 && x.cashNeeded <= funds() + 0.5 && !x.depCapped; };
       let lo = Math.max(0, s.depositNeeded), hi = Math.max(lo, best.depositNeeded);
       if (!passes(hi)) hi = best.depositNeeded;
       for (let i = 0; i < 24 && hi - lo > 1000; i++) { const mid = (lo + hi) / 2; if (passes(mid)) hi = mid; else lo = mid; }
       let need = Math.ceil(hi / 5000) * 5000; if (!passes(need)) need = Math.ceil(hi / 1000) * 1000;
-      const cash = withState({ loanMode: "deposit", deposit: need }, () => scenario(sub)).cashNeeded;
+      const cash = withState({ loanMode: "deposit", depAuto: false, deposit: need }, () => scenario(sub)).cashNeeded;
       return `<div class="take-head warn"><b>On your figures, a larger deposit would pass these checks now.</b> You've entered ${fmt(funds())} in savings but a ${fmt(s.depositNeeded)} deposit. With a deposit of about <b>${fmt(need)}</b>, the loan is likely to pass our rough lender check and your savings would still cover stamp duty and fees (${fmt(cash)} in total). If your savings figure isn't right, change it in the Deposit &amp; loan step.</div>`;
     }
     return `<div class="take-head bad"><b>Not yet at ${fmt(s.price)}, on these figures.</b> ${when}<br>For these checks to pass now, the estimate needs:<ul style="margin:6px 0;padding-left:18px">${items.join("")}</ul>${tip}</div>`;
@@ -4680,9 +4690,9 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     if (document.activeElement !== sd) {
       sd.step = 5000; sd.min = depMode ? 0 : 100000;
       sd.max = depMode ? Math.max(Math.round(price * 0.5 / 5000) * 5000, state.deposit) : Math.max(Math.round(price / 5000) * 5000, state.loan);
-      sd.value = depMode ? state.deposit : state.loan;
+      sd.value = depMode ? (state.depAuto ? Math.round(s.depositNeeded) : state.deposit) : state.loan;
     }
-    $("slDepV").textContent = fmt(depMode ? state.deposit : state.loan); $("slDepMin").textContent = fmt(Number(sd.min)); $("slDepMax").textContent = fmt(Number(sd.max));
+    $("slDepV").textContent = fmt(depMode ? (state.depAuto ? s.depositNeeded : state.deposit) : state.loan); $("slDepMin").textContent = fmt(Number(sd.min)); $("slDepMax").textContent = fmt(Number(sd.max));
     if (document.activeElement !== sr) sr.value = state.rate;
     $("slRateV").textContent = `${Number(state.rate).toFixed(2)}%`;
   }
@@ -5001,6 +5011,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   function loadState(saved) {
     const fresh = defaultState();
     state = Object.assign(fresh, saved || {});
+    if (!(saved && "depAuto" in saved)) state.depAuto = false;
     if (!(saved && saved.takeHome) && saved && saved.income) state.takeHome = [{ amount: saved.income, freq: "monthly" }, { amount: 0, freq: "fortnightly" }];
     CAT_IDS.forEach(id => { if (!state.expenses[id]) state.expenses[id] = { amount: 0, freq: "monthly" }; });
     if (!subs().some(s => s.id === state.suburb)) state.suburb = "seaton";
@@ -5353,7 +5364,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     $("pay" + i).addEventListener("input", e => { state.takeHome[i].amount = num(e.target.value); recalcIncome(); markEdited(); changed(); });
     $("payf" + i).addEventListener("change", e => { state.takeHome[i].freq = e.target.value; recalcIncome(); changed(); });
   });
-  bindNum("children", "children"); bindSelect("adults", "adults");
+  bindNum("children", "children"); bindSelect("adults", "adults", () => { if (state.adults < 2) { state.takeHome[1] = { ...state.takeHome[1], amount: 0 }; syncPayInputs(); } syncAdults(); });
   bindNum("cardLimits", "cardLimits", { blankZero: true }); 
   bindText("clientName", "clientName", () => { $("clientNameIntake").value = state.clientName; });
   $("clientNameIntake").addEventListener("input", e => { state.clientName = e.target.value; $("clientName").value = state.clientName; });
@@ -5388,6 +5399,8 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("price").addEventListener("input", () => { const v = num($("price").value); if (v > 0) state.priceOverride[state.suburb] = v; else delete state.priceOverride[state.suburb]; changed(); });
   $("resetPrice").onclick = () => { delete state.priceOverride[state.suburb]; syncPrice(); changed(); };
   $("modeDeposit").onclick = () => setMode("deposit");
+  $("depAutoOff").onclick = () => { const s = scenario(subById(state.suburb)); state.depAuto = false; state.deposit = Math.round(s.depositNeeded / 1000) * 1000; $("deposit").value = state.deposit; setMode("deposit"); $("deposit").focus(); };
+  $("depAutoOn").onclick = () => { state.depAuto = true; setMode("deposit"); };
   $("modeFixed").onclick = () => setMode("fixed");
   document.querySelectorAll('.tabs [role="tab"]').forEach(t => t.addEventListener("click", () => {
     document.querySelectorAll('.tabs [role="tab"]').forEach(x => { const on = x === t; x.setAttribute("aria-selected", String(on)); $(x.getAttribute("aria-controls")).hidden = !on; });
@@ -5476,7 +5489,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("landStart2").onclick = () => $("landStart").click();
   $("landStart").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false;
     // A new buyer starts with none of the example household's money figures
-    Object.assign(state, { cardLimits: 0, savings: 0, deposit: 0 }); try { state.docs = JSON.parse(localStorage.getItem("sf-docs") || "{}"); } catch (e) {} syncInputs(); $("exampleNote").hidden = true; setStatus(""); showLanding(false); wizOn = true; wizIdx = 0; changed(); renderWiz(); };
+    Object.assign(state, { cardLimits: 0, savings: 0, deposit: 0, depAuto: true }); try { state.docs = JSON.parse(localStorage.getItem("sf-docs") || "{}"); } catch (e) {} syncInputs(); $("exampleNote").hidden = true; setStatus(""); showLanding(false); wizOn = true; wizIdx = 0; changed(); renderWiz(); };
   $("landExample").onclick = () => { showLanding(false); wizOn = false; renderWiz(); render(); window.scrollTo(0, 0); };
   const setPro = on => { document.body.classList.toggle("pro", on); try { localStorage.setItem("sf-pro", on ? "1" : ""); } catch (e) {} };
   try { if (localStorage.getItem("sf-pro") === "1") document.body.classList.add("pro"); } catch (e) {}
@@ -5513,7 +5526,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("wizEdit").onclick = () => { wizOn = true; wizIdx = 0; renderWiz(); wizScroll(); };
   $("slPrice").addEventListener("input", e => { const sub = subById(state.suburb); state.priceOverride[sub.id] = Number(e.target.value); $("price").value = e.target.value; changed(); });
   $("slPriceReset").onclick = () => { delete state.priceOverride[state.suburb]; syncPrice(); changed(); };
-  $("slDep").addEventListener("input", e => { const v = Number(e.target.value); if (state.loanMode === "deposit") { state.deposit = v; $("deposit").value = v; } else { state.loan = v; $("loan").value = v; } changed(); });
+  $("slDep").addEventListener("input", e => { const v = Number(e.target.value); if (state.loanMode === "deposit") { state.deposit = v; $("deposit").value = v; if (state.depAuto) { state.depAuto = false; setMode("deposit", true); } } else { state.loan = v; $("loan").value = v; } changed(); });
   $("slRate").addEventListener("input", e => { state.rate = Number(e.target.value); $("rate").value = state.rate; changed(); });
   bindNum("planSave", "planSave", { nullable: true }); bindNum("priceGrowth", "priceGrowth");
   $("checkIn").onclick = recordCheckIn;
