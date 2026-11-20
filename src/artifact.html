@@ -870,10 +870,10 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 /* Step 5: choose an area, then a council */
 .pick-tools { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 300px); gap: 10px; align-items: end; margin-bottom: 10px; }
 .pick-tools input { width: 100%; }
-.area-pick label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; color: var(--muted); }
+.area-pick label { display: block; font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; color: var(--ink); }
 .area-sel { position: relative; }
-.area-sel svg { position: absolute; left: 12px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--orange); pointer-events: none; }
-.area-sel select { width: 100%; min-height: 48px; padding-left: 38px; font-weight: 700; color: var(--ink); background-color: var(--surface); border: 1.5px solid var(--accent); border-radius: 12px; }
+.area-sel svg { position: absolute; left: 14px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%); color: var(--orange); pointer-events: none; }
+.area-sel select { width: 100%; min-height: 58px; padding-left: 44px; font-size: 1.12rem; font-weight: 700; color: var(--ink); background-color: var(--surface); border: 1.5px solid var(--accent); border-radius: 12px; }
 .area-sel select:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 1px; }
 .council-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
 .council-chips button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600; font-size: 0.9rem; }
@@ -888,6 +888,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   .council-chips::-webkit-scrollbar { display: none; }
   .council-chips button { flex: none; white-space: nowrap; font-size: 0.86rem; padding: 6px 12px; }
 }
+.pick-more { display: block; margin: 10px 0 0; font-weight: 700; }
 /* ---------- Phones: less scrolling, the answer first ---------- */
 .m-fold-head { display: none; }
 @media (max-width: 700px) {
@@ -1441,7 +1442,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <p class="hint" style="margin-top:8px" id="typeHint">Bigger homes also cost more to power and insure; those bills update too.</p>
         </div>
         <div class="pick-tools" id="pickTools">
-          <input id="subSearch" type="search" placeholder="Or search a suburb or postcode" aria-label="Search suburbs by name or postcode">
+          <input id="subSearch" type="search" placeholder="Search a suburb or postcode" aria-label="Search suburbs by name or postcode">
           <div class="area-pick">
             <label for="areaSel">Area</label>
             <div class="area-sel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></svg>
@@ -2376,7 +2377,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       expMode: "quick", quick: { rent: { amount: 0, freq: "weekly" }, spend: { amount: 0, freq: "weekly" }, debt: { amount: 0, freq: "monthly" } },
       intakeSuburbs: [], intakeNotes: "", takeGoal: 0.15, planSave: null, priceGrowth: 3, checkins: [],
       goals: { purpose: "First home to live in", time: "3 to 6 months", rateType: "Variable", features: [], priorities: "", notes: "", reviewed: false },
-      shortlist: ["fulham", "lockleys", "westbeach", "seaton", "royalpark", "flinderspark", "findon", "henleybeach", "hendon", "woodvillewest"]
+      shortlist: [], subChosen: false
     };
     CAT_IDS.forEach(id => s.expenses[id] = { amount: 0, freq: id === "fuel" ? "weekly" : "monthly" });
     return s;
@@ -2398,8 +2399,19 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   const subs = () => [...SUBURBS, ...customSuburbs];
   const subById = id => subs().find(s => s.id === id) || SUBURBS[0];
   // Suburbs shown in the comparison chart, petrol table, projection table and PDF: the shortlist plus the selected suburb
-  const listSubs = () => subs().filter(s => (state.shortlist || []).includes(s.id) || s.id === state.suburb);
-  let pickFilter = "", pickGroup = "short", pickCouncil = "", pickCollapsed = false;
+  let suggCache = null;
+  function suggestions() {
+    if (suggCache) return suggCache;
+    const rows = subs().filter(x => !x.custom).map(x => { const sc = scenario(x); return { x, price: sc.price, ok: status(sc).canBuy }; });
+    const fit = rows.filter(r => r.ok).sort((a, b) => b.price - a.price);
+    suggCache = fit.length ? { fit: true, count: fit.length, list: fit.map(r => r.x) } : { fit: false, count: 0, list: rows.sort((a, b) => a.price - b.price).map(r => r.x) };
+    return suggCache;
+  }
+  // The suburbs compared in the results: the buyer's own shortlist, or the top suggestions until they star some
+  const listSubs = () => (state.shortlist || []).length
+    ? subs().filter(s => state.shortlist.includes(s.id) || s.id === state.suburb)
+    : [...new Set([subById(state.suburb), ...suggestions().list.slice(0, 6)].filter(Boolean))];
+  let pickFilter = "", pickGroup = "", pickCouncil = "", pickCollapsed = false, pickMore = false;
   // Areas of Adelaide, each a set of councils
   const AREAS = {
     west: { label: "Adelaide West", councils: ["Charles Sturt", "West Torrens", "Port Adelaide Enfield"] },
@@ -2409,8 +2421,10 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   };
   function renderAreaPick() {
     const all = subs(), n = (k) => all.filter(x => AREAS[k].councils.includes(x.council)).length;
-    const opts = [["short", `My shortlist (${listSubs().length})`], ...Object.keys(AREAS).map(k => [k, `${AREAS[k].label} (${n(k)} suburbs)`]),
-      ["cap", `Under $900k: 5% scheme cap (${all.filter(x => priceFor(x) <= SCHEME_CAP).length})`], ["all", `All suburbs (${all.length})`]];
+    const sg = suggestions(), own = (state.shortlist || []).length;
+    if (!pickGroup || (pickGroup === "short" && !own)) pickGroup = own ? "short" : "fit";
+    const opts = [["fit", sg.fit ? `Suggested for you (${sg.count})` : "Suggested: lowest priced"], ...(own ? [["short", `My shortlist (${own})`]] : []), ...Object.keys(AREAS).map(k => [k, `${AREAS[k].label} (${n(k)})`]),
+      ["cap", `Under $900k (${all.filter(x => priceFor(x) <= SCHEME_CAP).length})`], ["all", `All suburbs (${all.length})`]];
     $("areaSel").innerHTML = opts.map(([v, t]) => `<option value="${v}"${v === pickGroup ? " selected" : ""}>${escapeHtml(t)}</option>`).join("");
     const area = AREAS[pickGroup], chips = $("councilChips");
     chips.hidden = !area || pickCollapsed || !!pickFilter.trim() || area.councils.length < 2;
@@ -3030,9 +3044,23 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     const q = pickFilter.trim().toLowerCase();
     let pool = subs();
     if (q) pool = pool.filter(s => s.name.toLowerCase().includes(q) || (s.postcode || "").startsWith(q));
+    else if (pickGroup === "fit") { const sg = suggestions(); pool = sg.list.slice(0, pickMore ? 60 : 12); }
     else if (pickGroup === "short") pool = listSubs();
     else if (pickGroup === "cap") pool = pool.filter(s => priceFor(s) <= SCHEME_CAP);
     else if (AREAS[pickGroup]) pool = pool.filter(s => pickCouncil ? s.council === pickCouncil : AREAS[pickGroup].councils.includes(s.council));
+    if (pickGroup === "fit" && !q) {
+      const sg = suggestions();
+      if (!state.subChosen && pool[0] && state.suburb !== pool[0].id) { state.suburb = pool[0].id; syncPrice(); setTimeout(changed, 0); }
+      const h = document.createElement("div"); h.className = "region-h";
+      h.textContent = sg.fit ? `Suggested for you: ${sg.count} suburb${sg.count === 1 ? "" : "s"} where your figures pass every check, highest price first` : "No suburb passes every check yet on your figures. These are the lowest priced:";
+      wrap.appendChild(h);
+      const grid = document.createElement("div"); grid.className = "picks"; wrap.appendChild(grid);
+      pool.forEach(s => grid.appendChild(pickCard(s)));
+      const more = sg.fit ? sg.count : 60;
+      if (more > 12) { const b = document.createElement("button"); b.type = "button"; b.className = "link-btn pick-more"; b.textContent = pickMore ? "Show fewer" : `Show more (${Math.min(more, 60) - 12} more)`; b.onclick = () => { pickMore = !pickMore; renderSubPick(); }; wrap.appendChild(b); }
+      const tip = document.createElement("p"); tip.className = "hint"; tip.textContent = "Or choose an area above to see every suburb there."; wrap.appendChild(tip);
+      return;
+    }
     const regions = [...new Set(pool.map(s => s.region || "Other"))];
     if (!pool.length) { wrap.innerHTML = `<p class="pick-empty">No suburbs match "${escapeHtml(pickFilter)}". Try another name or postcode, or add it below.</p>`; }
     regions.forEach(rg => {
@@ -3050,7 +3078,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     if (k >= 0) list.splice(k, 1); else list.push(id);
     rebuildPetrolRows(); changed();
   }
-  function selectSuburb(id, keepOpen) { state.suburb = id; if (!keepOpen) pickCollapsed = true; syncPrice(); rebuildPetrolRows(); changed(); }
+  function selectSuburb(id, keepOpen) { state.suburb = id; state.subChosen = true; if (!keepOpen) pickCollapsed = true; syncPrice(); rebuildPetrolRows(); changed(); }
   function syncPrice() { const s = subById(state.suburb); $("price").value = Math.round(priceFor(s)); $("priceSub").textContent = s.name; }
   function setMode(mode, quiet) {
     state.loanMode = mode;
@@ -3062,7 +3090,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 
   // ---------- Rendering: results ----------
   let dirty = false;
-  function changed() { dirty = true; render(); updateSavedState(); }
+  function changed() { dirty = true; suggCache = null; render(); updateSavedState(); }
   function render() {
     if (document.body.classList.contains("openhome")) { renderOpen(); return; }
     if (document.body.classList.contains("intake")) { renderIntakeSuburbs(); return; }
@@ -4837,7 +4865,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("nsCouncil").addEventListener("change", e => { $("nsRateWrap").hidden = e.target.value !== "Other"; });
   $("nsSave").onclick = saveSuburb;
   $("subSearch").addEventListener("input", e => { pickFilter = e.target.value; renderSubPick(); });
-  $("areaSel").addEventListener("change", e => { pickGroup = e.target.value; pickCouncil = ""; pickFilter = ""; $("subSearch").value = ""; renderSubPick(); $("councilChips").scrollLeft = 0; });
+  $("areaSel").addEventListener("change", e => { pickGroup = e.target.value; pickCouncil = ""; pickMore = false; pickFilter = ""; $("subSearch").value = ""; renderSubPick(); $("councilChips").scrollLeft = 0; });
   window.addEventListener("hashchange", applyMode);
   // What it takes
   document.querySelectorAll("#goalSeg [data-goal]").forEach(b => b.addEventListener("click", () => { state.takeGoal = Number(b.dataset.goal); changed(); }));
