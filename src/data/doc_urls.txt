@@ -40,5 +40,3 @@ https://www.governmentgazette.sa.gov.au/2026/July/2026_046.pdf
 # Leaflet 1.9.4 (map library) stylesheet and script
 https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css
 https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js
-# Australian postcodes by suburb (public dataset), for postcodes.json
-https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_postcodes.csv
