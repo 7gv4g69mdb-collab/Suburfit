@@ -1273,6 +1273,28 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 .policy-sum ul { margin: 6px 0 0; padding-left: 18px; }
 .pp-link { font-size: 0.85rem; }
 .wiz-now { display: none; }
+
+/* Step 5: choose an area, then a council */
+.pick-tools { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 300px); gap: 10px; align-items: end; margin-bottom: 10px; }
+.pick-tools input { width: 100%; }
+.area-pick label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; color: var(--muted); }
+.area-sel { position: relative; }
+.area-sel svg { position: absolute; left: 12px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--orange); pointer-events: none; }
+.area-sel select { width: 100%; min-height: 48px; padding-left: 38px; font-weight: 700; color: var(--ink); background-color: var(--surface); border: 1.5px solid var(--accent); border-radius: 12px; }
+.area-sel select:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 1px; }
+.council-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.council-chips button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600; font-size: 0.9rem; }
+.council-chips button span { font-size: 0.75rem; font-weight: 700; color: var(--muted); background: var(--surface-2); border-radius: 999px; padding: 1px 8px; }
+.council-chips button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+.council-chips button[aria-pressed="true"] span { background: var(--orange); color: var(--navy); }
+@media (max-width: 600px) {
+  .pick-tools { grid-template-columns: minmax(0, 1fr); }
+  .pick-tools .area-pick { order: -1; }
+  .council-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px 4px; scroll-padding-inline: 16px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 28px), transparent); }
+  .council-chips::-webkit-scrollbar { display: none; }
+  .council-chips button { flex: none; white-space: nowrap; font-size: 0.86rem; padding: 6px 12px; }
+}
 /* ---------- Phones: less scrolling, the answer first ---------- */
 .m-fold-head { display: none; }
 @media (max-width: 700px) {
@@ -1313,8 +1335,6 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   .pick .upto { display: none; }
   .pick-wrap .pick { padding-right: 30px; }
   .star { width: 28px; height: 28px; top: 4px; right: 2px; }
-  .pick-tools .seg-toggle { overflow-x: auto; max-width: 100%; flex-wrap: nowrap; }
-  .pick-tools .seg-toggle button { white-space: nowrap; }
   /* results: answer first, the rest tap to open */
   .res-hero { padding: 16px; gap: 12px; border-radius: 16px; }
   .hero-top > div > p, .hero-top .eyebrow { display: none; }
@@ -1827,24 +1847,15 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           </div>
           <p class="hint" style="margin-top:8px" id="typeHint">Bigger homes also cost more to power and insure; those bills update too.</p>
         </div>
-        <div class="pick-tools" id="pickTools" style="flex-wrap:wrap">
-          <input id="subSearch" type="search" placeholder="Search 240 suburbs by name or postcode" aria-label="Search suburbs">
-          <div class="seg-toggle" role="group" aria-label="Show suburbs" style="margin:0">
-            <button type="button" data-g="short" aria-pressed="true">Shortlist</button>
-            <button type="button" data-g="City of Charles Sturt" aria-pressed="false">Charles Sturt</button>
-            <button type="button" data-g="City of West Torrens" aria-pressed="false">West Torrens</button>
-            <button type="button" data-g="City of Port Adelaide Enfield" aria-pressed="false">Port Adelaide Enfield</button>
-            <button type="button" data-g="City of Salisbury" aria-pressed="false">Salisbury</button>
-            <button type="button" data-g="City of Playford" aria-pressed="false">Playford</button>
-            <button type="button" data-g="City of Onkaparinga" aria-pressed="false">Onkaparinga</button>
-            <button type="button" data-g="City of Norwood Payneham &amp; St Peters" aria-pressed="false">Norwood Payneham &amp; St Peters</button>
-            <button type="button" data-g="City of Burnside" aria-pressed="false">Burnside</button>
-            <button type="button" data-g="Campbelltown City Council" aria-pressed="false">Campbelltown</button>
-            <button type="button" data-g="Town of Walkerville" aria-pressed="false">Walkerville</button>
-            <button type="button" data-g="cap" aria-pressed="false" title="Homes priced within the 5% Deposit Scheme and Help to Buy cap">Under $900k</button>
-            <button type="button" data-g="all" aria-pressed="false">All</button>
+        <div class="pick-tools" id="pickTools">
+          <input id="subSearch" type="search" placeholder="Or search a suburb or postcode" aria-label="Search suburbs by name or postcode">
+          <div class="area-pick">
+            <label for="areaSel">Area</label>
+            <div class="area-sel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></svg>
+              <select id="areaSel"></select></div>
           </div>
         </div>
+        <div class="council-chips" id="councilChips" role="group" aria-label="Council" hidden></div>
         <p class="hint" id="pickHint" style="margin:-4px 0 10px">Star a suburb to add it to the shortlist that's compared in the results, the petrol table and the PDF.</p>
         <p class="pick-note" id="pickNote"></p>
         <div id="subPick"></div>
@@ -2826,7 +2837,27 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   const subById = id => subs().find(s => s.id === id) || SUBURBS[0];
   // Suburbs shown in the comparison chart, petrol table, projection table and PDF: the shortlist plus the selected suburb
   const listSubs = () => subs().filter(s => (state.shortlist || []).includes(s.id) || s.id === state.suburb);
-  let pickFilter = "", pickGroup = "short", pickCollapsed = false;
+  let pickFilter = "", pickGroup = "short", pickCouncil = "", pickCollapsed = false;
+  // Areas of Adelaide, each a set of councils
+  const AREAS = {
+    west: { label: "Adelaide West", councils: ["Charles Sturt", "West Torrens", "Port Adelaide Enfield"] },
+    north: { label: "Adelaide North", councils: ["Salisbury", "Playford"] },
+    east: { label: "Adelaide East", councils: ["Norwood Payneham & St Peters", "Burnside", "Campbelltown", "Walkerville"] },
+    south: { label: "Adelaide South", councils: ["Onkaparinga"] }
+  };
+  function renderAreaPick() {
+    const all = subs(), n = (k) => all.filter(x => AREAS[k].councils.includes(x.council)).length;
+    const opts = [["short", `My shortlist (${listSubs().length})`], ...Object.keys(AREAS).map(k => [k, `${AREAS[k].label} (${n(k)} suburbs)`]),
+      ["cap", `Under $900k: 5% scheme cap (${all.filter(x => priceFor(x) <= SCHEME_CAP).length})`], ["all", `All suburbs (${all.length})`]];
+    $("areaSel").innerHTML = opts.map(([v, t]) => `<option value="${v}"${v === pickGroup ? " selected" : ""}>${escapeHtml(t)}</option>`).join("");
+    const area = AREAS[pickGroup], chips = $("councilChips");
+    chips.hidden = !area || pickCollapsed || !!pickFilter.trim() || area.councils.length < 2;
+    if (!chips.hidden) {
+      const btn = (v, t, c) => `<button type="button" data-c="${escapeHtml(v)}" aria-pressed="${pickCouncil === v}">${escapeHtml(t)}<span>${c}</span></button>`;
+      chips.innerHTML = btn("", "All councils", n(pickGroup)) + area.councils.map(c => btn(c, c, all.filter(x => x.council === c).length)).join("");
+      chips.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { pickCouncil = b.dataset.c; renderSubPick(); });
+    }
+  }
   const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
 
   const BED_FACTOR = { 1: 0.7, 2: 0.85, 3: 1, 4: 1.2, 5: 1.4 };
@@ -3416,6 +3447,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   }
   function renderSubPick() {
     const wrap = $("subPick"); wrap.innerHTML = "";
+    renderAreaPick();
     { const sel = subById(state.suburb), u = sel && upTo(sel), beds = state.bedrooms === 5 ? "5+" : state.bedrooms;
       $("pickNote").hidden = pickCollapsed;
       $("pickNote").innerHTML = `Prices are estimated for a ${beds}-bedroom house like the one you described, worked out from each suburb's median house sale price. ` +
@@ -3438,7 +3470,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
     if (q) pool = pool.filter(s => s.name.toLowerCase().includes(q) || (s.postcode || "").startsWith(q));
     else if (pickGroup === "short") pool = listSubs();
     else if (pickGroup === "cap") pool = pool.filter(s => priceFor(s) <= SCHEME_CAP);
-    else if (pickGroup !== "all") pool = pool.filter(s => s.region === pickGroup);
+    else if (AREAS[pickGroup]) pool = pool.filter(s => pickCouncil ? s.council === pickCouncil : AREAS[pickGroup].councils.includes(s.council));
     const regions = [...new Set(pool.map(s => s.region || "Other"))];
     if (!pool.length) { wrap.innerHTML = `<p class="pick-empty">No suburbs match "${escapeHtml(pickFilter)}". Try another name or postcode, or add it below.</p>`; }
     regions.forEach(rg => {
@@ -5243,11 +5275,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("nsCouncil").addEventListener("change", e => { $("nsRateWrap").hidden = e.target.value !== "Other"; });
   $("nsSave").onclick = saveSuburb;
   $("subSearch").addEventListener("input", e => { pickFilter = e.target.value; renderSubPick(); });
-  document.querySelectorAll(".pick-tools [data-g]").forEach(b => b.addEventListener("click", () => {
-    pickGroup = b.dataset.g; pickFilter = ""; $("subSearch").value = "";
-    document.querySelectorAll(".pick-tools [data-g]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-    renderSubPick();
-  }));
+  $("areaSel").addEventListener("change", e => { pickGroup = e.target.value; pickCouncil = ""; pickFilter = ""; $("subSearch").value = ""; renderSubPick(); $("councilChips").scrollLeft = 0; });
   window.addEventListener("hashchange", applyMode);
   // What it takes
   document.querySelectorAll("#goalSeg [data-goal]").forEach(b => b.addEventListener("click", () => { state.takeGoal = Number(b.dataset.goal); changed(); }));
