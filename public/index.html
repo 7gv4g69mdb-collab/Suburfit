@@ -905,6 +905,13 @@ body.wiz .entries-bar { display: none; }
 .lead-consent, .lead-send, .lead-form .status-msg { grid-column: 1 / -1; }
 .lead-send { min-height: 48px; font-size: 1rem; }
 .lead-done { grid-template-columns: minmax(0, 1fr); }
+.lead-card { background: var(--surface); color: var(--ink); border-radius: 12px; padding: 20px; display: grid; gap: 10px; align-content: start; }
+.lead-card .lc-who { display: grid; gap: 2px; font-size: 1.05rem; }
+.lead-card .lc-who span { font-size: 0.92rem; }
+.lead-card .lc-line { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.lead-card .lc-line .muted { min-width: 52px; }
+.lead-card .btn-row button { min-height: 46px; }
+.lead-card .hint { margin: 0; }
 .lead-done h3 { font-size: 1.15rem; }
 .lead-done pre { white-space: pre-wrap; font: inherit; font-size: 0.84rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 0; max-height: 260px; overflow: auto; }
 .lender-note { margin-top: 14px; border: 1px solid color-mix(in srgb, var(--warn) 35%, var(--line)); background: var(--warn-soft); border-radius: 12px; padding: 14px 16px; font-size: 0.9rem; display: grid; gap: 8px; }
@@ -1593,22 +1600,13 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   <section class="lead-panel lead-top broker-only" id="leadPanelTop" aria-labelledby="leadHTop">
     <div class="lead-intro">
       <h2 id="leadHTop">Speak to a broker</h2>
-      <p id="leadWhoTop">A local mortgage broker can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.</p>
+      <p id="leadWhoTop">A local mortgage broker can check these numbers with real lenders and help you get pre-approved. Brokers are usually paid a commission by the lender, so there's usually no cost to you.</p>
       <ul class="lead-points">
-        <li>Your results and the details you entered are sent with your request, so you won't have to repeat yourself.</li>
-        <li>Nothing is sent until you press the button below.</li>
+        <li>You contact the broker yourself. Fit To Buy doesn't send them anything.</li>
+        <li>Email them your results, or just call and start from scratch.</li>
       </ul>
     </div>
-    <div class="lead-form" id="leadFormTop">
-      <div><label for="tName">Your name</label><input id="tName" type="text" autocomplete="name"></div>
-      <div><label for="tEmail">Email</label><input id="tEmail" type="email" autocomplete="email" inputmode="email"></div>
-      <div><label for="tPhone">Contact number</label><input id="tPhone" type="tel" autocomplete="tel" inputmode="tel"></div>
-      <div><label for="tTime">Best time to call</label><select id="tTime"><option>Any time</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekend</option></select></div>
-      <label class="check lead-consent"><input type="checkbox" id="tConsent"> <span id="tConsentTxt">I agree to my details and results being sent to a broker so they can contact me about a home loan.</span></label> <a href="#privacy" class="pp-link" data-privacy>Privacy policy</a>
-      <button type="button" class="primary lead-send" id="tSend">Send my details to a broker</button>
-      <p class="status-msg" id="tMsg" aria-live="polite"></p>
-    </div>
-    <div class="lead-done" id="leadDoneTop" hidden></div>
+    <div class="lead-card" id="leadCardTop"></div>
   </section>
 
   <div class="extras broker-only">
@@ -2046,22 +2044,13 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   <section class="lead-panel broker-only" id="leadPanel" aria-labelledby="leadH">
     <div class="lead-intro">
       <h2 id="leadH">Speak to a broker</h2>
-      <p id="leadWho">A local mortgage broker can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.</p>
+      <p id="leadWho">A local mortgage broker can check these numbers with real lenders and help you get pre-approved. Brokers are usually paid a commission by the lender, so there's usually no cost to you.</p>
       <ul class="lead-points">
-        <li>Your results and the details you entered are sent with your request, so you won't have to repeat yourself.</li>
-        <li>Nothing is sent until you press the button below.</li>
+        <li>You contact the broker yourself. Fit To Buy doesn't send them anything.</li>
+        <li>Email them your results, or just call and start from scratch.</li>
       </ul>
     </div>
-    <div class="lead-form" id="leadForm">
-      <div><label for="lName">Your name</label><input id="lName" type="text" autocomplete="name"></div>
-      <div><label for="lEmail">Email</label><input id="lEmail" type="email" autocomplete="email" inputmode="email"></div>
-      <div><label for="lPhone">Contact number</label><input id="lPhone" type="tel" autocomplete="tel" inputmode="tel"></div>
-      <div><label for="lTime">Best time to call</label><select id="lTime"><option>Any time</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekend</option></select></div>
-      <label class="check lead-consent"><input type="checkbox" id="lConsent"> <span id="lConsentTxt">I agree to my details and results being sent to a broker so they can contact me about a home loan.</span></label> <a href="#privacy" class="pp-link" data-privacy>Privacy policy</a>
-      <button type="button" class="primary lead-send" id="lSend">Send my details to a broker</button>
-      <p class="status-msg" id="lMsg" aria-live="polite"></p>
-    </div>
-    <div class="lead-done" id="leadDone" hidden></div>
+    <div class="lead-card" id="leadCard"></div>
   </section>
 
   <footer class="fine broker-only" data-mfold="Sources and notes">
@@ -2114,7 +2103,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dpH" style="width:min(720px,100%)">
     <div class="dh"><h2 id="dpH">Privacy policy</h2><button type="button" class="close">Close</button></div>
     <div class="privacy-body policy">
-      <p class="small muted">Last updated 17 November 2026</p>
+      <p class="small muted">Last updated 23 November 2026</p>
       <p>This policy explains what personal information the Fit To Buy website (fittobuy.com.au) handles, why, and the choices you have. Fit To Buy is a business name registered in Australia. We aim to handle personal information in line with the Australian Privacy Principles in the Privacy Act 1988 (Cth).</p>
       <div class="policy-sum">
         <b>In short</b>
@@ -2122,7 +2111,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
           <li>Your figures are worked out on your own device. We don't keep a database of buyers or their figures.</li>
           <li>Nothing about you is sent anywhere unless you press a button to send it.</li>
           <li>Bank statements you upload never leave your device.</li>
-          <li>Your details only go to a broker if you ask for that, and we don't use advertising cookies.</li>
+          <li>We never send your details to a broker. If you want to talk to one, you contact them yourself. We don't use advertising cookies.</li>
         </ul>
       </div>
 
@@ -2132,8 +2121,8 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <p>A few things are saved in your browser's storage on your device, such as the ticks on your pre-approval checklist. You can remove them at any time by clearing this site's data in your browser settings.</p>
 
       <h3>2. When information leaves your device</h3>
-      <p><b>Speak to a broker.</b> If you tick the consent box and press send, your name, email, phone number, best time to call, your results and the figures you entered are sent to a mortgage broker so they can contact you about a home loan. This is sent through a form service (Formspree, based in the United States) or through your own email app. Once the broker receives it, they handle it under their own privacy policy and their obligations as a credit licensee or credit representative, so ask them for a copy. Brokers may pay Fit To Buy for enquiries. That never changes your results.</p>
-      <p><b>Save for later.</b> If you ask us to email you a link, your first name, your email address and the link are sent through an email service (EmailJS, based in the United States) so the email can be delivered. The link itself contains the figures you've entered, so anyone with the link can see them. Keep the email private. If you also tick the optional box, your name, email and the link are sent to a mortgage broker so they can contact you.</p>
+      <p><b>Speak to a broker.</b> Fit To Buy doesn't send your details to brokers. The results page shows a broker's contact details. If you choose to email them, your own email app opens with your results filled in, and you decide what to change or delete before you send it from your own account. You can also call them, or copy your results to share another way. Once a broker receives anything from you, they handle it under their own privacy policy and their obligations as a credit licensee or credit representative, so ask them for a copy. Brokers may pay Fit To Buy to appear on the site. That never changes your results.</p>
+      <p><b>Save for later.</b> If you ask us to email you a link, your first name, your email address and the link are sent through an email service (EmailJS, based in the United States) so the email can be delivered. The link itself contains the figures you've entered, so anyone with the link can see them. Keep the email private.</p>
       <p><b>Share your results.</b> A share link contains only your results page: the suburb, price, what's left each month, the lender check and your shortlist. It doesn't contain your pay, spending, savings or debts. The results sit in the part of the link after the "#", which browsers don't send to our servers. Anyone you send the link to can see those results.</p>
 
       <h3>3. Information collected automatically</h3>
@@ -2145,7 +2134,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <p>The providers named above may store or process information in the United States and other countries. We choose established providers and send them only what's needed for the task.</p>
 
       <h3>5. How long it's kept</h3>
-      <p>We don't keep your figures. Emails sent through EmailJS and enquiries sent through Formspree are kept by those services under their own retention settings. Brokers keep enquiries as their legal and licence obligations require.</p>
+      <p>We don't keep your figures. Emails sent through EmailJS are kept by that service under its own retention settings. If you contact a broker, they keep what you send as their legal and licence obligations require.</p>
 
       <h3>6. Security</h3>
       <p>Everything is sent over an encrypted (HTTPS) connection. Because your figures stay on your device, the main thing to protect is any link you save or share, so treat those like a private document.</p>
@@ -2293,7 +2282,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div><h3>What does "Lender check (estimate)" mean?</h3><p>Banks test whether you could still afford the loan if interest rates rose 3%, and they use minimum living costs. We run a similar check, so you can see early whether a loan is likely to be a stretch.</p></div>
       <div><h3>Why do you ask about my rent?</h3><p>Rent stops when you buy, and your loan repayment takes its place. Knowing your rent stops us counting both.</p></div>
       <div><h3>Can I save and come back later?</h3><p>Yes. Press "Save for later" on any step and we'll email you a link that opens where you left off.</p></div>
-      <div><h3>What happens if I talk to a broker?</h3><p>Only if you ask, a local mortgage broker contacts you to talk through your loan options. You don't have to go ahead.</p></div>
+      <div><h3>What happens if I talk to a broker?</h3><p>You contact the broker yourself, by email or phone; Fit To Buy doesn't send them anything. You can email them your results or start from scratch. They'll talk through your loan options, and you don't have to go ahead.</p></div>
     </div>
   </div>
 </div>
@@ -2317,7 +2306,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <p class="muted small">We'll email you a link. Click <b>Continue</b> in the email and you'll come back to this step with everything you've entered.</p>
       <div><label for="svName">Your first name</label><input id="svName" type="text" autocomplete="given-name"></div>
       <div><label for="svEmail">Email address</label><input id="svEmail" type="email" autocomplete="email" inputmode="email"></div>
-      <label class="check"><input type="checkbox" id="svBroker"> A local mortgage broker can also contact me (optional)</label> <a href="#privacy" class="pp-link" data-privacy>Privacy policy</a>
+      <p class="hint"><a href="#privacy" class="pp-link" data-privacy>Privacy policy</a></p>
       <p class="hint">Your figures are kept inside the link itself, not stored by us, so keep the email private.</p>
       <div class="btn-row"><button type="button" class="primary" id="svSend">Email me the link</button><span class="status-msg" id="svMsg" aria-live="polite"></span></div>
     </div>
@@ -2421,7 +2410,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
       <div><label for="bBroker">Broker name</label><input id="bBroker" type="text"></div>
       <div><label for="bPhone">Phone</label><input id="bPhone" type="tel"></div>
       <div><label for="bEmail">Email</label><input id="bEmail" type="email"></div>
-      <div style="grid-column:1/-1"><label for="bLeadUrl">Where "Speak to a broker" requests go (optional)</label><input id="bLeadUrl" type="url" placeholder="e.g. https://formspree.io/f/your-form-id"><p class="hint">Paste a free form-service link (such as Formspree) and requests arrive in your inbox automatically. Leave blank and the client's email app opens a ready-to-send email to the address above.</p></div>
+      <div style="grid-column:1/-1" hidden><label for="bLeadUrl">Where "Speak to a broker" requests go (optional)</label><input id="bLeadUrl" type="url" placeholder="e.g. https://formspree.io/f/your-form-id"><p class="hint">Paste a free form-service link (such as Formspree) and requests arrive in your inbox automatically. Leave blank and the client's email app opens a ready-to-send email to the address above.</p></div>
       <div style="grid-column:1/-1"><label>"Save for later" emails (EmailJS, optional)</label><div class="grid2"><input id="bEjService" type="text" placeholder="Service ID" aria-label="EmailJS service ID"><input id="bEjTemplate" type="text" placeholder="Template ID" aria-label="EmailJS template ID"><input id="bEjKey" type="text" placeholder="Public key" aria-label="EmailJS public key"></div><p class="hint">Without these, people can still copy their link or email it to themselves.</p></div>
       <div style="grid-column:1/-1"><label for="bLicence">Credit licence or representative number</label><input id="bLicence" type="text" placeholder="e.g. Credit Representative 000000 of ACL 000000"></div>
     </div>
@@ -3967,57 +3956,36 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
 
 
 
-  // ---------- Speak to a broker: send the client's details and results ----------
-  const LEAD_FORMS = [{ p: "l", who: "leadWho", form: "leadForm", done: "leadDone" }, { p: "t", who: "leadWhoTop", form: "leadFormTop", done: "leadDoneTop" }];
+  // ---------- Speak to a broker: the person contacts the broker themselves. Fit To Buy sends nothing. ----------
+  const LEAD_CARDS = ["leadCard", "leadCardTop"];
+  function leadBody() {
+    const who = brand.broker || brand.business || "";
+    return [`Hi${who ? " " + who.split(" ")[0] : ""},`, "", "I used Fit To Buy and would like to talk about a home loan. My results are below.", "", "Name: ", "Phone: ", "Best time to call: ", "", $("summaryText").value].join("\n");
+  }
   function renderLeadIntro() {
-    const who = brand.broker || brand.business;
-    LEAD_FORMS.forEach(f => {
-      if (!$(f.who)) return;
-      $(f.who).textContent = who ? `${brand.broker || "A broker"}${brand.business && brand.broker ? ` from ${brand.business}` : ""} can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.` : "A local mortgage broker can check these numbers with real lenders and help you get pre-approved, usually at no cost to you.";
-      $(f.p + "ConsentTxt").textContent = `I agree to my details and results being sent to ${who || "a broker"} so they can contact me about a home loan.`;
-      $(f.p + "Send").textContent = who ? `Send my details to ${brand.broker || brand.business}` : "Send my details to a broker";
-    });
+    const name = brand.broker || brand.business, ready = !!(name && (brand.email || brand.phone));
+    const first = name ? name.split(" ")[0] : "";
+    ["leadWho", "leadWhoTop"].forEach(id => { if ($(id)) $(id).textContent = ready
+      ? `${brand.broker || "A broker"}${brand.business && brand.broker ? ` from ${brand.business}` : ""} can check these numbers with real lenders and help you get pre-approved. Brokers are usually paid a commission by the lender, so there's usually no cost to you.`
+      : "A local mortgage broker can check these numbers with real lenders and help you get pre-approved. Brokers are usually paid a commission by the lender, so there's usually no cost to you."; });
+    const html = ready ? `
+      <div class="lc-who"><b>${escapeHtml(name)}</b>${brand.broker && brand.business ? `<span>${escapeHtml(brand.business)}</span>` : ""}${brand.licence ? `<span class="muted small">${escapeHtml(brand.licence)}</span>` : ""}</div>
+      ${brand.phone ? `<div class="lc-line"><span class="muted small">Phone</span><span>${escapeHtml(brand.phone)}</span></div>` : ""}
+      ${brand.email ? `<div class="lc-line"><span class="muted small">Email</span><span>${escapeHtml(brand.email)}</span></div>` : ""}
+      <div class="btn-row">
+        ${brand.email ? `<button type="button" class="primary" data-lead="email">Email my results to ${escapeHtml(first)}</button>` : ""}
+        ${brand.phone ? `<button type="button" data-lead="call">Call ${escapeHtml(first)}</button>` : ""}
+        <button type="button" data-lead="copy">Copy my results</button>
+      </div>
+      <p class="status-msg" data-lead-msg aria-live="polite"></p>
+      <p class="hint">Email opens your own email app with your results filled in. Change or delete anything before you send it, or just call and start from scratch.</p>
+      <p class="hint lc-disclose">Brokers may pay Fit To Buy to appear here. That never changes your results.</p>`
+    : `<div class="lc-who"><b>Broker details will appear here soon</b></div>
+      <p class="hint">In the meantime, copy your results to take to any broker or lender.</p>
+      <div class="btn-row"><button type="button" data-lead="copy">Copy my results</button></div>
+      <p class="status-msg" data-lead-msg aria-live="polite"></p>`;
+    LEAD_CARDS.forEach(id => { const el = $(id); if (el && el.dataset.html !== html) { el.innerHTML = html; el.dataset.html = html; } });
   }
-  function leadText(c) {
-    return [`New enquiry from Fit To Buy`, "", `Name: ${c.name}`, `Email: ${c.email}`, `Phone: ${c.phone}`, `Best time to call: ${c.time}`, "", $("summaryText").value.replace(/^Suburb affordability summary for .*$/m, `Suburb affordability summary for ${c.name}`)].join("\n");
-  }
-  async function sendLead(f) {
-    f = f || LEAD_FORMS[0]; const P = f.p;
-    const msg = $(P + "Msg"), c = { name: $(P + "Name").value.trim(), email: $(P + "Email").value.trim(), phone: $(P + "Phone").value.trim(), time: $(P + "Time").value };
-    const bad = (t, el) => { msg.className = "status-msg err"; msg.textContent = t; el && el.focus(); };
-    if (!c.name) return bad("Add your name.", $(P + "Name"));
-    if (!/^\S+@\S+\.\S+$/.test(c.email)) return bad("Add a valid email address.", $(P + "Email"));
-    if (c.phone.replace(/\D/g, "").length < 8) return bad("Add a contact number.", $(P + "Phone"));
-    if (!$(P + "Consent").checked) return bad("Tick the box to agree to your details being sent.", $(P + "Consent"));
-    const text = leadText(c), who = brand.broker || brand.business || "the broker";
-    const subject = `Home loan enquiry from ${c.name}`;
-    msg.className = "status-msg"; msg.textContent = "Sending...";
-    // 1) A form service (such as Formspree) emails the broker directly
-    if (brand.leadUrl && /^https:\/\//i.test(brand.leadUrl)) {
-      try {
-        const r = await fetch(brand.leadUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ name: c.name, email: c.email, phone: c.phone, best_time: c.time, _subject: subject, message: text }) });
-        if (r.ok) return leadDone(f, `Thanks ${c.name.split(" ")[0]}, your details have been sent to ${who}. They'll be in touch soon.`, text, false);
-      } catch (e) { /* falls through to email */ }
-    }
-    // 2) Open the client's email app with everything filled in
-    if (brand.email) {
-      const href = `mailto:${encodeURIComponent(brand.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text.length > 1800 ? text.slice(0, 1800) + "\n..." : text)}`;
-      try { window.location.href = href; } catch (e) { /* blocked in some views */ }
-      return leadDone(f, `Your email app should have opened with a message to ${who} (${brand.email}). Press send there to finish.`, text, true);
-    }
-    // 3) Nowhere set up yet (prototype)
-    leadDone(f, "Preview only: no broker email has been set up yet, so nothing was sent. Add one in Branding. This is what the broker would receive.", text, true);
-  }
-  function leadDone(f, headline, text, showText) {
-    // Show the result in both forms, so the client sees it wherever they look
-    LEAD_FORMS.forEach(g => {
-      if (!$(g.form)) return;
-      $(g.form).hidden = true; const d = $(g.done); d.hidden = false;
-      d.innerHTML = `<h3>${escapeHtml(headline)}</h3>${showText && g === f ? `<pre>${escapeHtml(text)}</pre>` : ""}<div class="btn-row"><button type="button" class="lead-again">Edit my details</button></div>`;
-      d.querySelector(".lead-again").onclick = () => LEAD_FORMS.forEach(h => { $(h.done).hidden = true; $(h.form).hidden = false; $(h.p + "Msg").textContent = ""; });
-    });
-  }
-
 
   // ---------- "You could spend up to" (most a suburb's price could be while the budget, a bank and savings all still work) ----------
   // Assumes the buyer puts all their available money towards it: whatever is left after stamp duty, fees and any mortgage insurance becomes the deposit.
@@ -4213,8 +4181,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
         sent = r.ok;
       } catch (e) { sent = false; }
     }
-    // Only when they ticked the box: let the broker know someone wants to be contacted
-    if ($("svBroker").checked && brand.leadUrl && /^https:\/\//i.test(brand.leadUrl)) {
+    if (false) {
       try { await fetch(brand.leadUrl, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ name, email, source: "Saved progress", message: "Saved their details and is happy for a broker to contact them.", link }) }); } catch (e) {}
     }
     $("svSend").disabled = false; msg.textContent = "";
@@ -5484,8 +5451,21 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("qTypical").onclick = () => { state.quick.spend = { amount: Math.round((hemPlaceholder() + monthly(state.quick.rent)) / 10) * 10, freq: "monthly" }; syncQuickInputs(); markEdited(); applyQuick(); changed(); $("qSpend").focus(); };
   $("moreMenu").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("moreMenu").open = false; }));
   document.addEventListener("click", e => { if ($("moreMenu").open && !e.target.closest("#moreMenu")) $("moreMenu").open = false; });
-  $("lSend").onclick = () => sendLead(LEAD_FORMS[0]);
-  $("tSend").onclick = () => sendLead(LEAD_FORMS[1]);
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-lead]"); if (!b) return;
+    const card = b.closest(".lead-card"), msg = card && card.querySelector("[data-lead-msg]");
+    const say = (t, ok) => { if (msg) { msg.className = "status-msg" + (ok ? " ok" : ""); msg.textContent = t; } };
+    if (b.dataset.lead === "email") {
+      const body = leadBody(), href = `mailto:${encodeURIComponent(brand.email)}?subject=${encodeURIComponent("Home loan enquiry from Fit To Buy")}&body=${encodeURIComponent(body.length > 1800 ? body.slice(0, 1800) + "\n..." : body)}`;
+      try { window.location.href = href; } catch (err) {}
+      say("Your email app should open with your results filled in. Check it, add your name and number, then send it yourself.");
+    } else if (b.dataset.lead === "call") {
+      try { window.location.href = "tel:" + brand.phone.replace(/[^\d+]/g, ""); } catch (err) {}
+    } else if (b.dataset.lead === "copy") {
+      const text = $("summaryText").value;
+      try { navigator.clipboard.writeText(text).then(() => say("Copied. Paste it into an email or message.", true), () => say("Use Summary to share below to copy your results.")); } catch (err) { say("Use Summary to share below to copy your results."); }
+    }
+  });
   $("landStart2").onclick = () => $("landStart").click();
   $("landStart").onclick = () => { currentClientId = null; state = defaultState(); state.clientName = ""; state.isExample = false;
     // A new buyer starts with none of the example household's money figures
@@ -5513,7 +5493,7 @@ body.shared .site-menu, body.shared .wiz-top { display: none !important; }
   $("oeBeds").addEventListener("change", e => { state.ownEst.beds = parseInt(e.target.value, 10); renderOwnEst(); });
   $("oeBaths").addEventListener("change", e => { state.ownEst.baths = parseInt(e.target.value, 10); renderOwnEst(); });
   $("oeLand").addEventListener("input", e => { state.ownEst.land = num(e.target.value); renderOwnEst(); });
-  $("toLead").onclick = () => { $("leadPanelTop").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => $("tName").focus({ preventScroll: true }), 400); };
+  $("toLead").onclick = () => { $("leadPanelTop").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => { const b = $("leadCardTop").querySelector("button"); if (b) b.focus({ preventScroll: true }); }, 400); };
   $("toggleEntries").onclick = () => {
     const on = !document.body.classList.contains("show-entries");
     document.body.classList.toggle("show-entries", on);
