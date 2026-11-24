@@ -22,7 +22,9 @@ HOME_COUNCIL = {"WEST BEACH": "WEST TORRENS", "DEVON PARK": "CHARLES STURT", "VA
                 "SEACLIFF PARK": "MARION", "SEFTON PARK": "PROSPECT", "OVINGHAM": "PROSPECT", "BROADVIEW": "PROSPECT"}
 SKIP = {"GILLMAN", "DRY CREEK", "GEPPS CROSS", "WINGFIELD", "HINDMARSH"}  # mostly industrial, or too few homes
 
-# Hand-checked details for the original ten suburbs: nearest petrol station and bedroom medians (property.com.au)
+# Hand-checked details for the original ten suburbs: nearest petrol station.
+# (Bedroom medians copied from property.com.au were removed: that data isn't licensed for reuse.
+#  Every suburb now uses the same typical bedroom ratios until licensed bedroom data is available.)
 ORIG = {
  "FULHAM GARDENS": dict(id="fulham", petrol=2.419, station="Ampol Fulham Gardens", salesMedian=1375000, bed=[817000,960000,1250000,1450000,1680000]),
  "LOCKLEYS": dict(id="lockleys", petrol=2.389, station="BP Brooklyn Park / Shell Underdale", salesMedian=1555000, bed=[790000,929000,1310000,1690000,1930000]),
@@ -105,7 +107,6 @@ def main():
                      lat=round(pos["lat"], 6), lng=round(pos["lng"], 6), postcode=pos["pc"], insFactor=ins, insNote=note,
                      petrol=o.get("petrol", 2.388), station=o.get("station", "Adelaide average price"), typLand=land)
             if varies: d["varies"] = [min(meds), max(meds)]
-            if o: d["salesMedian"] = o["salesMedian"]; d["bed"] = {str(i + 1): v for i, v in enumerate(o["bed"])}
             if n == "FULHAM": d["id"] = "fulham-west"  # "fulham" is Fulham Gardens, kept for saved clients
             if any(x["id"] == d["id"] for x in out): d["id"] += "-" + cname.split()[0].lower()
             out.append(d)
